@@ -418,65 +418,24 @@
 			<properties>
 				<label>local</label>
 				<jdbc.driver>com.mk.jdbc.MonitorDriver</jdbc.driver>
-				<master.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://192.168.0.34:3306/gds?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></master.jdbc.url>
+				<master.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://211.157.155.198:3306/gds?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></master.jdbc.url>
 				<master.jdbc.user>root</master.jdbc.user>
-				<master.jdbc.password>imike@2015</master.jdbc.password>
-				<slave.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://192.168.0.34:3306/gds?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></slave.jdbc.url>
+				<master.jdbc.password>dtk@2016</master.jdbc.password>
+				<slave.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://211.157.155.198:3306/gds?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></slave.jdbc.url>
 				<slave.jdbc.user>root</slave.jdbc.user>
-				<slave.jdbc.password>imike@2015</slave.jdbc.password>
-				<spring.redis.sentinel.master>mymaster</spring.redis.sentinel.master>
-				<spring.redis.sentinel.nodes>192.168.0.21:26379</spring.redis.sentinel.nodes>
+				<slave.jdbc.password>dtk@2016</slave.jdbc.password>
+				<spring.redis.sentinel.master>dtk-redis</spring.redis.sentinel.master>
+				<spring.redis.sentinel.nodes>211.157.155.198:26379</spring.redis.sentinel.nodes>
 				<jedis.pool.maxidl>20</jedis.pool.maxidl>
 				<jedis.pool.minidl>8</jedis.pool.minidl>
 				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
 				<!-- kafka_setting -->
-				<metadata.broker.list>192.168.0.17:9092</metadata.broker.list>
-				<zk.connect>192.168.0.17:2181</zk.connect>
-				<!-- config_center -->
-				<config.localMode>false</config.localMode>
-				<config.zk>192.168.0.17:2181</config.zk>
-				<cat.app.name>${project.name}</cat.app.name>
+				<metadata.broker.list>211.157.155.198:9092</metadata.broker.list>
+				<zk.connect>211.157.155.198:2181</zk.connect>
 				<dubbo-group>dev</dubbo-group>
 				<dubbo-provide-group>test</dubbo-provide-group>
-				<!-- taobao -->
-				<taobao.restUrl>http://localhost:8080/order/router/rest</taobao.restUrl>
-				<!-- <taobao.restUrl>http://gw.api.tbsandbox.com/router/rest</taobao.restUrl> -->
-				<taobao.appkey>test</taobao.appkey>
-				<taobao.secret>test</taobao.secret>
-				<crm.url>http://192.168.0.21:8012/crmas/</crm.url>
-				<sc>sc</sc>
 			</properties>
 		</profile>
-		<profile>
-			<id>clu</id>
-			<properties>
-				<label>product</label>
-				<jdbc.driver>com.mk.jdbc.MonitorDriver</jdbc.driver>
-				<master.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://10.10.221.48:3306/gds?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></master.jdbc.url>
-				<master.jdbc.user>denglei</master.jdbc.user>
-				<master.jdbc.password>#SXZjl6Tf#W#Fztl</master.jdbc.password>
-				<slave.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://10.10.240.82:3306/gds?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></slave.jdbc.url>
-				<slave.jdbc.user>denglei</slave.jdbc.user>
-				<slave.jdbc.password>#SXZjl6Tf#W#Fztl</slave.jdbc.password>
-				<spring.redis.sentinel.master>ds-redis</spring.redis.sentinel.master>
-				<spring.redis.sentinel.nodes>10.10.240.233:26379,10.10.231.253:26379</spring.redis.sentinel.nodes>
-				<jedis.pool.maxidl>20</jedis.pool.maxidl>
-				<jedis.pool.minidl>8</jedis.pool.minidl>
-				<jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-				<!-- kafka_setting -->
-				<metadata.broker.list>10.10.231.253:9092,10.10.240.233:9092,10.10.231.175:9092</metadata.broker.list>
-				<zk.connect>10.10.231.253,10.10.240.233,10.10.231.175</zk.connect>
-				<!-- config_center -->
-				<config.localMode>true</config.localMode>
-				<config.zk>10.10.231.253,10.10.240.233,10.10.231.175</config.zk>
-				<cat.app.name>${project.name}</cat.app.name>
-				<dubbo-group>clu</dubbo-group>
-				<dubbo-provide-group>clu</dubbo-provide-group>
-				<crm.url>http://crmas.fangbaba.com/crmas/</crm.url>
-				<sc>sc</sc>
-			</properties>
-		</profile>
-
 	</profiles>
 	<modules>
 		<module>duantuke-order-biz</module>
