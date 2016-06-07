@@ -2,6 +2,7 @@ package com.duantuke.order.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     private Long id;
@@ -33,6 +34,8 @@ public class Order {
     private Date upateTime;
 
     private String updateBy;
+    
+    private List<OrderDetail> orderDetails;
 
     public Long getId() {
         return id;
@@ -153,4 +156,12 @@ public class Order {
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy == null ? null : updateBy.trim();
     }
+
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
 }

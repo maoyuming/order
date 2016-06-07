@@ -418,10 +418,10 @@
 			<properties>
 				<label>local</label>
 				<jdbc.driver>com.mk.jdbc.MonitorDriver</jdbc.driver>
-				<master.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://211.157.155.198:3306/gds?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></master.jdbc.url>
+				<master.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://211.157.155.198:3306/otc?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></master.jdbc.url>
 				<master.jdbc.user>root</master.jdbc.user>
 				<master.jdbc.password>dtk@2016</master.jdbc.password>
-				<slave.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://211.157.155.198:3306/gds?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></slave.jdbc.url>
+				<slave.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://211.157.155.198:3306/otc?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></slave.jdbc.url>
 				<slave.jdbc.user>root</slave.jdbc.user>
 				<slave.jdbc.password>dtk@2016</slave.jdbc.password>
 				<spring.redis.sentinel.master>dtk-redis</spring.redis.sentinel.master>
