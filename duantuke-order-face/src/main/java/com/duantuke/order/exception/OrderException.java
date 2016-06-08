@@ -5,30 +5,21 @@ import java.io.Serializable;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 
 /**
- * @author shellingford
- * @version 创建时间：2012-2-2 下午01:09:49
- * 
+ * 订单系统自定义异常
+ * @author 须俊杰
+ * @date 2016年6月8日
  */
 public class OrderException extends RuntimeException implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String errorCode;
-	private String errorKey;
+	private String errorMsg;
 
-	public OrderException(String errorCode, String errorKey, String errorMsg) {
+	public OrderException(String errorCode,String errorMsg) {
 		super(errorMsg);
 		this.errorCode = errorCode;
-		this.errorKey = errorKey;
-	}
-
-	public OrderException(String errorCode, String errorKey) {
-		super("errorcode:" + errorCode);
-		this.errorCode = errorCode;
-		this.errorKey = errorKey;
+		this.errorMsg = errorMsg;
 	}
 
 	public OrderException() {
@@ -43,11 +34,19 @@ public class OrderException extends RuntimeException implements Serializable {
 		return OrderErrorEnum.findByCode(errorCode);
 	}
 
-	public final String getErrorKey() {
-		return errorKey;
+	public String getErrorCode() {
+		return errorCode;
 	}
 
-	public final void setErrorKey(String errorKey) {
-		this.errorKey = errorKey;
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 }

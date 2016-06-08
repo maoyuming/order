@@ -14,25 +14,16 @@ public enum OrderErrorEnum {
 	notfindHotelRoomtype("11002","酒店房型不存在。"),
 	
 	// 订单错误信息
+	orderIdError("10001","订单号不正确"),
 	orderAlreadyCheckIn("10003","此订单已经入住"),
-    cancelOrderForMaxTime("10005","订单取消失败,订单超过30分钟!"),
-    orderIdError("10001","订单号不正确"),
-    DBError("10006","数据库错误"),
-    pmsCancelOrderError("14001","PMS取消订单错误"),
-    pmsUpdateOrderError("14002","PMS修改订单错误"),
     
      //表单校验
   	priceError("12000","订单价格错误"),
-    stockNull("13000","酒店房间已满"),
-    moneyError("14000","钱不够"),
-
     
-	// 其他错误信息
-	customError("0000",""),
-	dataError("8","数据错误"),
-	paramsError("6", "非法参数请求"),
-	orderStatusError("5","订单状态错误");
-	
+	// 通用错误信息
+	customError("0","系统错误"),
+	DBError("100","数据库错误"),
+	paramsError("101", "非法参数请求");
 	
 	private final String errorCode;
 	private final String errorMsg;
@@ -47,7 +38,7 @@ public enum OrderErrorEnum {
 	}
 	
 	public OrderException getOrderException(String msg){
-		return new OrderException(errorCode, "", msg);//  返回输入的错误信息
+		return new OrderException(errorCode,  msg);//  返回输入的错误信息
 	}
 	
 	public String getErrorCode() {

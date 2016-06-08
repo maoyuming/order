@@ -46,7 +46,7 @@
       #{createBy,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.duantuke.order.model.Order" >
+  <insert id="insertSelective" parameterType="com.duantuke.order.model.Order" useGeneratedKeys="true" keyProperty="id">
     insert into orders
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

@@ -22,7 +22,9 @@ public class OrderDetail {
 
     private Date endTime;
 
-    private String supplier;
+    private Long supplierId;
+
+    private String supplierName;
 
     private Date createTime;
 
@@ -104,12 +106,20 @@ public class OrderDetail {
         this.endTime = endTime;
     }
 
-    public String getSupplier() {
-        return supplier;
+    public Long getSupplierId() {
+        return supplierId;
     }
 
-    public void setSupplier(String supplier) {
-        this.supplier = supplier == null ? null : supplier.trim();
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName == null ? null : supplierName.trim();
     }
 
     public Date getCreateTime() {

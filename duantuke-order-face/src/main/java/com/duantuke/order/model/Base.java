@@ -11,16 +11,14 @@ import java.io.Serializable;
 public class Base implements Serializable {
 
 	private static final long serialVersionUID = 4377893284204298358L;
-	
 	/**
 	 * 订单id
 	 */
 	private Long orderId;
 	/**
-	 * 酒店id1070182
+	 * 酒店
 	 */
 	private Long hotelId;
-	
 	/**
 	 * 酒店名称
 	 */
