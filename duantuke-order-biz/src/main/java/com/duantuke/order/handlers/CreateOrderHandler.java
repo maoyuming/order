@@ -13,10 +13,13 @@ import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayStatusEnum;
 import com.duantuke.order.exception.OrderException;
+import com.duantuke.order.mappers.OrderDetailMapper;
 import com.duantuke.order.mappers.OrderMapper;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.Order;
+import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.OrderDetail;
+import com.duantuke.order.model.Request;
 
 /**
  * 创建订单处理器
@@ -29,19 +32,23 @@ public class CreateOrderHandler {
 
 	@Autowired
 	private OrderMapper orderMapper;
+	@Autowired
+	private OrderDetailMapper orderDetailMapper;
 
-	public void create(CreateOrderRequest request) {
-		Order order = request.getOrder();
-		order.setType(OrderTypeEnum.common.getId());
-		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
-		order.setPayStatus(PayStatusEnum.waitForPayment.getId());
-		order.setTotalPrice(calculateTotalPrice(order.getOrderDetails()));
+	public void create(OrderContext<Request<CreateOrderRequest>> context) {
+		// 构建订单信息
+		Order order = buildOrder(context);
 		
 		// 保存订单主表
 		orderMapper.insertSelective(order);
-		System.out.println("id = "+order.getId());
+
+		// 构建订单明细
+		List<OrderDetail> orderDetails = buildOrderDetail(order, context);
+
 		// 保存订单明细
+		orderDetailMapper.batchInsert(orderDetails);
 		
+		context.setOrder(order);
 	}
 
 	/**
@@ -55,7 +62,7 @@ public class CreateOrderHandler {
 		// 验证订单主信息
 		validateOrder(order);
 
-		// 订单订单明细
+		// 验证订单明细
 		validateOrderDetail(order.getOrderDetails());
 	}
 
@@ -110,13 +117,14 @@ public class CreateOrderHandler {
 			}
 		}
 	}
-	
+
 	/**
 	 * 计算订单总金额
+	 * 
 	 * @param orderDetails
 	 * @return
 	 */
-	private BigDecimal calculateTotalPrice(List<OrderDetail> orderDetails){
+	private BigDecimal calculateTotalPrice(List<OrderDetail> orderDetails) {
 		BigDecimal totalPrice = BigDecimal.ZERO;
 		for (OrderDetail orderDetail : orderDetails) {
 			BigDecimal price = orderDetail.getPrice();
@@ -125,5 +133,42 @@ public class CreateOrderHandler {
 			totalPrice = totalPrice.add(totalPriceOfSku);
 		}
 		return totalPrice;
-	} 
+	}
+
+	/**
+	 * 构建订单信息
+	 * 
+	 * @param order
+	 */
+	private Order buildOrder(OrderContext<Request<CreateOrderRequest>> context) {
+		Order order = context.getRequest().getData().getOrder();
+		order.setType(OrderTypeEnum.common.getId());
+		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
+		order.setPayStatus(PayStatusEnum.waitForPayment.getId());
+		order.setTotalPrice(calculateTotalPrice(order.getOrderDetails()));
+		order.setCreateTime(context.getCurrentTime());
+		order.setUpateTime(context.getCurrentTime());
+		order.setCreateBy(context.getOperator());
+		order.setUpdateBy(context.getOperator());
+		
+		return order;
+	}
+
+	/**
+	 * 构建订单明细
+	 * 
+	 * @param order
+	 */
+	private List<OrderDetail> buildOrderDetail(Order order, OrderContext<Request<CreateOrderRequest>> context) {
+		List<OrderDetail> orderDetails = order.getOrderDetails();
+		for (OrderDetail orderDetail : orderDetails) {
+			orderDetail.setOrderId(order.getId());
+			orderDetail.setCreateTime(context.getCurrentTime());
+			orderDetail.setCreateBy(context.getOperator());
+			orderDetail.setUpdateTime(context.getCurrentTime());
+			orderDetail.setUpdateBy(context.getOperator());
+		}
+
+		return orderDetails;
+	}
 }

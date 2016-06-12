@@ -13,4 +13,13 @@ public class CreateOrderResponse implements Serializable {
 
 	private static final long serialVersionUID = -5443262340454055073L;
 	
+	private Order order;
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 }

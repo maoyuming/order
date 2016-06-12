@@ -1,5 +1,7 @@
 package com.duantuke.order.mappers;
 
+import java.util.List;
+
 import com.duantuke.order.model.OrderDetail;
 
 public interface OrderDetailMapper {
@@ -14,4 +16,6 @@ public interface OrderDetailMapper {
     int updateByPrimaryKeySelective(OrderDetail record);
 
     int updateByPrimaryKey(OrderDetail record);
+    
+    void batchInsert(List<OrderDetail> orderDetails);
 }

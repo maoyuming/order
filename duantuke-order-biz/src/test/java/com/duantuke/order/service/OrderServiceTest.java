@@ -6,14 +6,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.alibaba.fastjson.JSON;
-import com.duantuke.order.common.enums.PayStatusEnum;
 import com.duantuke.order.common.enums.PayTypeEnum;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
@@ -34,7 +33,7 @@ public class OrderServiceTest {
 	private OrderService orderService;
 	
 	@Test
-	public void testCreateOrder(){
+	public void testCreate(){
 		Request<CreateOrderRequest> request = new Request<CreateOrderRequest>();
 		Header header = new Header();
 		header.setTimeStamp(new Date());
@@ -46,6 +45,7 @@ public class OrderServiceTest {
 		order.setPayType(PayTypeEnum.prepay.getId());
 		order.setContact("张三");
 		order.setContactPhone("13333333333");
+		order.setMemo("尽量安排无烟房");
 		
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
@@ -77,6 +77,6 @@ public class OrderServiceTest {
 		request.setData(createOrderRequest);
 		
 		Response<CreateOrderResponse> response = orderService.createOrder(request);
-		System.out.println(JSON.toJSONString(response));
+		Assert.assertTrue(response.isSuccess());
 	}
 }
