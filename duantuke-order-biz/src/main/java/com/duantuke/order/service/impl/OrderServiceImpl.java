@@ -1,6 +1,7 @@
 package com.duantuke.order.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,11 +10,16 @@ import com.alibaba.fastjson.JSON;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CreateOrderHandler;
+import com.duantuke.order.handlers.QueryOrderHandler;
+import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
+import com.duantuke.order.model.Message;
+import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
+import com.duantuke.order.mq.OrderProducter;
 import com.duantuke.order.service.OrderService;
 import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
@@ -24,27 +30,34 @@ public class OrderServiceImpl implements OrderService {
 	public static final LogUtil logger = new LogUtil(OrderServiceImpl.class);
 	@Autowired
 	private CreateOrderHandler createOrderHandler;
+	@Autowired
+	private QueryOrderHandler queryOrderHandler;
+	@Autowired
+	private OrderProducter orderProducter;
 
 	@Override
-	public Response<CreateOrderResponse> createOrder(Request<CreateOrderRequest> request) {
+	public Response<CreateOrderResponse> create(Request<CreateOrderRequest> request) {
 
 		Response<CreateOrderResponse> response = new Response<CreateOrderResponse>();
 		try {
-			logger.info("创建订单入参:{}", JSON.toJSONString(request));
+			logger.info("接收到订单创建请求,入参:{}", JSON.toJSONString(request));
 
 			CreateOrderRequest createOrderRequest = request.getData();
 			// 参数合法性校验
 			createOrderHandler.validate(createOrderRequest);
-			
+
 			// 构建订单上下文
 			OrderContext<Request<CreateOrderRequest>> context = new OrderContext<Request<CreateOrderRequest>>();
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
 			context.setOperator(PropertyConfigurer.getProperty("system"));
-			
+
 			// 开始创建订单
 			createOrderHandler.create(context);
-			
+
+			// 发送消息
+			orderProducter.sendMessage(buildMessage(context.getOrder()));
+
 			// 封装返回信息
 			CreateOrderResponse createOrderResponse = new CreateOrderResponse();
 			createOrderResponse.setOrder(context.getOrder());
@@ -62,8 +75,32 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
 
-		logger.info("订单创建成功,返回值:{}", JSON.toJSONString(response));
+		logger.info("订单创建全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
 
+	/**
+	 * 构建消息报文
+	 * 
+	 * @param order
+	 * @return
+	 */
+	private String buildMessage(Order order) {
+		logger.info("开始构建订单消息");
+		Message message = new Message();
+		message.setOrder(order);
+
+		logger.info("订单消息构建完成");
+		return JSON.toJSONString(message);
+	}
+
+	@Override
+	public Response<List<Order>> queryOrders(Request<Base> request) {
+		List<Order> orders = queryOrderHandler.queryOrders();
+		System.out.println("size = "+orders.size());
+		Response<List<Order>> response = new Response<List<Order>>();
+		response.setData(orders);
+		
+		return response;
+	}
 }

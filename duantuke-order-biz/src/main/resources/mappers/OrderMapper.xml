@@ -10,6 +10,7 @@
     <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
     <result column="contact" property="contact" jdbcType="VARCHAR" />
     <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
     <result column="promotion_id" property="promotionId" jdbcType="BIGINT" />
     <result column="sales" property="sales" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
@@ -17,9 +18,26 @@
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="upate_time" property="upateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <collection property = "orderDetails" ofType = "com.duantuke.order.model.OrderDetail" javaType="java.util.ArrayList">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="order_id" property="orderId" jdbcType="BIGINT" />
+		<result column="sku_id" property="skuId" jdbcType="BIGINT" />
+		<result column="sku_name" property="skuName" jdbcType="VARCHAR" />
+		<result column="sku_type" property="skuType" jdbcType="INTEGER" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+		<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, type, status, pay_type, pay_status, total_price, contact, contact_phone, promotion_id, 
+    id, type, status, pay_type, pay_status, total_price, contact, contact_phone,customer_id, promotion_id, 
     sales, memo, create_time, create_by, upate_time, update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -41,8 +59,8 @@
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{payType,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, 
-      #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{promotionId,jdbcType=BIGINT}, 
-      #{sales,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT},
+      #{promotionId,jdbcType=BIGINT},#{sales,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
       )
   </insert>
@@ -72,6 +90,9 @@
       </if>
       <if test="contactPhone != null" >
         contact_phone,
+      </if>
+      <if test="promotionId != null" >
+        customer_id,
       </if>
       <if test="promotionId != null" >
         promotion_id,
@@ -121,6 +142,9 @@
         #{contactPhone,jdbcType=VARCHAR},
       </if>
       <if test="promotionId != null" >
+        #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="promotionId != null" >
         #{promotionId,jdbcType=BIGINT},
       </if>
       <if test="sales != null" >
@@ -168,6 +192,9 @@
         contact_phone = #{contactPhone,jdbcType=VARCHAR},
       </if>
       <if test="promotionId != null" >
+        customer_id = #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="promotionId != null" >
         promotion_id = #{promotionId,jdbcType=BIGINT},
       </if>
       <if test="sales != null" >
@@ -200,6 +227,7 @@
       total_price = #{totalPrice,jdbcType=DECIMAL},
       contact = #{contact,jdbcType=VARCHAR},
       contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      customer_id = #{customerId,jdbcType=BIGINT},
       promotion_id = #{promotionId,jdbcType=BIGINT},
       sales = #{sales,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
@@ -209,4 +237,25 @@
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="queryOrders" resultMap="BaseResultMap" parameterType="map" >
+		SELECT 
+			a.id,
+			a.type,
+			a.status,
+			a.pay_type,
+			a.pay_status,
+			a.total_price,
+			a.contact,
+			a.contact_phone,
+			a.customer_id,
+			a.promotion_id,
+			a.sales,
+			a.memo,
+			a.create_time,
+			a.create_by,
+			a.upate_time,
+			a.update_by
+		FROM orders AS a
+		LEFT JOIN order_details AS b ON a.id = b.order_id
+  </select>
 </mapper>

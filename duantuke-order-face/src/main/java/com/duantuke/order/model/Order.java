@@ -5,157 +5,159 @@ import java.util.Date;
 import java.util.List;
 
 public class Order {
-    private Long id;
+	private Long id;
 
-    private Integer type;
+	private Integer type;
 
-    private Integer status;
+	private Integer status;
 
-    private Integer payType;
+	private Integer payType;
 
-    private Integer payStatus;
+	private Integer payStatus;
 
-    private BigDecimal totalPrice;
+	private BigDecimal totalPrice;
 
-    private String contact;
+	private String contact;
 
-    private String contactPhone;
+	private String contactPhone;
 
-    private Long promotionId;
+	private Long customerId;
 
-    private String sales;
+	private Long promotionId;
 
-    private String memo;
+	private String sales;
 
-    private Date createTime;
+	private String memo;
 
-    private String createBy;
+	private Date createTime;
 
-    private Date upateTime;
+	private String createBy;
 
-    private String updateBy;
-    
-    private List<OrderDetail> orderDetails;
+	private Date upateTime;
 
-    public Long getId() {
-        return id;
-    }
+	private String updateBy;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	private List<OrderDetail> orderDetails;
 
-    public Integer getType() {
-        return type;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setType(Integer type) {
-        this.type = type;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public Integer getType() {
+		return type;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
-    public Integer getPayType() {
-        return payType;
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public void setPayType(Integer payType) {
-        this.payType = payType;
-    }
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public Integer getPayStatus() {
-        return payStatus;
-    }
+	public Integer getPayType() {
+		return payType;
+	}
 
-    public void setPayStatus(Integer payStatus) {
-        this.payStatus = payStatus;
-    }
+	public void setPayType(Integer payType) {
+		this.payType = payType;
+	}
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
+	public Integer getPayStatus() {
+		return payStatus;
+	}
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
+	}
 
-    public String getContact() {
-        return contact;
-    }
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
 
-    public void setContact(String contact) {
-        this.contact = contact == null ? null : contact.trim();
-    }
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 
-    public String getContactPhone() {
-        return contactPhone;
-    }
+	public String getContact() {
+		return contact;
+	}
 
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone == null ? null : contactPhone.trim();
-    }
+	public void setContact(String contact) {
+		this.contact = contact == null ? null : contact.trim();
+	}
 
-    public Long getPromotionId() {
-        return promotionId;
-    }
+	public String getContactPhone() {
+		return contactPhone;
+	}
 
-    public void setPromotionId(Long promotionId) {
-        this.promotionId = promotionId;
-    }
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone == null ? null : contactPhone.trim();
+	}
 
-    public String getSales() {
-        return sales;
-    }
+	public Long getPromotionId() {
+		return promotionId;
+	}
 
-    public void setSales(String sales) {
-        this.sales = sales == null ? null : sales.trim();
-    }
+	public void setPromotionId(Long promotionId) {
+		this.promotionId = promotionId;
+	}
 
-    public String getMemo() {
-        return memo;
-    }
+	public String getSales() {
+		return sales;
+	}
 
-    public void setMemo(String memo) {
-        this.memo = memo == null ? null : memo.trim();
-    }
+	public void setSales(String sales) {
+		this.sales = sales == null ? null : sales.trim();
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public String getMemo() {
+		return memo;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setMemo(String memo) {
+		this.memo = memo == null ? null : memo.trim();
+	}
 
-    public String getCreateBy() {
-        return createBy;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public Date getUpateTime() {
-        return upateTime;
-    }
+	public String getCreateBy() {
+		return createBy;
+	}
 
-    public void setUpateTime(Date upateTime) {
-        this.upateTime = upateTime;
-    }
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy == null ? null : createBy.trim();
+	}
 
-    public String getUpdateBy() {
-        return updateBy;
-    }
+	public Date getUpateTime() {
+		return upateTime;
+	}
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy == null ? null : updateBy.trim();
-    }
+	public void setUpateTime(Date upateTime) {
+		this.upateTime = upateTime;
+	}
+
+	public String getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(String updateBy) {
+		this.updateBy = updateBy == null ? null : updateBy.trim();
+	}
 
 	public List<OrderDetail> getOrderDetails() {
 		return orderDetails;
@@ -164,4 +166,13 @@ public class Order {
 	public void setOrderDetails(List<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
 }

@@ -20,6 +20,7 @@ import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.OrderDetail;
 import com.duantuke.order.model.Request;
+import com.duantuke.order.utils.log.LogUtil;
 
 /**
  * 创建订单处理器
@@ -30,15 +31,17 @@ import com.duantuke.order.model.Request;
 @Service
 public class CreateOrderHandler {
 
+	private static final LogUtil logger = new LogUtil(CreateOrderHandler.class);
 	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
 	private OrderDetailMapper orderDetailMapper;
 
 	public void create(OrderContext<Request<CreateOrderRequest>> context) {
+		logger.info("开始创建订单");
 		// 构建订单信息
 		Order order = buildOrder(context);
-		
+
 		// 保存订单主表
 		orderMapper.insertSelective(order);
 
@@ -47,8 +50,9 @@ public class CreateOrderHandler {
 
 		// 保存订单明细
 		orderDetailMapper.batchInsert(orderDetails);
-		
+
 		context.setOrder(order);
+		logger.info("订单创建成功,orderId = {}", order.getId());
 	}
 
 	/**
@@ -57,6 +61,7 @@ public class CreateOrderHandler {
 	 * @param request
 	 */
 	public void validate(CreateOrderRequest request) {
+		logger.info("开始验证请求参数");
 		Order order = request.getOrder();
 
 		// 验证订单主信息
@@ -64,6 +69,7 @@ public class CreateOrderHandler {
 
 		// 验证订单明细
 		validateOrderDetail(order.getOrderDetails());
+		logger.info("请求参数验证通过");
 	}
 
 	/**
@@ -72,6 +78,7 @@ public class CreateOrderHandler {
 	 * @param order
 	 */
 	private void validateOrder(Order order) {
+		logger.info("开始验证订单主信息");
 		if (order.getPayType() == null) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "联系人不能为空");
 		}
@@ -81,6 +88,7 @@ public class CreateOrderHandler {
 		if (StringUtils.isBlank(order.getContactPhone())) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "联系人电话不能为空");
 		}
+		logger.info("订单主信息验证通过");
 	}
 
 	/**
@@ -89,6 +97,7 @@ public class CreateOrderHandler {
 	 * @param orderDetail
 	 */
 	private void validateOrderDetail(List<OrderDetail> orderDetails) {
+		logger.info("开始验证订单明细");
 		if (CollectionUtils.isEmpty(orderDetails)) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "订单明细不能为空");
 		}
@@ -116,6 +125,8 @@ public class CreateOrderHandler {
 				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "预离时间不能为空");
 			}
 		}
+
+		logger.info("订单明细验证通过");
 	}
 
 	/**
@@ -125,6 +136,7 @@ public class CreateOrderHandler {
 	 * @return
 	 */
 	private BigDecimal calculateTotalPrice(List<OrderDetail> orderDetails) {
+		logger.info("开始计算订单总金额");
 		BigDecimal totalPrice = BigDecimal.ZERO;
 		for (OrderDetail orderDetail : orderDetails) {
 			BigDecimal price = orderDetail.getPrice();
@@ -132,6 +144,8 @@ public class CreateOrderHandler {
 			BigDecimal totalPriceOfSku = price.multiply(num);
 			totalPrice = totalPrice.add(totalPriceOfSku);
 		}
+
+		logger.info("订单总金额计算完成,totalPrice = {}", totalPrice);
 		return totalPrice;
 	}
 
@@ -141,6 +155,7 @@ public class CreateOrderHandler {
 	 * @param order
 	 */
 	private Order buildOrder(OrderContext<Request<CreateOrderRequest>> context) {
+		logger.info("开始构建订单主信息");
 		Order order = context.getRequest().getData().getOrder();
 		order.setType(OrderTypeEnum.common.getId());
 		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
@@ -150,7 +165,8 @@ public class CreateOrderHandler {
 		order.setUpateTime(context.getCurrentTime());
 		order.setCreateBy(context.getOperator());
 		order.setUpdateBy(context.getOperator());
-		
+
+		logger.info("订单主信息构建完成");
 		return order;
 	}
 
@@ -160,6 +176,7 @@ public class CreateOrderHandler {
 	 * @param order
 	 */
 	private List<OrderDetail> buildOrderDetail(Order order, OrderContext<Request<CreateOrderRequest>> context) {
+		logger.info("开始构建订单明细");
 		List<OrderDetail> orderDetails = order.getOrderDetails();
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetail.setOrderId(order.getId());
@@ -169,6 +186,7 @@ public class CreateOrderHandler {
 			orderDetail.setUpdateBy(context.getOperator());
 		}
 
+		logger.info("订单明细构建完成");
 		return orderDetails;
 	}
 }

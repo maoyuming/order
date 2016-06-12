@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.alibaba.fastjson.JSON;
 import com.duantuke.order.common.enums.PayTypeEnum;
+import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Header;
@@ -76,7 +78,20 @@ public class OrderServiceTest {
 		createOrderRequest.setOrder(order);
 		request.setData(createOrderRequest);
 		
-		Response<CreateOrderResponse> response = orderService.createOrder(request);
+		Response<CreateOrderResponse> response = orderService.create(request);
 		Assert.assertTrue(response.isSuccess());
+	}
+	
+	@Test
+	public void testQueryOrders(){
+		Request<Base> request = new Request<Base>();
+		Header header = new Header();
+		header.setTimeStamp(new Date());
+		header.setToken("token");
+		request.setHeader(header);
+		
+		Response<List<Order>> response = orderService.queryOrders(request);
+		List<Order> orders = response.getData();
+		JSON.toJSONString(orders);
 	}
 }

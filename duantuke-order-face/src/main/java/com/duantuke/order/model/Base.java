@@ -41,19 +41,12 @@ public class Base implements Serializable {
 		this.orderId = orderId;
 	}
 
-	/**
-	 * @return the hotelName
-	 */
 	public String getHotelName() {
 		return hotelName;
 	}
 
-	/**
-	 * @param hotelName the hotelName to set
-	 */
 	public void setHotelName(String hotelName) {
 		this.hotelName = hotelName;
 	}
-
 	
 }

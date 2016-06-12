@@ -1,7 +1,11 @@
 package com.duantuke.order.service;
 
+import java.util.List;
+
+import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
+import com.duantuke.order.model.Order;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
 
@@ -55,5 +59,7 @@ public interface OrderService {
 	 * @param request
 	 * @return
 	 */
-	Response<CreateOrderResponse> createOrder(Request<CreateOrderRequest> request);
+	Response<CreateOrderResponse> create(Request<CreateOrderRequest> request);
+	
+	Response<List<Order>> queryOrders(Request<Base> request);
 }
