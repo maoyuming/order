@@ -48,7 +48,7 @@ public class OrderAsepct {
 				Base base = (Base) o;
 				if (base != null) {
 					// 统一将酒店id和订单id放入线程本地变量中，主要为了统一日志输出
-					ThreadLocalContext.set("hotelId", base.getHotelId());
+					ThreadLocalContext.set("supplierId", base.getSupplierId());
 					ThreadLocalContext.set("orderId", base.getOrderId());
 				}
 			}

@@ -16,22 +16,9 @@ public class Base implements Serializable {
 	 */
 	private Long orderId;
 	/**
-	 * 酒店
+	 * 供应商
 	 */
-	private Long hotelId;
-	/**
-	 * 酒店名称
-	 */
-	private String hotelName;
-	
-	
-	public Long getHotelId() {
-		return hotelId;
-	}
-
-	public void setHotelId(Long hotelId) {
-		this.hotelId = hotelId;
-	}
+	private Long supplierId;
 
 	public Long getOrderId() {
 		return orderId;
@@ -41,12 +28,12 @@ public class Base implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public String getHotelName() {
-		return hotelName;
+	public Long getSupplierId() {
+		return supplierId;
 	}
 
-	public void setHotelName(String hotelName) {
-		this.hotelName = hotelName;
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
 	}
-	
+
 }

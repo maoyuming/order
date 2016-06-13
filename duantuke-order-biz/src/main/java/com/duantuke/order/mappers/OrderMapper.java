@@ -1,6 +1,7 @@
 package com.duantuke.order.mappers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.duantuke.order.model.Order;
 
@@ -17,5 +18,5 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order record);
     
-    List<Order> queryOrders();
+    List<Order> queryOrders(Map<String, Object> params);
 }

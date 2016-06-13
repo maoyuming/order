@@ -2,10 +2,10 @@ package com.duantuke.order.service;
 
 import java.util.List;
 
-import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Order;
+import com.duantuke.order.model.QueryOrderRequest;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
 
@@ -60,6 +60,12 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<CreateOrderResponse> create(Request<CreateOrderRequest> request);
-	
-	Response<List<Order>> queryOrders(Request<Base> request);
+
+	/**
+	 * 查询订单列表(多个查询条件，结果集取交集)
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response<List<Order>> queryOrders(Request<QueryOrderRequest> request);
 }

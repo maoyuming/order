@@ -17,6 +17,7 @@ import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Message;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
+import com.duantuke.order.model.QueryOrderRequest;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
 import com.duantuke.order.mq.OrderProducter;
@@ -95,12 +96,31 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Response<List<Order>> queryOrders(Request<Base> request) {
-		List<Order> orders = queryOrderHandler.queryOrders();
-		System.out.println("size = "+orders.size());
+	public Response<List<Order>> queryOrders(Request<QueryOrderRequest> request) {
+
 		Response<List<Order>> response = new Response<List<Order>>();
-		response.setData(orders);
-		
+		try {
+			logger.info("接收到订单查询请求,入参:{}", JSON.toJSONString(request));
+			// 参数合法性校验
+			QueryOrderRequest queryOrderRequest = request.getData();
+			queryOrderHandler.validate(queryOrderRequest);
+			
+			List<Order> orders = queryOrderHandler.queryOrders(queryOrderRequest);
+			
+			System.out.println(JSON.toJSONString(orders));
+			System.out.println("size = "+orders.size());
+		} catch (OrderException e) {
+			logger.error("查询订单异常", e);
+			response.setSuccess(false);
+			response.setErrorCode(e.getErrorCode());
+			response.setErrorMessage(e.getErrorMsg());
+		} catch (Exception ex) {
+			logger.error("查询订单异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
 		return response;
 	}
 }

@@ -1,6 +1,8 @@
 package com.duantuke.order.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,13 +16,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
+import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayTypeEnum;
-import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Header;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderDetail;
+import com.duantuke.order.model.QueryOrderRequest;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
 import com.duantuke.order.utils.log.LogUtil;
@@ -83,12 +86,26 @@ public class OrderServiceTest {
 	}
 	
 	@Test
-	public void testQueryOrders(){
-		Request<Base> request = new Request<Base>();
+	public void testQueryOrders() throws ParseException{
+		Request<QueryOrderRequest> request = new Request<QueryOrderRequest>();
 		Header header = new Header();
 		header.setTimeStamp(new Date());
 		header.setToken("token");
 		request.setHeader(header);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = sdf.parse("2016-06-12");
+		Date endDate = sdf.parse("2016-06-14");
+		
+		QueryOrderRequest queryOrderRequest = new QueryOrderRequest();
+		queryOrderRequest.setOrderType(OrderTypeEnum.common.getId());
+		queryOrderRequest.setContact("张三");
+		queryOrderRequest.setStartDate(startDate);
+		queryOrderRequest.setEndDate(endDate);
+		queryOrderRequest.setPageNo(1);
+		queryOrderRequest.setPageSize(10);
+		
+		request.setData(queryOrderRequest);
 		
 		Response<List<Order>> response = orderService.queryOrders(request);
 		List<Order> orders = response.getData();

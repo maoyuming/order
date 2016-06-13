@@ -29,7 +29,9 @@ public class Order {
 
     private String supplierName;
 
-	private String sales;
+	private Long salesId;
+	
+	private Long salesName;
 
 	private String memo;
 
@@ -114,15 +116,7 @@ public class Order {
 	public void setPromotionId(Long promotionId) {
 		this.promotionId = promotionId;
 	}
-
-	public String getSales() {
-		return sales;
-	}
-
-	public void setSales(String sales) {
-		this.sales = sales == null ? null : sales.trim();
-	}
-
+	
 	public String getMemo() {
 		return memo;
 	}
@@ -195,4 +189,19 @@ public class Order {
 		this.supplierName = supplierName;
 	}
 
+	public Long getSalesId() {
+		return salesId;
+	}
+
+	public void setSalesId(Long salesId) {
+		this.salesId = salesId;
+	}
+
+	public Long getSalesName() {
+		return salesName;
+	}
+
+	public void setSalesName(Long salesName) {
+		this.salesName = salesName;
+	}
 }

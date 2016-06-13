@@ -12,7 +12,8 @@
     <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
     <result column="customer_id" property="customerId" jdbcType="BIGINT" />
     <result column="promotion_id" property="promotionId" jdbcType="BIGINT" />
-    <result column="sales" property="sales" jdbcType="VARCHAR" />
+    <result column="sales_id" property="salesId" jdbcType="BIGINT" />
+    <result column="sales_name" property="salesName" jdbcType="VARCHAR" />
     <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
@@ -20,6 +21,8 @@
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="upate_time" property="upateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithOrderDetails" type="com.duantuke.order.model.Order" extends="BaseResultMap">
     <collection property = "orderDetails" ofType = "com.duantuke.order.model.OrderDetail" javaType="java.util.ArrayList">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="order_id" property="orderId" jdbcType="BIGINT" />
@@ -38,7 +41,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, type, status, pay_type, pay_status, total_price, contact, contact_phone, customer_id, 
-    promotion_id, sales, supplier_id, supplier_name, memo, create_time, create_by, upate_time, 
+    promotion_id, sales_id, sales_name, supplier_id, supplier_name, memo, create_time, create_by, upate_time, 
     update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -51,23 +54,23 @@
     delete from orders
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.duantuke.order.model.Order" >
+  <insert id="insert" parameterType="com.duantuke.order.model.Order" useGeneratedKeys="true" keyProperty="id">
     insert into orders (id, type, status, 
       pay_type, pay_status, total_price, 
       contact, contact_phone, customer_id, 
-      promotion_id, sales, supplier_id, 
+      promotion_id, sales_id, sales_name, supplier_id, 
       supplier_name, memo, create_time, 
       create_by, upate_time, update_by
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{payType,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, 
       #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
-      #{promotionId,jdbcType=BIGINT}, #{sales,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
+      #{promotionId,jdbcType=BIGINT}, #{salesId,jdbcType=BIGINT},#{salesName,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
       #{supplierName,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.duantuke.order.model.Order" >
+  <insert id="insertSelective" parameterType="com.duantuke.order.model.Order" useGeneratedKeys="true" keyProperty="id">
     insert into orders
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -100,8 +103,11 @@
       <if test="promotionId != null" >
         promotion_id,
       </if>
-      <if test="sales != null" >
-        sales,
+      <if test="salesId != null" >
+        sales_id,
+      </if>
+      <if test="salesName != null" >
+        sales_name,
       </if>
       <if test="supplierId != null" >
         supplier_id,
@@ -156,8 +162,11 @@
       <if test="promotionId != null" >
         #{promotionId,jdbcType=BIGINT},
       </if>
-      <if test="sales != null" >
-        #{sales,jdbcType=VARCHAR},
+      <if test="salesId != null" >
+        #{salesId,jdbcType=BIGINT},
+      </if>
+      <if test="salesName != null" >
+        #{salesName,jdbcType=VARCHAR},
       </if>
       <if test="supplierId != null" >
         #{supplierId,jdbcType=BIGINT},
@@ -212,8 +221,11 @@
       <if test="promotionId != null" >
         promotion_id = #{promotionId,jdbcType=BIGINT},
       </if>
-      <if test="sales != null" >
-        sales = #{sales,jdbcType=VARCHAR},
+      <if test="salesId != null" >
+        sales_id = #{salesId,jdbcType=BIGINT},
+      </if>
+      <if test="salesName != null" >
+        sales_name = #{salesName,jdbcType=BIGINT},
       </if>
       <if test="supplierId != null" >
         supplier_id = #{supplierId,jdbcType=BIGINT},
@@ -250,7 +262,8 @@
       contact_phone = #{contactPhone,jdbcType=VARCHAR},
       customer_id = #{customerId,jdbcType=BIGINT},
       promotion_id = #{promotionId,jdbcType=BIGINT},
-      sales = #{sales,jdbcType=VARCHAR},
+      sales_id = #{salesId,jdbcType=BIGINT},
+      sales_name = #{salesName,jdbcType=VARCHAR},
       supplier_id = #{supplierId,jdbcType=BIGINT},
       supplier_name = #{supplierName,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
@@ -260,7 +273,7 @@
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="queryOrders" resultMap="BaseResultMap" parameterType="map" >
+  <select id="queryOrdersAndDetails" resultMap="BaseResultMap" parameterType="map" >
 		SELECT 
 			a.id,
 			a.type,
@@ -272,13 +285,69 @@
 			a.contact_phone,
 			a.customer_id,
 			a.promotion_id,
-			a.sales,
+			a.sales_id,
+			a.sales_name,
 			a.memo,
 			a.create_time,
 			a.create_by,
 			a.upate_time,
 			a.update_by
 		FROM orders AS a
-		LEFT JOIN order_details AS b ON a.id = b.order_id
+		LEFT JOIN order_details AS b ON a.id = b.order_id 
+		WHERE a.type = #{orderType,jdbcType=INTEGER}
+  </select>
+  <select id="queryOrders" resultMap="BaseResultMap" parameterType="map" >
+		SELECT 
+			id,
+			type,
+			status,
+			pay_type,
+			pay_status,
+			total_price,
+			contact,
+			contact_phone,
+			customer_id,
+			promotion_id,
+			sales_id,
+			sales_name,
+			memo,
+			create_time,
+			create_by,
+			upate_time,
+			update_by
+		FROM orders 
+		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+		 <if test="type != null">
+	    	AND type = #{orderType,jdbcType=INTEGER}
+	     </if>
+	     <if test="status != null">
+	    	AND status = #{orderStatus,jdbcType=INTEGER}
+	     </if>
+	     <if test="payType != null">
+	    	AND pay_type = #{payType,jdbcType=INTEGER}
+	     </if>
+	     <if test="payStatus != null">
+	    	AND pay_status = #{payStatus,jdbcType=INTEGER}
+	     </if>
+	     <if test="contact != null">
+	    	AND contact = #{contact,jdbcType=VARCHAR}
+	     </if>
+	     <if test="contactPhone != null">
+	    	AND contactPhone = #{contactPhone,jdbcType=VARCHAR}
+	     </if>
+	     <if test="customerId != null">
+	    	AND customer_id = #{customerId,jdbcType=BIGINT}
+	     </if>
+	     <if test="salesId != null">
+	    	AND sales_id = #{salesId,jdbcType=BIGINT}
+	     </if>
+	     <if test="startDate != null">
+	    	AND create_time &gt; #{startDate,jdbcType=TIMESTAMP}
+	     </if>
+	      <if test="endDate != null">
+	    	AND create_time &lt; #{endDate,jdbcType=TIMESTAMP}
+	     </if>
+	    </trim>
+		LIMIT #{startNum, jdbcType=INTEGER} ,#{pageSize, jdbcType=INTEGER}
   </select>
 </mapper>
