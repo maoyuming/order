@@ -24,6 +24,10 @@ public class Order {
 	private Long customerId;
 
 	private Long promotionId;
+	
+	private Long supplierId;
+
+    private String supplierName;
 
 	private String sales;
 
@@ -173,6 +177,22 @@ public class Order {
 
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
+	}
+
+	public Long getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
+	}
+
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
 	}
 
 }

@@ -22,10 +22,6 @@ public class OrderDetail {
 
     private Date endTime;
 
-    private Long supplierId;
-
-    private String supplierName;
-
     private Date createTime;
 
     private String createBy;
@@ -104,22 +100,6 @@ public class OrderDetail {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
-    }
-
-    public Long getSupplierId() {
-        return supplierId;
-    }
-
-    public void setSupplierId(Long supplierId) {
-        this.supplierId = supplierId;
-    }
-
-    public String getSupplierName() {
-        return supplierName;
-    }
-
-    public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName == null ? null : supplierName.trim();
     }
 
     public Date getCreateTime() {
