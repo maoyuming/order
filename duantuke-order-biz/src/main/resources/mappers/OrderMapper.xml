@@ -20,6 +20,21 @@
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="upate_time" property="upateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <collection property = "orderDetails" ofType = "com.duantuke.order.model.OrderDetail" javaType="java.util.ArrayList">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="order_id" property="orderId" jdbcType="BIGINT" />
+		<result column="sku_id" property="skuId" jdbcType="BIGINT" />
+		<result column="sku_name" property="skuName" jdbcType="VARCHAR" />
+		<result column="sku_type" property="skuType" jdbcType="INTEGER" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
     id, type, status, pay_type, pay_status, total_price, contact, contact_phone, customer_id, 
@@ -245,4 +260,25 @@
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="queryOrders" resultMap="BaseResultMap" parameterType="map" >
+		SELECT 
+			a.id,
+			a.type,
+			a.status,
+			a.pay_type,
+			a.pay_status,
+			a.total_price,
+			a.contact,
+			a.contact_phone,
+			a.customer_id,
+			a.promotion_id,
+			a.sales,
+			a.memo,
+			a.create_time,
+			a.create_by,
+			a.upate_time,
+			a.update_by
+		FROM orders AS a
+		LEFT JOIN order_details AS b ON a.id = b.order_id
+  </select>
 </mapper>

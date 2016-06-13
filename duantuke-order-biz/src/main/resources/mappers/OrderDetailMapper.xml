@@ -185,4 +185,29 @@
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="batchInsert" parameterType="java.util.List">
+		INSERT INTO order_details (
+			order_id, sku_id,
+			sku_name, sku_type,
+			num,price, begin_time, end_time,
+			create_time,
+			create_by, update_time,
+			update_by
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.orderId,jdbcType=BIGINT},
+			#{item.skuId,jdbcType=BIGINT},
+			#{item.skuName,jdbcType=VARCHAR},
+			#{item.skuType,jdbcType=INTEGER},
+			#{item.num,jdbcType=INTEGER},
+			#{item.price,jdbcType=DECIMAL},
+			#{item.beginTime,jdbcType=TIMESTAMP},
+			#{item.endTime,jdbcType=TIMESTAMP},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.createBy,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=TIMESTAMP},
+			#{item.updateBy,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</select>
 </mapper>
