@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.mappers.OrderMapper;
@@ -29,10 +30,13 @@ public class QueryOrderHandler {
 	private OrderMapper orderMapper;
 
 	public List<Order> queryOrders(QueryOrderRequest request) {
-
+		logger.info("开始查询订单");
 		Map<String, Object> params = buildParameters(request);
 
-		return orderMapper.queryOrders(params);
+		List<Order> orders = orderMapper.queryOrders(params);
+		
+		logger.info("订单查询成功");
+		return orders;
 	}
 
 	/**
@@ -42,7 +46,9 @@ public class QueryOrderHandler {
 	 * @return
 	 */
 	private Map<String, Object> buildParameters(QueryOrderRequest request) {
+		logger.info("开始构建查询参数");
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("supplierId", request.getSupplierId());
 		params.put("orderType", request.getOrderType());
 		params.put("orderStatus", request.getOrderStatus());
 		params.put("payType", request.getPayType());
@@ -55,6 +61,7 @@ public class QueryOrderHandler {
 		params.put("endDate", request.getEndDate());
 		params.put("startNum", (request.getPageNo() - 1) * request.getPageSize());
 		params.put("pageSize", request.getPageSize());
+		logger.info("查询参数构建完成,参数明细:{}",JSON.toJSONString(params));
 		return params;
 	}
 

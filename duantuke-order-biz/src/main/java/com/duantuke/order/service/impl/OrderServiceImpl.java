@@ -11,7 +11,6 @@ import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CreateOrderHandler;
 import com.duantuke.order.handlers.QueryOrderHandler;
-import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Message;
@@ -105,10 +104,12 @@ public class OrderServiceImpl implements OrderService {
 			QueryOrderRequest queryOrderRequest = request.getData();
 			queryOrderHandler.validate(queryOrderRequest);
 			
+			// 执行查询操作
 			List<Order> orders = queryOrderHandler.queryOrders(queryOrderRequest);
 			
-			System.out.println(JSON.toJSONString(orders));
-			System.out.println("size = "+orders.size());
+			// 封装返回信息
+			response.setSuccess(true);
+			response.setData(orders);
 		} catch (OrderException e) {
 			logger.error("查询订单异常", e);
 			response.setSuccess(false);
@@ -121,6 +122,7 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
 
+		logger.info("订单查询全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
 }

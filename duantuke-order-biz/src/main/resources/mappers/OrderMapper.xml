@@ -308,6 +308,8 @@
 			contact_phone,
 			customer_id,
 			promotion_id,
+			supplier_id,
+			supplier_name,
 			sales_id,
 			sales_name,
 			memo,
@@ -317,6 +319,9 @@
 			update_by
 		FROM orders 
 		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+		 <if test="supplierId != null">
+	    	AND supplier_id = #{supplierId,jdbcType=BIGINT}
+	     </if>
 		 <if test="type != null">
 	    	AND type = #{orderType,jdbcType=INTEGER}
 	     </if>
@@ -348,6 +353,7 @@
 	    	AND create_time &lt; #{endDate,jdbcType=TIMESTAMP}
 	     </if>
 	    </trim>
+	    ORDER BY id DESC
 		LIMIT #{startNum, jdbcType=INTEGER} ,#{pageSize, jdbcType=INTEGER}
   </select>
 </mapper>

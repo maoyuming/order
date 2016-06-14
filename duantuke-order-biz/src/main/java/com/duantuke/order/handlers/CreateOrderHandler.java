@@ -8,8 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.duantuke.basic.face.bean.SkuQueryIn;
-import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
@@ -38,8 +36,6 @@ public class CreateOrderHandler {
 	private OrderMapper orderMapper;
 	@Autowired
 	private OrderDetailMapper orderDetailMapper;
-	@Autowired
-	private SkuService skuService;
 
 	public void create(OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始创建订单");
