@@ -10,9 +10,13 @@
 	<dubbo:registry address="zookeeper://${zk.connect}" />
 	<!-- 用dubbo协议在20880端口暴露服务 -->
 	<dubbo:protocol name="dubbo" port="-1" />
-	<!-- 声明需要暴露的服务接口 
+	<!-- 声明需要暴露的服务接口 -->
 	
-	<dubbo:service ref="orderService" interface="com.fangbaba.order.service.OrderService"  group="order_${dubbo-group}" version="1.0.0"  timeout="10000" retries="0" />-->
-
+	<dubbo:service ref="orderService"
+		interface="com.duantuke.order.service.OrderService" group="order_${dubbo-group}"
+		version="1.0.0" timeout="10000" retries="0" />
+	<dubbo:reference id="skuService"
+		interface="com.duantuke.basic.face.service.SkuService" timeout="30000"
+		group="tk" version="1.0.0" check="false" />
 	<dubbo:monitor protocol="registry"></dubbo:monitor>
 </beans>

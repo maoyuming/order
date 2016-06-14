@@ -2,6 +2,7 @@ package com.duantuke.order.service;
 
 import java.util.List;
 
+import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Order;
@@ -68,4 +69,12 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<List<Order>> queryOrders(Request<QueryOrderRequest> request);
+
+	/**
+	 * 根据订单号查询订单明细
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response<Order> queryOrderByOrderId(Request<Base> request);
 }

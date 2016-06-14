@@ -8,6 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.duantuke.basic.enums.SkuTypeEnum;
+import com.duantuke.basic.face.bean.RoomTypeInfo;
+import com.duantuke.basic.face.bean.SkuInfo;
+import com.duantuke.basic.face.bean.SkuRequest;
+import com.duantuke.basic.face.bean.SkuResponse;
+import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
@@ -36,9 +42,21 @@ public class CreateOrderHandler {
 	private OrderMapper orderMapper;
 	@Autowired
 	private OrderDetailMapper orderDetailMapper;
+	@Autowired
+	private SkuService skuService;
 
 	public void create(OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始创建订单");
+
+//		SkuRequest request = new SkuRequest();
+//		SkuResponse response = skuService.querySku(request);
+//		List<SkuInfo> skus = response.getList();
+//		for (SkuInfo s : skus) {
+//			if (s.getType().equals(SkuTypeEnum.roomtype.getCode())) {
+//				RoomTypeInfo r = (RoomTypeInfo) s.getInfo();
+//			}
+//		}
+
 		// 构建订单信息
 		Order order = buildOrder(context);
 

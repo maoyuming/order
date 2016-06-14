@@ -34,7 +34,7 @@ public class QueryOrderHandler {
 		Map<String, Object> params = buildParameters(request);
 
 		List<Order> orders = orderMapper.queryOrders(params);
-		
+
 		logger.info("订单查询成功");
 		return orders;
 	}
@@ -61,7 +61,7 @@ public class QueryOrderHandler {
 		params.put("endDate", request.getEndDate());
 		params.put("startNum", (request.getPageNo() - 1) * request.getPageSize());
 		params.put("pageSize", request.getPageSize());
-		logger.info("查询参数构建完成,参数明细:{}",JSON.toJSONString(params));
+		logger.info("查询参数构建完成,参数明细:{}", JSON.toJSONString(params));
 		return params;
 	}
 
@@ -103,5 +103,18 @@ public class QueryOrderHandler {
 		}
 
 		logger.info("请求参数验证通过");
+	}
+
+	/**
+	 * 根据订单号查询订单信息，包含明细
+	 * 
+	 * @param orderId
+	 * @return
+	 */
+	public Order queryOrderAndDetailsByOrderId(Long orderId) {
+		logger.info("开始查询订单");
+		Order order = orderMapper.selectOrderAndDetailsById(orderId);
+		logger.info("订单查询完成");
+		return order;
 	}
 }

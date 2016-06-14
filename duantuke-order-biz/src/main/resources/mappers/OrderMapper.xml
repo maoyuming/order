@@ -22,21 +22,24 @@
     <result column="upate_time" property="upateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="ResultMapWithOrderDetails" type="com.duantuke.order.model.Order" extends="BaseResultMap">
-    <collection property = "orderDetails" ofType = "com.duantuke.order.model.OrderDetail" javaType="java.util.ArrayList">
-		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="order_id" property="orderId" jdbcType="BIGINT" />
-		<result column="sku_id" property="skuId" jdbcType="BIGINT" />
-		<result column="sku_name" property="skuName" jdbcType="VARCHAR" />
-		<result column="sku_type" property="skuType" jdbcType="INTEGER" />
-		<result column="num" property="num" jdbcType="INTEGER" />
-		<result column="price" property="price" jdbcType="DECIMAL" />
-		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
-		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
-		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
-		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+  <resultMap id="ResultMapWithOrderDetails" type="com.duantuke.order.model.Order"
+	extends="BaseResultMap">
+	<collection property="orderDetails" 
+		ofType="com.duantuke.order.model.OrderDetail"
+		javaType="java.util.ArrayList">
+		<id column="detail_id" property="id" jdbcType="BIGINT" />
+	    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+	    <result column="sku_id" property="skuId" jdbcType="BIGINT" />
+	    <result column="sku_name" property="skuName" jdbcType="VARCHAR" />
+	    <result column="sku_type" property="skuType" jdbcType="INTEGER" />
+	    <result column="num" property="num" jdbcType="INTEGER" />
+	    <result column="price" property="price" jdbcType="DECIMAL" />
+	    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="detail_create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="detail_create_by" property="createBy" jdbcType="VARCHAR" />
+	    <result column="detail_update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="detail_update_by" property="updateBy" jdbcType="VARCHAR" />
 	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
@@ -355,5 +358,39 @@
 	    </trim>
 	    ORDER BY id DESC
 		LIMIT #{startNum, jdbcType=INTEGER} ,#{pageSize, jdbcType=INTEGER}
+  </select>
+  <select id="selectOrderAndDetailsById" resultMap="ResultMapWithOrderDetails" parameterType="java.lang.Long" >
+    SELECT 
+    	a.id,
+		a.type,
+		a.status,
+		a.pay_type,
+		a.pay_status,
+		a.total_price,
+		a.contact,
+		a.contact_phone,
+		a.customer_id,
+		a.promotion_id,
+		a.sales_id,
+		a.sales_name,
+		a.memo,
+		a.create_time,
+		a.create_by,
+		a.upate_time,
+		a.update_by,
+		b.id as detail_id,
+		b.order_id,
+		b.sku_id,
+		b.sku_name,
+		b.sku_type,
+		b.num,
+		b.create_time as detail_create_time,
+		b.create_by as detail_create_by,
+		b.update_time as detail_update_time,
+		b.update_by as detail_update_by
+    FROM orders AS a 
+    LEFT JOIN order_details AS b 
+    ON a.id = b.order_id 
+    WHERE a.id = #{id,jdbcType=BIGINT}
   </select>
 </mapper>

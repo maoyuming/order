@@ -11,6 +11,7 @@ import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CreateOrderHandler;
 import com.duantuke.order.handlers.QueryOrderHandler;
+import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Message;
@@ -24,7 +25,7 @@ import com.duantuke.order.service.OrderService;
 import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
 
-@Service
+@Service("orderService")
 public class OrderServiceImpl implements OrderService {
 
 	public static final LogUtil logger = new LogUtil(OrderServiceImpl.class);
@@ -103,10 +104,10 @@ public class OrderServiceImpl implements OrderService {
 			// 参数合法性校验
 			QueryOrderRequest queryOrderRequest = request.getData();
 			queryOrderHandler.validate(queryOrderRequest);
-			
+
 			// 执行查询操作
 			List<Order> orders = queryOrderHandler.queryOrders(queryOrderRequest);
-			
+
 			// 封装返回信息
 			response.setSuccess(true);
 			response.setData(orders);
@@ -123,6 +124,36 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		logger.info("订单查询全部完成,返回值:{}", JSON.toJSONString(response));
+		return response;
+	}
+
+	@Override
+	public Response<Order> queryOrderByOrderId(Request<Base> request) {
+		Response<Order> response = new Response<Order>();
+		try {
+			logger.info("接收到订单明细查询请求,入参:{}", JSON.toJSONString(request));
+			// 参数合法性校验
+			Base base = request.getData();
+			if (base == null || base.getOrderId() == null || base.getOrderId() < 1) {
+				throw new OrderException(OrderErrorEnum.paramsError);
+			}
+
+			// 执行查询操作
+			Order order = queryOrderHandler.queryOrderAndDetailsByOrderId(base.getOrderId());
+			// 封装返回信息
+			response.setSuccess(true);
+			response.setData(order);
+		} catch (OrderException e) {
+			logger.error("查询订单明细异常", e);
+			response.setSuccess(false);
+			response.setErrorCode(e.getErrorCode());
+			response.setErrorMessage(e.getErrorMsg());
+		} catch (Exception ex) {
+			logger.error("查询订单明细异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
 		return response;
 	}
 }

@@ -19,4 +19,6 @@ public interface OrderMapper {
     int updateByPrimaryKey(Order record);
     
     List<Order> queryOrders(Map<String, Object> params);
+    
+    Order selectOrderAndDetailsById(Long id);
 }

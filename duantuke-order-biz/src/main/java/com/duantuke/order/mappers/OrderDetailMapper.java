@@ -18,4 +18,6 @@ public interface OrderDetailMapper {
     int updateByPrimaryKey(OrderDetail record);
     
     void batchInsert(List<OrderDetail> orderDetails);
+    
+    List<OrderDetail> selectByOrderId(Long orderId);
 }
