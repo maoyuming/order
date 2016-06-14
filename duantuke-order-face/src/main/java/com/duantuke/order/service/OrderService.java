@@ -71,7 +71,7 @@ public interface OrderService {
 	Response<List<Order>> queryOrders(Request<QueryOrderRequest> request);
 
 	/**
-	 * 根据订单号查询订单明细
+	 * 根据订单号查询订单信息，包含订单明细
 	 * 
 	 * @param request
 	 * @return
