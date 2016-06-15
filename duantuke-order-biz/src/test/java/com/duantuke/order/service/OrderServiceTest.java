@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
+import com.duantuke.basic.enums.SkuTypeEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayTypeEnum;
 import com.duantuke.order.model.Base;
@@ -55,9 +56,9 @@ public class OrderServiceTest {
 		
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
-		orderDetail.setSkuId(10000l);
+		orderDetail.setSkuId(1l);
 		orderDetail.setSkuName("大床房");
-		orderDetail.setSkuType(1);
+		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
 		orderDetail.setNum(1);
 		orderDetail.setPrice(new BigDecimal("190"));
 		
@@ -68,9 +69,9 @@ public class OrderServiceTest {
 		orderDetails.add(orderDetail);
 		
 		orderDetail = new OrderDetail();
-		orderDetail.setSkuId(100002l);
+		orderDetail.setSkuId(2l);
 		orderDetail.setSkuName("标准房");
-		orderDetail.setSkuType(1);
+		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
 		orderDetail.setNum(1);
 		orderDetail.setPrice(new BigDecimal("200"));
 		orderDetail.setBeginTime(today);

@@ -2,6 +2,8 @@ package com.duantuke.order.model;
 
 import java.util.Date;
 
+import com.duantuke.basic.face.bean.SkuResponse;
+
 /**
  * 订单上下文
  * 
@@ -19,6 +21,11 @@ public class OrderContext<T> {
 	 * 订单
 	 */
 	private Order order;
+	
+	/**
+	 * sku信息
+	 */
+	private SkuResponse skuInfo;
 	
 	/**
 	 * 操作人
@@ -60,5 +67,13 @@ public class OrderContext<T> {
 
 	public void setCurrentTime(Date currentTime) {
 		this.currentTime = currentTime;
+	}
+
+	public SkuResponse getSkuInfo() {
+		return skuInfo;
+	}
+
+	public void setSkuInfo(SkuResponse skuInfo) {
+		this.skuInfo = skuInfo;
 	}
 }
