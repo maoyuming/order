@@ -11,9 +11,6 @@ import java.util.Date;
  *
  */
 public class Header implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4882140048672696514L;
 	/**
 	 * 时间

@@ -49,7 +49,7 @@ public class CreateOrderHandler {
 
 	public void create(OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始创建订单");
-		
+
 		// 构建订单信息
 		Order order = buildOrder(context);
 
@@ -180,11 +180,11 @@ public class CreateOrderHandler {
 		// 获取sku信息
 		SkuResponse skuResponse = getSkuInfo(order);
 		context.setSkuInfo(skuResponse);
-		
+
 		order.setSupplierId(skuResponse.getSupplierId());
 		order.setSupplierName(skuResponse.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
-		
+
 		logger.info("订单主信息构建完成");
 		return order;
 	}
@@ -209,10 +209,16 @@ public class CreateOrderHandler {
 		return orderDetails;
 	}
 
+	/**
+	 * 获取sku信息
+	 * 
+	 * @param order
+	 * @return
+	 */
 	private SkuResponse getSkuInfo(Order order) {
 		logger.info("开始获取sku信息");
 		List<OrderDetail> orderDetails = order.getOrderDetails();
-		
+
 		SkuRequest request = new SkuRequest();
 		request.setHotelId(order.getSupplierId());
 		Map<Integer, List<Long>> skuMap = new HashMap<Integer, List<Long>>();
@@ -221,7 +227,7 @@ public class CreateOrderHandler {
 			Integer skuType = orderDetail.getSkuType();
 			Date beginTime = orderDetail.getBeginTime();
 			Date endTime = orderDetail.getEndTime();
-			
+
 			if (skuMap.containsKey(skuType)) {
 				List<Long> skus = skuMap.get(skuType);
 				skus.add(skuId);
@@ -230,20 +236,20 @@ public class CreateOrderHandler {
 				skus.add(skuId);
 				skuMap.put(skuType, skus);
 			}
-			
+
 			// 目前逻辑暂定所有sku预抵时间和预离时间都相同，支取一个即可
 			if (request.getBeginTime() == null && request.getEndTime() == null && beginTime != null
 					&& endTime != null) {
-				request.setBeginTime(beginTime);
-				request.setEndTime(endTime);
+				 request.setBeginTime(beginTime);
+				 request.setEndTime(endTime);
 			}
 		}
 		request.setSkuMap(skuMap);
-		
+
 		logger.info("开始调用SkuService,参数:{}", JSON.toJSONString(request));
 		SkuResponse skuResponse = skuService.querySku(request);
-		
-		logger.info("sku信息获取完成,结果:{}",JSON.toJSONString(skuResponse));
+
+		logger.info("sku信息获取完成,结果:{}", JSON.toJSONString(skuResponse));
 		return skuResponse;
 	}
 }
