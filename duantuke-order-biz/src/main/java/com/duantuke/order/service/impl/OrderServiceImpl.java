@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Response<List<Order>> queryOrders(Request<QueryOrderRequest> request) {
-
+		
 		Response<List<Order>> response = new Response<List<Order>>();
 		try {
 			logger.info("接收到订单查询请求,入参:{}", JSON.toJSONString(request));
