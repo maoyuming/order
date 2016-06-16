@@ -9,6 +9,7 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>duantuke-order-web</artifactId>
+	<packaging>war</packaging>
 	<name>duantuke-order-web</name>
 	<url>http://maven.apache.org</url>
 	<properties>
