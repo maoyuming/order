@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuRequest;
 import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.basic.face.service.SkuService;
@@ -178,10 +179,11 @@ public class CreateOrderHandler {
 
 		// 获取sku信息
 		SkuResponse skuResponse = getSkuInfo(order);
-		context.setSkuInfo(skuResponse);
+		context.setSkuInfo(skuResponse);	
+		SkuInfo<?> skuInfo = skuResponse.getList().get(0);
 
-//		order.setSupplierId(skuResponse.getSupplierId());
-//		order.setSupplierName(skuResponse.getSupplierName());
+		order.setSupplierId(skuInfo.getSupplierId());
+		order.setSupplierName(skuInfo.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
 
 		logger.info("订单主信息构建完成");
@@ -196,6 +198,7 @@ public class CreateOrderHandler {
 	private List<OrderDetail> buildOrderDetail(Order order, OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始构建订单明细");
 		List<OrderDetail> orderDetails = order.getOrderDetails();
+		
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetail.setOrderId(order.getId());
 			orderDetail.setCreateTime(context.getCurrentTime());

@@ -70,7 +70,7 @@ public class OrderServiceTest {
 		orderDetail = new OrderDetail();
 		orderDetail.setSkuId(2l);
 		orderDetail.setSkuName("标准房");
-		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
+		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
 		orderDetail.setNum(1);
 		orderDetail.setPrice(new BigDecimal("200"));
 		orderDetail.setBeginTime(today);
