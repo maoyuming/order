@@ -22,7 +22,6 @@ import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
 import com.duantuke.order.mq.OrderProducter;
 import com.duantuke.order.service.OrderService;
-import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
 
 @Service("orderService")
@@ -51,7 +50,6 @@ public class OrderServiceImpl implements OrderService {
 			OrderContext<Request<CreateOrderRequest>> context = new OrderContext<Request<CreateOrderRequest>>();
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
-			context.setOperator(PropertyConfigurer.getProperty("system"));
 
 			// 开始创建订单
 			createOrderHandler.create(context);

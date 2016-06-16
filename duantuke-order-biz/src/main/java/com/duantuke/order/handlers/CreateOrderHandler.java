@@ -146,6 +146,7 @@ public class CreateOrderHandler {
 	 * @param orderDetails
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	@Deprecated
 	private BigDecimal calculateTotalPrice(List<OrderDetail> orderDetails) {
 		logger.info("开始计算订单总金额");
@@ -173,9 +174,7 @@ public class CreateOrderHandler {
 		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
 		order.setPayStatus(PayStatusEnum.waitForPayment.getId());
 		order.setCreateTime(context.getCurrentTime());
-		order.setUpateTime(context.getCurrentTime());
-		order.setCreateBy(context.getOperator());
-		order.setUpdateBy(context.getOperator());
+		order.setCreateBy(String.valueOf(order.getCustomerId()));
 
 		// 获取sku信息
 		SkuResponse skuResponse = getSkuInfo(order);
@@ -220,7 +219,6 @@ public class CreateOrderHandler {
 		List<OrderDetail> orderDetails = order.getOrderDetails();
 
 		SkuRequest request = new SkuRequest();
-		request.setHotelId(order.getSupplierId());
 		Map<Integer, List<Long>> skuMap = new HashMap<Integer, List<Long>>();
 		for (OrderDetail orderDetail : orderDetails) {
 			Long skuId = orderDetail.getSkuId();
