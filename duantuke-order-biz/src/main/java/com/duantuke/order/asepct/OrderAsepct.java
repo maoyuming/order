@@ -1,6 +1,5 @@
 package com.duantuke.order.asepct;
 
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -37,9 +36,8 @@ public class OrderAsepct {
 
 			Header header = request.getHeader();
 			if (header == null 
-					|| StringUtils.isBlank(header.getToken()) 
 					|| header.getTimeStamp() == null) {
-				logger.error("request验证失败，请检查token、timestamp");
+				logger.error("request验证失败，请检查timestamp");
 				throw new OrderException(OrderErrorEnum.paramsError);
 			}
 			

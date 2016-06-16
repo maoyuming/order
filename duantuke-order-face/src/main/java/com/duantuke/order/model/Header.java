@@ -16,10 +16,6 @@ public class Header implements Serializable {
 	 * 时间
 	 */
 	private Date timeStamp;
-	/**
-	 * 授权信息
-	 */
-	private String token;
 
 	public Date getTimeStamp() {
 		return timeStamp;
@@ -27,13 +23,5 @@ public class Header implements Serializable {
 
 	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
 	}
 }

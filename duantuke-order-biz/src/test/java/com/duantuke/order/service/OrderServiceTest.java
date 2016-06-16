@@ -44,7 +44,6 @@ public class OrderServiceTest {
 		Request<CreateOrderRequest> request = new Request<CreateOrderRequest>();
 		Header header = new Header();
 		header.setTimeStamp(new Date());
-		header.setToken("token");
 		request.setHeader(header);
 		
 		CreateOrderRequest createOrderRequest = new CreateOrderRequest();
@@ -92,7 +91,6 @@ public class OrderServiceTest {
 		Request<QueryOrderRequest> request = new Request<QueryOrderRequest>();
 		Header header = new Header();
 		header.setTimeStamp(new Date());
-		header.setToken("token");
 		request.setHeader(header);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -118,7 +116,6 @@ public class OrderServiceTest {
 		Request<Base> request = new Request<Base>();
 		Header header = new Header();
 		header.setTimeStamp(new Date());
-		header.setToken("token");
 		request.setHeader(header);
 		
 		Base base = new Base();
