@@ -180,8 +180,8 @@ public class CreateOrderHandler {
 		SkuResponse skuResponse = getSkuInfo(order);
 		context.setSkuInfo(skuResponse);
 
-		order.setSupplierId(skuResponse.getSupplierId());
-		order.setSupplierName(skuResponse.getSupplierName());
+//		order.setSupplierId(skuResponse.getSupplierId());
+//		order.setSupplierName(skuResponse.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
 
 		logger.info("订单主信息构建完成");
