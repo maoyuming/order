@@ -65,6 +65,8 @@ public class CancelOrderHandler extends AbstractOrderHandler {
 		Order order = context.getOrder();
 		order.setStatus(OrderStatusEnum.canceled.getId());
 		order.setCancelReason(cancelOrderRequest.getReason());
+		order.setUpateTime(context.getCurrentTime());
+		order.setUpdateBy(context.getOperator());
 
 		int result = orderMapper.cancelOrder(order);
 
