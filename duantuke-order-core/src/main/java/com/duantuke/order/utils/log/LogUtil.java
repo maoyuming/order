@@ -48,9 +48,9 @@ public class LogUtil {
 
 	private LogBean buildMessage(String format, Object... arguments) {
 		StringBuilder sb = new StringBuilder();
-		Object orderid = ThreadLocalContext.get("orderid");
+		Object orderid = ThreadLocalContext.get("orderId");
 		if (orderid != null) {
-			sb.append(",orderid = ");
+			sb.append(",orderId = ");
 			sb.append(String.valueOf(orderid));
 			arguments = ArrayUtils.add(arguments, orderid);
 		}
@@ -59,6 +59,12 @@ public class LogUtil {
 			sb.append(",supplierId = ");
 			sb.append(String.valueOf(hotelid));
 			arguments = ArrayUtils.add(arguments, hotelid);
+		}
+		Object customerId = ThreadLocalContext.get("customerId");
+		if (hotelid != null) {
+			sb.append(",customerId = ");
+			sb.append(String.valueOf(customerId));
+			arguments = ArrayUtils.add(arguments, customerId);
 		}
 
 		LogBean logBean = new LogBean();

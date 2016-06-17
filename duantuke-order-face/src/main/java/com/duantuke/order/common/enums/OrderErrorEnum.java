@@ -12,14 +12,10 @@ public enum OrderErrorEnum {
 	notfindHotel("11001", "酒店不存在。"),
 	roomNUll("13000","酒店房间已满,客官请下次再来."),
 	notfindHotelRoomtype("11002","酒店房型不存在。"),
-	
+    
 	// 订单错误信息
-	orderIdError("10001","订单号不正确"),
-	orderAlreadyCheckIn("10003","此订单已经入住"),
-    
-     //表单校验
-  	priceError("12000","订单价格错误"),
-    
+	orderCanceled("10001","订单已取消"),
+	
 	// 通用错误信息
 	customError("0","系统错误"),
 	DBError("100","数据库错误"),

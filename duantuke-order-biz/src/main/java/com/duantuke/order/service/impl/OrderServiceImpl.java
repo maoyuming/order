@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
+import com.duantuke.order.handlers.CancelOrderHandler;
 import com.duantuke.order.handlers.CreateOrderHandler;
 import com.duantuke.order.handlers.QueryOrderHandler;
 import com.duantuke.order.model.Base;
+import com.duantuke.order.model.CancelOrderRequest;
+import com.duantuke.order.model.CancelOrderResponse;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Message;
@@ -33,6 +36,8 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private QueryOrderHandler queryOrderHandler;
 	@Autowired
+	private CancelOrderHandler cancelOrderHandler;
+	@Autowired
 	private OrderProducter orderProducter;
 
 	@Override
@@ -46,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 			// 参数合法性校验
 			createOrderHandler.validate(createOrderRequest);
 
-			// 构建订单上下文
+			// 初始化订单上下文
 			OrderContext<Request<CreateOrderRequest>> context = new OrderContext<Request<CreateOrderRequest>>();
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
@@ -95,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Response<List<Order>> queryOrders(Request<QueryOrderRequest> request) {
-		
+
 		Response<List<Order>> response = new Response<List<Order>>();
 		try {
 			logger.info("接收到订单查询请求,入参:{}", JSON.toJSONString(request));
@@ -152,6 +157,62 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
+		return response;
+	}
+
+	@Override
+	public Response<CancelOrderResponse> cancel(Request<CancelOrderRequest> request) {
+		Response<CancelOrderResponse> response = new Response<CancelOrderResponse>();
+		// 初始化上下文
+		OrderContext<Request<CancelOrderRequest>> context = new OrderContext<Request<CancelOrderRequest>>();
+		try {
+			logger.info("接收到取消订单请求,入参:{}", JSON.toJSONString(request));
+			// 参数合法性校验
+			CancelOrderRequest cancelOrderRequest = request.getData();
+			if (cancelOrderRequest == null || cancelOrderRequest.getOrderId() == null
+					|| cancelOrderRequest.getOrderId() < 1) {
+				throw new OrderException(OrderErrorEnum.paramsError);
+			}
+			
+			// 设置订单上下文
+			context.setRequest(request);
+			context.setCurrentTime(new Date());
+
+			// 开始取消订单
+			cancelOrderHandler.cancel(context);
+
+			// 封装返回信息
+			Order order = context.getOrder();
+			response.setSuccess(true);
+			CancelOrderResponse cancelOrderResponse = new CancelOrderResponse();
+			cancelOrderResponse.setOrderId(order.getId());
+			cancelOrderResponse.setOrderStatus(order.getStatus());
+			response.setData(cancelOrderResponse);
+		} catch (OrderException e) {
+			// 特殊处理订单已取消异常，需返回true保证接口幂等性
+			OrderErrorEnum orderErrorEnum = e.getErrorEnum();
+			if (orderErrorEnum.getErrorCode().equals(OrderErrorEnum.orderCanceled.getErrorCode())) {
+				logger.warn("针对订单已取消的场景特殊处理返回值");
+				response.setSuccess(true);
+				Order order = context.getOrder();
+				CancelOrderResponse cancelOrderResponse = new CancelOrderResponse();
+				cancelOrderResponse.setOrderId(order.getId());
+				cancelOrderResponse.setOrderStatus(order.getStatus());
+				response.setData(cancelOrderResponse);
+			} else {
+				logger.error("取消订单异常", e);
+				response.setSuccess(false);
+				response.setErrorCode(e.getErrorCode());
+				response.setErrorMessage(e.getErrorMsg());
+			}
+		} catch (Exception ex) {
+			logger.error("取消订单异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
+		logger.info("取消订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
 }

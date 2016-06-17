@@ -35,8 +35,10 @@ public class Order implements Serializable{
 
 	private Long salesId;
 	
-	private Long salesName;
+	private String salesName;
 
+	private String cancelReason;
+	
 	private String memo;
 
 	private Date createTime;
@@ -201,11 +203,19 @@ public class Order implements Serializable{
 		this.salesId = salesId;
 	}
 
-	public Long getSalesName() {
+	public String getSalesName() {
 		return salesName;
 	}
 
-	public void setSalesName(Long salesName) {
+	public void setSalesName(String salesName) {
 		this.salesName = salesName;
+	}
+
+	public String getCancelReason() {
+		return cancelReason;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
 	}
 }

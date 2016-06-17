@@ -23,7 +23,6 @@ import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayStatusEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.mappers.OrderDetailMapper;
-import com.duantuke.order.mappers.OrderMapper;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
@@ -38,11 +37,9 @@ import com.duantuke.order.utils.log.LogUtil;
  * @since 1.0
  */
 @Service
-public class CreateOrderHandler {
+public class CreateOrderHandler extends AbstractOrderHandler{
 
 	private static final LogUtil logger = new LogUtil(CreateOrderHandler.class);
-	@Autowired
-	private OrderMapper orderMapper;
 	@Autowired
 	private OrderDetailMapper orderDetailMapper;
 	@Autowired

@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
-import com.duantuke.order.mappers.OrderMapper;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.QueryOrderRequest;
 import com.duantuke.order.utils.PropertyConfigurer;
@@ -23,11 +21,9 @@ import com.duantuke.order.utils.log.LogUtil;
  * @date 2016年6月12日
  */
 @Service
-public class QueryOrderHandler {
+public class QueryOrderHandler extends AbstractOrderHandler{
 
 	public static final LogUtil logger = new LogUtil(QueryOrderHandler.class);
-	@Autowired
-	private OrderMapper orderMapper;
 
 	public List<Order> queryOrders(QueryOrderRequest request) {
 		logger.info("开始查询订单");

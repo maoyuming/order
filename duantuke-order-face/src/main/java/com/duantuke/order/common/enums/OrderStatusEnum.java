@@ -27,7 +27,7 @@ public enum OrderStatusEnum {
 	 */
 	noshow(250, "用户未到店"),
 	/**
-	 * 渠道取消
+	 * 订单取消
 	 */
 	canceled(500, "取消");
 

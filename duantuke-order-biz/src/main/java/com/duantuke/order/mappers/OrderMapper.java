@@ -21,4 +21,6 @@ public interface OrderMapper {
     List<Order> queryOrders(Map<String, Object> params);
     
     Order selectOrderAndDetailsById(Long id);
+    
+    int cancelOrder(Order record);
 }

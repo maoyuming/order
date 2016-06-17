@@ -20,6 +20,8 @@ import com.duantuke.basic.enums.SkuTypeEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayTypeEnum;
 import com.duantuke.order.model.Base;
+import com.duantuke.order.model.CancelOrderRequest;
+import com.duantuke.order.model.CancelOrderResponse;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Header;
@@ -125,6 +127,22 @@ public class OrderServiceTest {
 		Response<Order> response = orderService.queryOrderByOrderId(request);
 		Order order = response.getData();
 		
+		System.out.println(JSON.toJSONString(response));
+	}
+	
+	@Test
+	public void testCancel(){
+		Request<CancelOrderRequest> request = new Request<CancelOrderRequest>();
+		Header header = new Header();
+		header.setTimeStamp(new Date());
+		request.setHeader(header);
+		
+		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
+		cancelOrderRequest.setOrderId(19l);
+		cancelOrderRequest.setReason("测试取消理由");
+		request.setData(cancelOrderRequest);
+		
+		Response<CancelOrderResponse> response = orderService.cancel(request);
 		System.out.println(JSON.toJSONString(response));
 	}
 }

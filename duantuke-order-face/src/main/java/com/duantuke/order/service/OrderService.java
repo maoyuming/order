@@ -3,6 +3,8 @@ package com.duantuke.order.service;
 import java.util.List;
 
 import com.duantuke.order.model.Base;
+import com.duantuke.order.model.CancelOrderRequest;
+import com.duantuke.order.model.CancelOrderResponse;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Order;
@@ -77,4 +79,12 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<Order> queryOrderByOrderId(Request<Base> request);
+	
+	/**
+	 * 取消订单
+	 *
+	 * @param request
+	 * @return
+	 */
+	public Response<CancelOrderResponse> cancel(Request<CancelOrderRequest> request);
 }

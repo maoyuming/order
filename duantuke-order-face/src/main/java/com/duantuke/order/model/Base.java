@@ -19,6 +19,10 @@ public class Base implements Serializable {
 	 * 供应商
 	 */
 	private Long supplierId;
+	/**
+	 * C端用户id
+	 */
+	private Long customerId;
 
 	public Long getOrderId() {
 		return orderId;
@@ -36,4 +40,11 @@ public class Base implements Serializable {
 		this.supplierId = supplierId;
 	}
 
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
 }

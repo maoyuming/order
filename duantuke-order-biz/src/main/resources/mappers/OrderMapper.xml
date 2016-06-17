@@ -16,6 +16,7 @@
     <result column="sales_name" property="salesName" jdbcType="VARCHAR" />
     <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="cancel_reason" property="cancelReason" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
@@ -44,7 +45,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, type, status, pay_type, pay_status, total_price, contact, contact_phone, customer_id, 
-    promotion_id, sales_id, sales_name, supplier_id, supplier_name, memo, create_time, create_by, upate_time, 
+    promotion_id, sales_id, sales_name, supplier_id, supplier_name, cancel_reason, memo, create_time, create_by, upate_time, 
     update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -62,14 +63,14 @@
       pay_type, pay_status, total_price, 
       contact, contact_phone, customer_id, 
       promotion_id, sales_id, sales_name, supplier_id, 
-      supplier_name, memo, create_time, 
+      supplier_name,cancel_reason, memo, create_time, 
       create_by, upate_time, update_by
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{payType,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, 
       #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
       #{promotionId,jdbcType=BIGINT}, #{salesId,jdbcType=BIGINT},#{salesName,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
-      #{supplierName,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{supplierName,jdbcType=VARCHAR}, #{cancel_reason,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
       )
   </insert>
@@ -117,6 +118,9 @@
       </if>
       <if test="supplierName != null" >
         supplier_name,
+      </if>
+       <if test="cancelReason != null" >
+        cancelReason,
       </if>
       <if test="memo != null" >
         memo,
@@ -177,6 +181,9 @@
       <if test="supplierName != null" >
         #{supplierName,jdbcType=VARCHAR},
       </if>
+      <if test="cancelReason != null" >
+        #{cancelReason,jdbcType=VARCHAR},
+      </if>
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
       </if>
@@ -236,6 +243,9 @@
       <if test="supplierName != null" >
         supplier_name = #{supplierName,jdbcType=VARCHAR},
       </if>
+      <if test="cancelReason != null" >
+        cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
@@ -269,6 +279,7 @@
       sales_name = #{salesName,jdbcType=VARCHAR},
       supplier_id = #{supplierId,jdbcType=BIGINT},
       supplier_name = #{supplierName,jdbcType=VARCHAR},
+      cancel_reason = #{cancelReason,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
@@ -290,6 +301,7 @@
 			a.promotion_id,
 			a.sales_id,
 			a.sales_name,
+			a.cancel_reason,
 			a.memo,
 			a.create_time,
 			a.create_by,
@@ -315,6 +327,7 @@
 			supplier_name,
 			sales_id,
 			sales_name,
+			cancel_reason,
 			memo,
 			create_time,
 			create_by,
@@ -373,6 +386,7 @@
 		a.promotion_id,
 		a.sales_id,
 		a.sales_name,
+		a.cancel_reason
 		a.memo,
 		a.create_time,
 		a.create_by,
@@ -393,4 +407,14 @@
     ON a.id = b.order_id 
     WHERE a.id = #{id,jdbcType=BIGINT}
   </select>
+   <update id="cancelOrder" parameterType="com.duantuke.order.model.Order" >
+    update orders
+    set status = #{status,jdbcType=INTEGER},
+      cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      upate_time = #{upateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>
