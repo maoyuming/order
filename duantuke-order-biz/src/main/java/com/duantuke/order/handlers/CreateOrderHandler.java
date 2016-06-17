@@ -1,22 +1,15 @@
 package com.duantuke.order.handlers;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.face.bean.SkuInfo;
-import com.duantuke.basic.face.bean.SkuRequest;
 import com.duantuke.basic.face.bean.SkuResponse;
-import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
@@ -42,8 +35,6 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 	private static final LogUtil logger = new LogUtil(CreateOrderHandler.class);
 	@Autowired
 	private OrderDetailMapper orderDetailMapper;
-	@Autowired
-	private SkuService skuService;
 
 	public void create(OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始创建订单");
@@ -175,7 +166,7 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 		order.setCreateBy(String.valueOf(order.getCustomerId()));
 
 		// 获取sku信息
-		SkuResponse skuResponse = getSkuInfo(order);
+		SkuResponse skuResponse = super.getSkuInfo(order);
 		context.setSkuInfo(skuResponse);	
 		SkuInfo<?> skuInfo = skuResponse.getList().get(0);
 
@@ -206,48 +197,5 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 
 		logger.info("订单明细构建完成");
 		return orderDetails;
-	}
-
-	/**
-	 * 获取sku信息
-	 * 
-	 * @param order
-	 * @return
-	 */
-	private SkuResponse getSkuInfo(Order order) {
-		logger.info("开始获取sku信息");
-		List<OrderDetail> orderDetails = order.getOrderDetails();
-
-		SkuRequest request = new SkuRequest();
-		Map<Integer, List<Long>> skuMap = new HashMap<Integer, List<Long>>();
-		for (OrderDetail orderDetail : orderDetails) {
-			Long skuId = orderDetail.getSkuId();
-			Integer skuType = orderDetail.getSkuType();
-			Date beginTime = orderDetail.getBeginTime();
-			Date endTime = orderDetail.getEndTime();
-
-			if (skuMap.containsKey(skuType)) {
-				List<Long> skus = skuMap.get(skuType);
-				skus.add(skuId);
-			} else {
-				List<Long> skus = new ArrayList<Long>();
-				skus.add(skuId);
-				skuMap.put(skuType, skus);
-			}
-
-			// 目前逻辑暂定所有sku预抵时间和预离时间都相同，支取一个即可
-			if (request.getBeginTime() == null && request.getEndTime() == null && beginTime != null
-					&& endTime != null) {
-				 request.setBeginTime(beginTime);
-				 request.setEndTime(endTime);
-			}
-		}
-		request.setSkuMap(skuMap);
-
-		logger.info("开始调用SkuService,参数:{}", JSON.toJSONString(request));
-		SkuResponse skuResponse = skuService.querySku(request);
-
-		logger.info("sku信息获取完成,结果:{}", JSON.toJSONString(skuResponse));
-		return skuResponse;
 	}
 }

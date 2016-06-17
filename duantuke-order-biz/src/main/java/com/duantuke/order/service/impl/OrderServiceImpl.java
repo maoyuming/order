@@ -44,6 +44,8 @@ public class OrderServiceImpl implements OrderService {
 	public Response<CreateOrderResponse> create(Request<CreateOrderRequest> request) {
 
 		Response<CreateOrderResponse> response = new Response<CreateOrderResponse>();
+		// 初始化订单上下文
+		OrderContext<Request<CreateOrderRequest>> context = new OrderContext<Request<CreateOrderRequest>>();
 		try {
 			logger.info("接收到订单创建请求,入参:{}", JSON.toJSONString(request));
 
@@ -51,16 +53,11 @@ public class OrderServiceImpl implements OrderService {
 			// 参数合法性校验
 			createOrderHandler.validate(createOrderRequest);
 
-			// 初始化订单上下文
-			OrderContext<Request<CreateOrderRequest>> context = new OrderContext<Request<CreateOrderRequest>>();
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
 
 			// 开始创建订单
 			createOrderHandler.create(context);
-
-			// 发送消息
-			orderProducter.sendMessage(buildMessage(context.getOrder()));
 
 			// 封装返回信息
 			CreateOrderResponse createOrderResponse = new CreateOrderResponse();
@@ -79,6 +76,9 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
 
+		// 发送消息
+		orderProducter.sendCreatedMessage(buildMessage(context.getOrder()));
+		
 		logger.info("订单创建全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
@@ -173,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
 					|| cancelOrderRequest.getOrderId() < 1) {
 				throw new OrderException(OrderErrorEnum.paramsError);
 			}
-			
+
 			// 设置订单上下文
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
@@ -211,6 +211,9 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
+
+		// 发送消息
+		orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
 
 		logger.info("取消订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;

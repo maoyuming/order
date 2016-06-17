@@ -1,7 +1,8 @@
 package com.duantuke.order.model;
 
 /**
- * 订单消息
+ * 订单消息模型
+ * 
  * @author 须俊杰
  * @date 2016年6月12日
  */
