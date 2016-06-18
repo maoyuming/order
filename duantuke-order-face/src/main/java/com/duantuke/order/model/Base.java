@@ -20,9 +20,13 @@ public class Base implements Serializable {
 	 */
 	private Long supplierId;
 	/**
-	 * 用户id
+	 * 操作人id
 	 */
-	private Long operator;
+	private String operatorId;
+	/**
+	 * 操作人名称
+	 */
+	private String operatorName;
 
 	public Long getOrderId() {
 		return orderId;
@@ -40,12 +44,19 @@ public class Base implements Serializable {
 		this.supplierId = supplierId;
 	}
 
-	public Long getOperator() {
-		return operator;
+	public String getOperatorId() {
+		return operatorId;
 	}
 
-	public void setOperator(Long operator) {
-		this.operator = operator;
+	public void setOperatorId(String operatorId) {
+		this.operatorId = operatorId;
 	}
 
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
+	}
 }

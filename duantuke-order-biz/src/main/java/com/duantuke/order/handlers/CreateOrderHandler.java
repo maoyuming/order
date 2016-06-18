@@ -190,9 +190,7 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetail.setOrderId(order.getId());
 			orderDetail.setCreateTime(context.getCurrentTime());
-			orderDetail.setCreateBy(context.getOperator());
-			orderDetail.setUpdateTime(context.getCurrentTime());
-			orderDetail.setUpdateBy(context.getOperator());
+			orderDetail.setCreateBy(context.getOperatorId()+"("+context.getOperatorName()+")");
 		}
 
 		logger.info("订单明细构建完成");

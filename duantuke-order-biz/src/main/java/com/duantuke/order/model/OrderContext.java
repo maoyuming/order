@@ -21,17 +21,21 @@ public class OrderContext<T> {
 	 * 订单
 	 */
 	private Order order;
-	
+
 	/**
 	 * sku信息
 	 */
 	private SkuResponse skuInfo;
-	
+
 	/**
-	 * 操作人
+	 * 操作人id
 	 */
-	private String operator;
-	
+	private String operatorId;
+	/**
+	 * 操作人姓名
+	 */
+	private String operatorName;
+
 	/**
 	 * 当前时间
 	 */
@@ -53,12 +57,20 @@ public class OrderContext<T> {
 		this.order = order;
 	}
 
-	public String getOperator() {
-		return operator;
+	public String getOperatorId() {
+		return operatorId;
 	}
 
-	public void setOperator(String operator) {
-		this.operator = operator;
+	public void setOperatorId(String operatorId) {
+		this.operatorId = operatorId;
+	}
+
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
 	}
 
 	public Date getCurrentTime() {

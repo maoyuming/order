@@ -180,7 +180,8 @@ public class OrderServiceImpl implements OrderService {
 			// 设置订单上下文
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
-			context.setOperator(String.valueOf(cancelOrderRequest.getOperator()));
+			context.setOperatorId(cancelOrderRequest.getOperatorId());
+			context.setOperatorName(cancelOrderRequest.getOperatorName());
 
 			// 开始取消订单
 			cancelOrderHandler.cancel(context);
@@ -240,7 +241,8 @@ public class OrderServiceImpl implements OrderService {
 			// 设置订单上下文
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
-			context.setOperator(String.valueOf(base.getOperator()));
+			context.setOperatorId(base.getOperatorId());
+			context.setOperatorName(base.getOperatorName());
 
 			// 开始确认订单
 			updateOrderHandler.confirm(context);

@@ -34,7 +34,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		Order order = context.getOrder();
 		order.setStatus(OrderStatusEnum.confirmed.getId());
 		order.setUpateTime(context.getCurrentTime());
-		order.setUpdateBy(context.getOperator());
+		order.setUpdateBy(context.getOperatorId()+"("+context.getOperatorName()+")");
 		int result = orderMapper.confirmOrder(order);
 
 		logger.info("订单确认完成,结果:{}", result);
