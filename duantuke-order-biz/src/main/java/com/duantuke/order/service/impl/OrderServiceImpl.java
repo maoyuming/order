@@ -177,6 +177,7 @@ public class OrderServiceImpl implements OrderService {
 			// 设置订单上下文
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
+			context.setOperator(String.valueOf(cancelOrderRequest.getOperator()));
 
 			// 开始取消订单
 			cancelOrderHandler.cancel(context);
