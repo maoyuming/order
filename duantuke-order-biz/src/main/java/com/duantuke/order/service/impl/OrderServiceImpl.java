@@ -12,6 +12,7 @@ import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CancelOrderHandler;
 import com.duantuke.order.handlers.CreateOrderHandler;
 import com.duantuke.order.handlers.QueryOrderHandler;
+import com.duantuke.order.handlers.UpdateOrderHandler;
 import com.duantuke.order.model.Base;
 import com.duantuke.order.model.CancelOrderRequest;
 import com.duantuke.order.model.CancelOrderResponse;
@@ -37,6 +38,8 @@ public class OrderServiceImpl implements OrderService {
 	private QueryOrderHandler queryOrderHandler;
 	@Autowired
 	private CancelOrderHandler cancelOrderHandler;
+	@Autowired
+	private UpdateOrderHandler updateOrderHandler;
 	@Autowired
 	private OrderProducter orderProducter;
 
@@ -217,6 +220,60 @@ public class OrderServiceImpl implements OrderService {
 		orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
 
 		logger.info("取消订单全部执行完成,返回值:{}", JSON.toJSONString(response));
+		return response;
+	}
+
+	@Override
+	public Response<Order> confirm(Request<Base> request) {
+		Response<Order> response = new Response<Order>();
+		// 初始化上下文
+		OrderContext<Request<Base>> context = new OrderContext<Request<Base>>();
+		try {
+			logger.info("接收到确认订单请求,入参:{}", JSON.toJSONString(request));
+			// 参数合法性校验
+			Base base = request.getData();
+			if (base == null || base.getOrderId() == null
+					|| base.getOrderId() < 1) {
+				throw new OrderException(OrderErrorEnum.paramsError);
+			}
+
+			// 设置订单上下文
+			context.setRequest(request);
+			context.setCurrentTime(new Date());
+			context.setOperator(String.valueOf(base.getOperator()));
+
+			// 开始确认订单
+			updateOrderHandler.confirm(context);
+			
+			// 封装返回信息
+			Order order = context.getOrder();
+			response.setSuccess(true);
+			response.setData(order);
+		} catch (OrderException e) {
+			// 特殊处理订单已取消异常，需返回true保证接口幂等性
+			OrderErrorEnum orderErrorEnum = e.getErrorEnum();
+			if (orderErrorEnum.getErrorCode().equals(OrderErrorEnum.orderConfirmed.getErrorCode())) {
+				logger.warn("针对订单已确认的场景特殊处理返回值");
+				response.setSuccess(true);
+				Order order = context.getOrder();
+				response.setData(order);
+			} else {
+				logger.error("确认订单异常", e);
+				response.setSuccess(false);
+				response.setErrorCode(e.getErrorCode());
+				response.setErrorMessage(e.getErrorMsg());
+			}
+		} catch (Exception ex) {
+			logger.error("确认订单异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
+		// 发送消息
+		orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
+
+		logger.info("确认订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
 }

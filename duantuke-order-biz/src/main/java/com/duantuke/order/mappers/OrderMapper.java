@@ -23,4 +23,6 @@ public interface OrderMapper {
     Order selectOrderAndDetailsById(Long id);
     
     int cancelOrder(Order record);
+    
+    int confirmOrder(Order record);
 }

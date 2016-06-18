@@ -15,6 +15,7 @@ public enum OrderErrorEnum {
     
 	// 订单错误信息
 	orderCanceled("10001","订单已取消"),
+	orderConfirmed("10002","订单已确认"),
 	
 	// 通用错误信息
 	customError("0","系统错误"),

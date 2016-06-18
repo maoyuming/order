@@ -36,4 +36,14 @@ public class OrderProducter {
 	public void sendCanceledMessage(String message) {
 		logger.info("取消订单消息报文：{}", message);
 	}
+	
+	/**
+	 * 订单确认消息
+	 *
+	 * @param message
+	 */
+	@MkTopicProducer(topic = "order_confirmed", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	public void sendConfirmedMessage(String message) {
+		logger.info("确认订单消息报文：{}", message);
+	}
 }

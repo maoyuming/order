@@ -86,5 +86,13 @@ public interface OrderService {
 	 * @param request
 	 * @return
 	 */
-	public Response<CancelOrderResponse> cancel(Request<CancelOrderRequest> request);
+	Response<CancelOrderResponse> cancel(Request<CancelOrderRequest> request);
+	
+	/**
+	 * 订单确认
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response<Order> confirm(Request<Base> request);
 }
