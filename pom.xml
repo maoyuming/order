@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.duantuke</groupId>
-	<artifactId>duantuke_order</artifactId>
+	<artifactId>duantuke-order</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0</version>
-	<name>duantuke_order</name>
+	<name>duantuke-order</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -311,7 +311,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>duantuke_order</finalName>
+		<finalName>duantuke-order</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
