@@ -60,11 +60,11 @@ public class LogUtil {
 			sb.append(String.valueOf(hotelid));
 			arguments = ArrayUtils.add(arguments, hotelid);
 		}
-		Object customerId = ThreadLocalContext.get("customerId");
-		if (hotelid != null) {
-			sb.append(",customerId = ");
-			sb.append(String.valueOf(customerId));
-			arguments = ArrayUtils.add(arguments, customerId);
+		Object operator = ThreadLocalContext.get("operator");
+		if (operator != null) {
+			sb.append(",operator = ");
+			sb.append(String.valueOf(operator));
+			arguments = ArrayUtils.add(arguments, operator);
 		}
 
 		LogBean logBean = new LogBean();
