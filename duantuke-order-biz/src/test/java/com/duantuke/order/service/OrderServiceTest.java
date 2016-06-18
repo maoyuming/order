@@ -155,4 +155,19 @@ public class OrderServiceTest {
 		Response<Order> response = orderService.confirm(request);
 		System.out.println(JSON.toJSONString(response));
 	}
+
+	@Test
+	public void testAutoFinish() {
+		Request<Base> request = new Request<Base>();
+		Header header = new Header();
+		header.setTimeStamp(new Date());
+		request.setHeader(header);
+
+		Base base = new Base();
+		base.setOperatorId("OrderFinishWorker");
+		request.setData(base);
+
+		Response<String> response = orderService.autoFinish(request);
+		System.out.println(JSON.toJSONString(response));
+	}
 }

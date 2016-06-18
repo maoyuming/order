@@ -442,11 +442,40 @@
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="confirmOrder" parameterType="com.duantuke.order.model.Order" >
+  <update id="updateOrderStatus" parameterType="com.duantuke.order.model.Order" >
     update orders
     set status = #{status,jdbcType=INTEGER},
       upate_time = #{upateTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="queryOrdersByEndTime" resultMap="BaseResultMap" parameterType="map" >
+		SELECT 
+			id,
+			type,
+			status,
+			pay_type,
+			pay_status,
+			total_price,
+			contact,
+			contact_phone,
+			customer_id,
+			promotion_id,
+			supplier_id,
+			supplier_name,
+			sales_id,
+			sales_name,
+			begin_time,
+			end_time,
+			cancel_reason,
+			memo,
+			create_time,
+			create_by,
+			upate_time,
+			update_by
+		FROM orders 
+		WHERE end_time &lt; #{endTime,jdbcType=TIMESTAMP}
+		AND status = 50 
+	    ORDER BY id DESC
+  </select>
 </mapper>

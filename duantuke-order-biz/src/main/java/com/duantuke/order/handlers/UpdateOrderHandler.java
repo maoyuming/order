@@ -1,9 +1,13 @@
 package com.duantuke.order.handlers;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.exception.OrderException;
@@ -37,7 +41,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		order.setStatus(OrderStatusEnum.confirmed.getId());
 		order.setUpateTime(context.getCurrentTime());
 		order.setUpdateBy(formatOperator(context));
-		int result = orderMapper.confirmOrder(order);
+		int result = orderMapper.updateOrderStatus(order);
 
 		logger.info("订单确认完成,结果:{}", result);
 	}
@@ -61,8 +65,33 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 
 		logger.info("确认订单业务合法性验证通过");
 	}
-	
-	public List<Order> finish(){
-		return null;
+
+	/**
+	 * 订单自动完成<br>
+	 * 此接口由订单完成worker触发，批量修改过了预离时间的订单，统一改成完成
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public List<Order> autoFinish(OrderContext<Request<Base>> context) {
+		logger.info("开始处理可完成的订单");
+		Date now = new Date();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("endTime", now);
+		logger.info("开始查询待完成的订单,参数:{}", JSON.toJSONString(params));
+		List<Order> orders = orderMapper.queryOrdersByEndTime(params);
+		logger.info("待完成的订单查询完成,结果:{}", JSON.toJSONString(orders));
+
+		// 执行完成操作
+		for (Order order : orders) {
+			order.setStatus(OrderStatusEnum.finished.getId());
+			order.setUpateTime(now);
+			order.setUpdateBy(formatOperator(context));
+			int result = orderMapper.updateOrderStatus(order);
+			logger.info("订单[{}]执行完成操作,结果:{}", order.getId(), result);
+		}
+
+		logger.info("订单处理完成");
+		return orders;
 	}
 }

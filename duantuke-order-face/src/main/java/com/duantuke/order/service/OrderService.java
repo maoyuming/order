@@ -102,5 +102,5 @@ public interface OrderService {
 	 * @param request
 	 * @return
 	 */
-	Response<?> autoFinish(Request<Base> request);
+	Response<String> autoFinish(Request<Base> request);
 }

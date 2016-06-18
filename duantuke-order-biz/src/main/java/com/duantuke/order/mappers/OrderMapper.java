@@ -24,5 +24,7 @@ public interface OrderMapper {
     
     int cancelOrder(Order record);
     
-    int confirmOrder(Order record);
+    int updateOrderStatus(Order record);
+    
+    List<Order> queryOrdersByEndTime(Map<String, Object> params);
 }

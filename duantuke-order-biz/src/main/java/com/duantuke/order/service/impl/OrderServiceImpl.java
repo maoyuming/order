@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
 		// 发送消息
 		orderProducter.sendCreatedMessage(buildMessage(context.getOrder()));
-		
+
 		logger.info("订单创建全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
@@ -233,8 +233,7 @@ public class OrderServiceImpl implements OrderService {
 			logger.info("接收到确认订单请求,入参:{}", JSON.toJSONString(request));
 			// 参数合法性校验
 			Base base = request.getData();
-			if (base == null || base.getOrderId() == null
-					|| base.getOrderId() < 1) {
+			if (base == null || base.getOrderId() == null || base.getOrderId() < 1) {
 				throw new OrderException(OrderErrorEnum.paramsError);
 			}
 
@@ -246,7 +245,7 @@ public class OrderServiceImpl implements OrderService {
 
 			// 开始确认订单
 			updateOrderHandler.confirm(context);
-			
+
 			// 封装返回信息
 			Order order = context.getOrder();
 			response.setSuccess(true);
@@ -294,9 +293,13 @@ public class OrderServiceImpl implements OrderService {
 			context.setOperatorId(base.getOperatorId());
 			context.setOperatorName(base.getOperatorName());
 
-			// 开始确认订单
-			updateOrderHandler.confirm(context);
-			
+			// 开始处理
+			List<Order> orders = updateOrderHandler.autoFinish(context);
+			// 发送消息
+			for (Order order : orders) {
+				orderProducter.sendFinishedMessage(buildMessage(order));
+			}
+
 			// 封装返回信息
 			response.setSuccess(true);
 			response.setData(null);
@@ -311,9 +314,6 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
-
-		// 发送消息
-		orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
 
 		logger.info("自动完成订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
