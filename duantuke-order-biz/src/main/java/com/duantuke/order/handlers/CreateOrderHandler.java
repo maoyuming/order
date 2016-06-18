@@ -88,6 +88,12 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 		if (StringUtils.isBlank(order.getContactPhone())) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "联系人电话不能为空");
 		}
+		if (order.getBeginTime() == null) {
+			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "预抵时间不能为空");
+		}
+		if (order.getEndTime() == null) {
+			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "预离时间不能为空");
+		}
 		logger.info("订单主信息验证通过");
 	}
 
@@ -117,12 +123,6 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 			}
 			if (orderDetail.getPrice() == null) {
 				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "单价不能为空");
-			}
-			if (orderDetail.getBeginTime() == null) {
-				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "预抵时间不能为空");
-			}
-			if (orderDetail.getEndTime() == null) {
-				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "预离时间不能为空");
 			}
 		}
 

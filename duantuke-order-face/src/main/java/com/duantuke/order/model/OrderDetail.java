@@ -22,10 +22,6 @@ public class OrderDetail implements Serializable{
 
     private BigDecimal price;
 
-    private Date beginTime;
-
-    private Date endTime;
-
     private Date createTime;
 
     private String createBy;
@@ -88,22 +84,6 @@ public class OrderDetail implements Serializable{
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Date getBeginTime() {
-        return beginTime;
-    }
-
-    public void setBeginTime(Date beginTime) {
-        this.beginTime = beginTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
     }
 
     public Date getCreateTime() {

@@ -46,4 +46,14 @@ public class OrderProducter {
 	public void sendConfirmedMessage(String message) {
 		logger.info("确认订单消息报文：{}", message);
 	}
+	
+	/**
+	 * 订单完成消息
+	 *
+	 * @param message
+	 */
+	@MkTopicProducer(topic = "order_finished", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	public void sendFinishedMessage(String message) {
+		logger.info("订单完成消息报文：{}", message);
+	}
 }

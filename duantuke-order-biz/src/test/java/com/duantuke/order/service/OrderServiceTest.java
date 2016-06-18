@@ -48,12 +48,16 @@ public class OrderServiceTest {
 		header.setTimeStamp(new Date());
 		request.setHeader(header);
 
+		Date today = new Date();
+		Date tomorrow = DateUtils.addDays(today, 1);
 		CreateOrderRequest createOrderRequest = new CreateOrderRequest();
 		Order order = new Order();
 		order.setPayType(PayTypeEnum.prepay.getId());
 		order.setContact("张三");
 		order.setContactPhone("13333333333");
 		order.setMemo("尽量安排无烟房");
+		order.setBeginTime(today);
+		order.setEndTime(tomorrow);
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
@@ -62,11 +66,6 @@ public class OrderServiceTest {
 		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
 		orderDetail.setNum(1);
 		orderDetail.setPrice(new BigDecimal("190"));
-
-		Date today = new Date();
-		Date tomorrow = DateUtils.addDays(today, 1);
-		orderDetail.setBeginTime(today);
-		orderDetail.setEndTime(tomorrow);
 		orderDetails.add(orderDetail);
 
 		orderDetail = new OrderDetail();
@@ -75,8 +74,6 @@ public class OrderServiceTest {
 		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
 		orderDetail.setNum(1);
 		orderDetail.setPrice(new BigDecimal("200"));
-		orderDetail.setBeginTime(today);
-		orderDetail.setEndTime(tomorrow);
 		orderDetails.add(orderDetail);
 
 		order.setOrderDetails(orderDetails);

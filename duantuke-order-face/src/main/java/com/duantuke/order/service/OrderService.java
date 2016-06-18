@@ -79,7 +79,7 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<Order> queryOrderByOrderId(Request<Base> request);
-	
+
 	/**
 	 * 取消订单
 	 *
@@ -87,7 +87,7 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<CancelOrderResponse> cancel(Request<CancelOrderRequest> request);
-	
+
 	/**
 	 * 订单确认
 	 * 
@@ -95,4 +95,12 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<Order> confirm(Request<Base> request);
+
+	/**
+	 * 订单自动完成接口(仅供worker调用)
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response<?> autoFinish(Request<Base> request);
 }

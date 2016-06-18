@@ -17,7 +17,7 @@
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, order_id, sku_id, sku_name, sku_type, num, price, begin_time, end_time, create_time, 
+    id, order_id, sku_id, sku_name, sku_type, num, price, create_time, 
     create_by, update_time, update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -38,8 +38,7 @@
       update_by)
     values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{skuId,jdbcType=BIGINT}, 
       #{skuName,jdbcType=VARCHAR}, #{skuType,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, 
-      #{price,jdbcType=DECIMAL}, #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{price,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.duantuke.order.model.OrderDetail" >
@@ -65,12 +64,6 @@
       </if>
       <if test="price != null" >
         price,
-      </if>
-      <if test="beginTime != null" >
-        begin_time,
-      </if>
-      <if test="endTime != null" >
-        end_time,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -107,12 +100,6 @@
       <if test="price != null" >
         #{price,jdbcType=DECIMAL},
       </if>
-      <if test="beginTime != null" >
-        #{beginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null" >
-        #{endTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -148,12 +135,6 @@
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
       </if>
-      <if test="beginTime != null" >
-        begin_time = #{beginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null" >
-        end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -177,8 +158,6 @@
       sku_type = #{skuType,jdbcType=INTEGER},
       num = #{num,jdbcType=INTEGER},
       price = #{price,jdbcType=DECIMAL},
-      begin_time = #{beginTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -189,8 +168,7 @@
 		INSERT INTO order_details (
 			order_id, sku_id,
 			sku_name, sku_type,
-			num,price, begin_time, end_time,
-			create_time,
+			num,price, create_time,
 			create_by, update_time,
 			update_by
 		) VALUES
@@ -201,8 +179,6 @@
 			#{item.skuType,jdbcType=INTEGER},
 			#{item.num,jdbcType=INTEGER},
 			#{item.price,jdbcType=DECIMAL},
-			#{item.beginTime,jdbcType=TIMESTAMP},
-			#{item.endTime,jdbcType=TIMESTAMP},
 			#{item.createTime,jdbcType=TIMESTAMP},
 			#{item.createBy,jdbcType=VARCHAR},
 			#{item.updateTime,jdbcType=TIMESTAMP},

@@ -32,6 +32,10 @@ public class Order implements Serializable{
 	private Long supplierId;
 
     private String supplierName;
+    
+    private Date beginTime;
+    
+    private Date endTime;
 
 	private Long salesId;
 	
@@ -217,5 +221,21 @@ public class Order implements Serializable{
 
 	public void setCancelReason(String cancelReason) {
 		this.cancelReason = cancelReason;
+	}
+
+	public Date getBeginTime() {
+		return beginTime;
+	}
+
+	public void setBeginTime(Date beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 }

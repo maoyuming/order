@@ -1,5 +1,7 @@
 package com.duantuke.order.handlers;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.duantuke.order.common.enums.OrderErrorEnum;
@@ -34,7 +36,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		Order order = context.getOrder();
 		order.setStatus(OrderStatusEnum.confirmed.getId());
 		order.setUpateTime(context.getCurrentTime());
-		order.setUpdateBy(context.getOperatorId()+"("+context.getOperatorName()+")");
+		order.setUpdateBy(formatOperator(context));
 		int result = orderMapper.confirmOrder(order);
 
 		logger.info("订单确认完成,结果:{}", result);
@@ -58,5 +60,9 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		}
 
 		logger.info("确认订单业务合法性验证通过");
+	}
+	
+	public List<Order> finish(){
+		return null;
 	}
 }

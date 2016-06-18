@@ -1,11 +1,11 @@
 package com.duantuke.order.handlers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -14,6 +14,7 @@ import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.order.mappers.OrderMapper;
 import com.duantuke.order.model.Order;
+import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.OrderDetail;
 import com.duantuke.order.utils.log.LogUtil;
 
@@ -37,7 +38,7 @@ public abstract class AbstractOrderHandler {
 		logger.info("订单信息查询完成,结果:{}", JSON.toJSONString(order));
 		return order;
 	}
-	
+
 	/**
 	 * 获取sku信息
 	 * 
@@ -49,12 +50,12 @@ public abstract class AbstractOrderHandler {
 		List<OrderDetail> orderDetails = order.getOrderDetails();
 
 		SkuRequest request = new SkuRequest();
+		request.setBeginTime(order.getBeginTime());
+		request.setEndTime(order.getEndTime());
 		Map<Integer, List<Long>> skuMap = new HashMap<Integer, List<Long>>();
 		for (OrderDetail orderDetail : orderDetails) {
 			Long skuId = orderDetail.getSkuId();
 			Integer skuType = orderDetail.getSkuType();
-			Date beginTime = orderDetail.getBeginTime();
-			Date endTime = orderDetail.getEndTime();
 
 			if (skuMap.containsKey(skuType)) {
 				List<Long> skus = skuMap.get(skuType);
@@ -64,13 +65,6 @@ public abstract class AbstractOrderHandler {
 				skus.add(skuId);
 				skuMap.put(skuType, skus);
 			}
-
-			// 目前逻辑暂定所有sku预抵时间和预离时间都相同，支取一个即可
-			if (request.getBeginTime() == null && request.getEndTime() == null && beginTime != null
-					&& endTime != null) {
-				 request.setBeginTime(beginTime);
-				 request.setEndTime(endTime);
-			}
 		}
 		request.setSkuMap(skuMap);
 
@@ -79,5 +73,23 @@ public abstract class AbstractOrderHandler {
 
 		logger.info("sku信息获取完成,结果:{}", JSON.toJSONString(skuResponse));
 		return skuResponse;
+	}
+
+	/**
+	 * 格式化操作人信息
+	 * 
+	 * @param context
+	 * @return
+	 */
+	protected String formatOperator(OrderContext<?> context) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(context.getOperatorId());
+		if (StringUtils.isNotBlank(context.getOperatorName())) {
+			sb.append("(");
+			sb.append(context.getOperatorName());
+			sb.append(")");
+		}
+
+		return sb.toString();
 	}
 }

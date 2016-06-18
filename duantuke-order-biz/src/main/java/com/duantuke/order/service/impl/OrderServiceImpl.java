@@ -278,4 +278,44 @@ public class OrderServiceImpl implements OrderService {
 		logger.info("确认订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
+
+	@Override
+	public Response<String> autoFinish(Request<Base> request) {
+		Response<String> response = new Response<String>();
+		// 初始化上下文
+		OrderContext<Request<Base>> context = new OrderContext<Request<Base>>();
+		try {
+			logger.info("接收到自动完成订单请求,入参:{}", JSON.toJSONString(request));
+
+			Base base = request.getData();
+			// 设置订单上下文
+			context.setRequest(request);
+			context.setCurrentTime(new Date());
+			context.setOperatorId(base.getOperatorId());
+			context.setOperatorName(base.getOperatorName());
+
+			// 开始确认订单
+			updateOrderHandler.confirm(context);
+			
+			// 封装返回信息
+			response.setSuccess(true);
+			response.setData(null);
+		} catch (OrderException e) {
+			logger.error("自动完成订单异常", e);
+			response.setSuccess(false);
+			response.setErrorCode(e.getErrorCode());
+			response.setErrorMessage(e.getErrorMsg());
+		} catch (Exception ex) {
+			logger.error("自动订单异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
+		// 发送消息
+		orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
+
+		logger.info("自动完成订单全部执行完成,返回值:{}", JSON.toJSONString(response));
+		return response;
+	}
 }
