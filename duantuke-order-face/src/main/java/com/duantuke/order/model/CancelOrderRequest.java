@@ -1,7 +1,5 @@
 package com.duantuke.order.model;
 
-import com.duantuke.order.common.enums.CancelTypeEnum;
-
 /**
  * 取消订单请求参数
  * 
@@ -19,7 +17,7 @@ public class CancelOrderRequest extends Base {
 	/**
 	 * 取消类型
 	 */
-	private CancelTypeEnum cancelTypeEnum;
+	private Integer cancelType;
 
 	public String getReason() {
 		return reason;
@@ -29,11 +27,12 @@ public class CancelOrderRequest extends Base {
 		this.reason = reason;
 	}
 
-	public CancelTypeEnum getCancelTypeEnum() {
-		return cancelTypeEnum;
+	public Integer getCancelType() {
+		return cancelType;
 	}
 
-	public void setCancelTypeEnum(CancelTypeEnum cancelTypeEnum) {
-		this.cancelTypeEnum = cancelTypeEnum;
+	public void setCancelType(Integer cancelType) {
+		this.cancelType = cancelType;
 	}
+
 }

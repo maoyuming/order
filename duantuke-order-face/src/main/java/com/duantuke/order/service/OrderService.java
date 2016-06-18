@@ -19,7 +19,7 @@ import com.duantuke.order.model.Response;
  * 所有的接口采用标准化的接口入参和出参
  * <p>
  *
- * 入参：Request,其中Header里封装了基本的参数，包括token,timeStamp<br/>
+ * 入参：Request,其中Header里封装了基本的参数，包括timeStamp<br/>
  * data是业务参数对象,是个泛型类型,不同接口需要传入相对应的类型
  *
  * <pre>
