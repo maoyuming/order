@@ -1,5 +1,6 @@
 package com.duantuke.order.handlers;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -75,9 +76,13 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 	 */
 	public List<Order> autoFinish(OrderContext<Request<Base>> context) {
 		logger.info("开始处理可完成的订单");
+
 		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // 设置时间格式
+		String endTime = sdf.format(now);
+
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("endTime", now);
+		params.put("endTime", endTime);
 		logger.info("开始查询待完成的订单,参数:{}", JSON.toJSONString(params));
 		List<Order> orders = orderMapper.queryOrdersByEndTime(params);
 		logger.info("待完成的订单查询完成,结果:{}", JSON.toJSONString(orders));
