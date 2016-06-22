@@ -231,8 +231,15 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
 
-		// 发送消息
-		orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
+		try {
+			// 发送消息
+			orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
+
+			// 记录日志
+			saveLog(context.getOrder(), BusinessTypeEnum.CANCEL, "订单已取消");
+		} catch (Exception e) {
+			logger.error("取消订单后处理异常", e);
+		}
 
 		logger.info("取消订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
@@ -285,8 +292,15 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
 
-		// 发送消息
-		orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
+		try {
+			// 发送消息
+			orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
+
+			// 记录日志
+			saveLog(context.getOrder(), BusinessTypeEnum.CONFIRM, "订单已确认");
+		} catch (Exception e) {
+			logger.error("确认订单后处理异常", e);
+		}
 
 		logger.info("确认订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
@@ -297,6 +311,7 @@ public class OrderServiceImpl implements OrderService {
 		Response<String> response = new Response<String>();
 		// 初始化上下文
 		OrderContext<Request<Base>> context = new OrderContext<Request<Base>>();
+		List<Order> orders = null;
 		try {
 			logger.info("接收到自动完成订单请求,入参:{}", JSON.toJSONString(request));
 
@@ -308,11 +323,7 @@ public class OrderServiceImpl implements OrderService {
 			context.setOperatorName(base.getOperatorName());
 
 			// 开始处理
-			List<Order> orders = updateOrderHandler.autoFinish(context);
-			// 发送消息
-			for (Order order : orders) {
-				orderProducter.sendFinishedMessage(buildMessage(order));
-			}
+			orders = updateOrderHandler.autoFinish(context);
 
 			// 封装返回信息
 			response.setSuccess(true);
@@ -323,10 +334,21 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorCode(e.getErrorCode());
 			response.setErrorMessage(e.getErrorMsg());
 		} catch (Exception ex) {
-			logger.error("自动订单异常", ex);
+			logger.error("自动完成订单异常", ex);
 			response.setSuccess(false);
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
+		try {
+			// 发送消息，记录日志
+			for (Order order : orders) {
+				orderProducter.sendFinishedMessage(buildMessage(order));
+
+				saveLog(order, BusinessTypeEnum.FINISHED, "订单已完成");
+			}
+		} catch (Exception e) {
+			logger.error("完成订单后处理异常", e);
 		}
 
 		logger.info("自动完成订单全部执行完成,返回值:{}", JSON.toJSONString(response));
@@ -343,13 +365,17 @@ public class OrderServiceImpl implements OrderService {
 	 * @param content
 	 *            日志内容
 	 */
-	protected void saveLog(Order order, BusinessTypeEnum businessTypeEnum, String content) {
+	private void saveLog(Order order, BusinessTypeEnum businessTypeEnum, String content) {
+		logger.info("准备记录日志");
 		BisLog bisLog = new BisLog();
 		bisLog.setSystem(PropertyConfigurer.getProperty("system"));
 		bisLog.setOperator(order.getUpdateBy() == null ? order.getCreateBy() : order.getUpdateBy());
 		bisLog.setBussinessId(String.valueOf(order.getId()));
 		bisLog.setBussinssType(businessTypeEnum.getId());
 		bisLog.setContent(content);
+		logger.info("开始记录日志,参数:{}", JSON.toJSONString(bisLog));
 		this.bisLogDelegate.saveBigLog(bisLog);
+		logger.info("日志记录完成");
 	}
+
 }
