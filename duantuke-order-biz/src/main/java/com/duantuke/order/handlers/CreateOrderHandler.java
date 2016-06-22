@@ -205,8 +205,17 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 * 
 	 * @param order
 	 */
-	public void updateOrderInfoAfterCreated(Order order) {
+	public Order updateOrderInfoAfterCreated(Order order) {
+		logger.info("开始更新订单信息");
 		// 获取销售信息
 		Sale sales = getSalesInfo(order.getSupplierId());
+		if (sales != null) {
+			order.setSalesId(sales.getSalesId());
+			order.setSalesName(sales.getMemberName());
+
+			int result = orderMapper.updateOrderInfoAfterCreated(order);
+			logger.info("订单信息更新完成,结果:{}", result);
+		}
+		return order;
 	}
 }

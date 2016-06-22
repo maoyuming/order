@@ -27,4 +27,6 @@ public interface OrderMapper {
     int updateOrderStatus(Order record);
     
     List<Order> queryOrdersByEndTime(Map<String, Object> params);
+    
+    int updateOrderInfoAfterCreated(Order record);
 }

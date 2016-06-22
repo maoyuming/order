@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CreateOrderHandler;
 import com.duantuke.order.model.Message;
+import com.duantuke.order.model.Order;
 import com.duantuke.order.utils.log.LogUtil;
 import com.mk.kafka.client.exception.KafkaMessageConsumeException;
 import com.mk.kafka.client.stereotype.MkMessageService;
@@ -37,13 +38,13 @@ public class OrderConsumer {
 			logger.info("接收到创建中的订单消息,报文:{}", message);
 			Message m = JSON.parseObject(message, Message.class);
 
-			createOrderHandler.updateOrderInfoAfterCreated(m.getOrder());
+			Order order = createOrderHandler.updateOrderInfoAfterCreated(m.getOrder());
 
 			logger.info("订单创建后信息更新完成,开始发送订单创建消息");
 
 			// 发送创建订单MQ消息
 			Message orderCreatedMessage = new Message();
-
+			orderCreatedMessage.setOrder(order);
 			orderProducter.sendCreatedMessage(JSON.toJSONString(orderCreatedMessage));
 			logger.info("订单创建消息发送成功");
 		} catch (OrderException e) {

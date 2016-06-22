@@ -13,7 +13,7 @@
 	<!-- 声明需要暴露的服务接口 -->
 
 	<dubbo:service ref="orderService"
-		interface="com.duantuke.order.service.OrderService" group="order_${dubbo-group}"
+		interface="com.duantuke.order.service.OrderService" group="order_dev"
 		version="1.0.0" timeout="10000" retries="0" />
 	<dubbo:reference id="skuService"
 		interface="com.duantuke.basic.face.service.SkuService" timeout="30000"
