@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date 2016年1月25日
  *
  */
-public class CreateOrderRequest implements Serializable {
+public class CreateOrderRequest extends Base implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
