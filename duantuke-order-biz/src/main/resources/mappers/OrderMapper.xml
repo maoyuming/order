@@ -188,8 +188,8 @@
       <if test="supplierName != null" >
         #{supplierName,jdbcType=VARCHAR},
       </if>
-      <if test="beignTime != null" >
-        #{beignTime,jdbcType=TIMESTAMP},
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="endTime != null" >
         #{endTime,jdbcType=TIMESTAMP},
@@ -256,8 +256,8 @@
       <if test="supplierName != null" >
         supplier_name = #{supplierName,jdbcType=VARCHAR},
       </if>
-      <if test="beignTime != null" >
-        beign_time = #{beignTime,jdbcType=TIMESTAMP},
+      <if test="beginTime != null" >
+        beign_time = #{beginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=TIMESTAMP},

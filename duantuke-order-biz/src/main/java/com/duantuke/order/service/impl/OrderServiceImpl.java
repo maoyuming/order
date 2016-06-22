@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.duantuke.order.common.enums.BusinessTypeEnum;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CancelOrderHandler;
@@ -26,7 +27,10 @@ import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
 import com.duantuke.order.mq.OrderProducter;
 import com.duantuke.order.service.OrderService;
+import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
+import com.lz.mongo.bislog.BisLog;
+import com.lz.mongo.bislog.BisLogDelegate;
 
 @Service("orderService")
 public class OrderServiceImpl implements OrderService {
@@ -42,6 +46,8 @@ public class OrderServiceImpl implements OrderService {
 	private UpdateOrderHandler updateOrderHandler;
 	@Autowired
 	private OrderProducter orderProducter;
+	@Autowired
+	private BisLogDelegate bisLogDelegate;
 
 	@Override
 	public Response<CreateOrderResponse> create(Request<CreateOrderRequest> request) {
@@ -79,8 +85,16 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
 
-		// 发送消息
-		orderProducter.sendCreatedMessage(buildMessage(context.getOrder()));
+		// 创建订单后处理，如果发生异常也需要正常返回成功，此处可降级
+		try {
+			// 发送消息
+			orderProducter.sendCreatedMessage(buildMessage(context.getOrder()));
+
+			// 保存业务日志
+			saveLog(context.getOrder(), BusinessTypeEnum.CREATE, "订单创建成功");
+		} catch (Exception e) {
+			logger.error("创建订单后处理异常", e);
+		}
 
 		logger.info("订单创建全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
@@ -317,5 +331,25 @@ public class OrderServiceImpl implements OrderService {
 
 		logger.info("自动完成订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
+	}
+
+	/**
+	 * 保存业务日志
+	 * 
+	 * @param order
+	 *            订单对象
+	 * @param businessTypeEnum
+	 *            日志类型
+	 * @param content
+	 *            日志内容
+	 */
+	protected void saveLog(Order order, BusinessTypeEnum businessTypeEnum, String content) {
+		BisLog bisLog = new BisLog();
+		bisLog.setSystem(PropertyConfigurer.getProperty("system"));
+		bisLog.setOperator(order.getUpdateBy() == null ? order.getCreateBy() : order.getUpdateBy());
+		bisLog.setBussinessId(String.valueOf(order.getId()));
+		bisLog.setBussinssType(businessTypeEnum.getId());
+		bisLog.setContent(content);
+		this.bisLogDelegate.saveBigLog(bisLog);
 	}
 }

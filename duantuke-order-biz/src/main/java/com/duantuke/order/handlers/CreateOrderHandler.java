@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.order.common.enums.OrderErrorEnum;
@@ -30,7 +31,7 @@ import com.duantuke.order.utils.log.LogUtil;
  * @since 1.0
  */
 @Service
-public class CreateOrderHandler extends AbstractOrderHandler{
+public class CreateOrderHandler extends AbstractOrderHandler {
 
 	private static final LogUtil logger = new LogUtil(CreateOrderHandler.class);
 	@Autowired
@@ -163,18 +164,18 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
 		order.setPayStatus(PayStatusEnum.waitForPayment.getId());
 		order.setCreateTime(context.getCurrentTime());
-		order.setCreateBy(String.valueOf(order.getCustomerId()));
+		order.setCreateBy(formatOperator(context));
 
 		// 获取sku信息
 		SkuResponse skuResponse = super.getSkuInfo(order);
-		context.setSkuInfo(skuResponse);	
+		context.setSkuInfo(skuResponse);
 		SkuInfo<?> skuInfo = skuResponse.getList().get(0);
 
 		order.setSupplierId(skuInfo.getSupplierId());
 		order.setSupplierName(skuInfo.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
 
-		logger.info("订单主信息构建完成");
+		logger.info("订单主信息构建完成,结果:{}", JSON.toJSONString(order));
 		return order;
 	}
 
@@ -186,11 +187,11 @@ public class CreateOrderHandler extends AbstractOrderHandler{
 	private List<OrderDetail> buildOrderDetail(Order order, OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始构建订单明细");
 		List<OrderDetail> orderDetails = order.getOrderDetails();
-		
+
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetail.setOrderId(order.getId());
 			orderDetail.setCreateTime(context.getCurrentTime());
-			orderDetail.setCreateBy(context.getOperatorId()+"("+context.getOperatorName()+")");
+			orderDetail.setCreateBy(context.getOperatorId() + "(" + context.getOperatorName() + ")");
 		}
 
 		logger.info("订单明细构建完成");

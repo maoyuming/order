@@ -308,6 +308,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.lz</groupId>
+			<artifactId>lz-mongo</artifactId>
+			<version>0.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -432,8 +437,10 @@
 				<!-- kafka_setting -->
 				<metadata.broker.list>211.157.155.198:9092</metadata.broker.list>
 				<zk.connect>211.157.155.198:2181</zk.connect>
-				<dubbo-group>dev</dubbo-group>
+				<dubbo-group>test</dubbo-group>
 				<dubbo-provide-group>test</dubbo-provide-group>
+				<!-- mongo -->
+				<mongo.host>211.157.155.198:27017</mongo.host>
 			</properties>
 		</profile>
 		<profile>
@@ -457,6 +464,8 @@
 				<zk.connect>211.157.155.198:2181</zk.connect>
 				<dubbo-group>test</dubbo-group>
 				<dubbo-provide-group>test</dubbo-provide-group>
+				<!-- mongo -->
+				<mongo.host>211.157.155.198:27017</mongo.host>
 			</properties>
 		</profile>
 		<profile>
@@ -480,6 +489,8 @@
 				<zk.connect>211.157.155.198:2181</zk.connect>
 				<dubbo-group>test</dubbo-group>
 				<dubbo-provide-group>test</dubbo-provide-group>
+				<!-- mongo -->
+				<mongo.host>211.157.155.198:27017</mongo.host>
 			</properties>
 		</profile>
 	</profiles>
