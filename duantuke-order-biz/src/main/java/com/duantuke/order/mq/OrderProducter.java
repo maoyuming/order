@@ -18,6 +18,16 @@ public class OrderProducter {
 	private static final Logger logger = LoggerFactory.getLogger(OrderProducter.class);
 
 	/**
+	 * 订单创建中消息
+	 *
+	 * @param message
+	 */
+	@MkTopicProducer(topic = "order_creating", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	public void sendCreatingMessage(String message) {
+		logger.info("创建订单中消息报文：{}", message);
+	}
+
+	/**
 	 * 订单创建消息
 	 *
 	 * @param message
@@ -26,7 +36,7 @@ public class OrderProducter {
 	public void sendCreatedMessage(String message) {
 		logger.info("创建订单消息报文：{}", message);
 	}
-	
+
 	/**
 	 * 订单取消消息
 	 *
@@ -36,7 +46,7 @@ public class OrderProducter {
 	public void sendCanceledMessage(String message) {
 		logger.info("取消订单消息报文：{}", message);
 	}
-	
+
 	/**
 	 * 订单确认消息
 	 *
@@ -46,7 +56,7 @@ public class OrderProducter {
 	public void sendConfirmedMessage(String message) {
 		logger.info("确认订单消息报文：{}", message);
 	}
-	
+
 	/**
 	 * 订单完成消息
 	 *

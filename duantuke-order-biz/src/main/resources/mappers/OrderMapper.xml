@@ -478,4 +478,11 @@
 		AND status = 50 
 	    ORDER BY id DESC
   </select>
+  <update id="updateOrderSalesInfo" parameterType="com.duantuke.order.model.Order" >
+    update orders
+    set status = #{status,jdbcType=INTEGER},
+      upate_time = #{upateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

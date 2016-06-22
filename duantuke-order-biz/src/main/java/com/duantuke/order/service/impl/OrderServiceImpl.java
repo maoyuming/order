@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 		// 创建订单后处理，如果发生异常也需要正常返回成功，此处可降级
 		try {
 			// 发送消息
-			orderProducter.sendCreatedMessage(buildMessage(context.getOrder()));
+			orderProducter.sendCreatingMessage(buildMessage(context.getOrder()));
 
 			// 保存业务日志
 			saveLog(context.getOrder(), BusinessTypeEnum.CREATE, "订单创建成功");

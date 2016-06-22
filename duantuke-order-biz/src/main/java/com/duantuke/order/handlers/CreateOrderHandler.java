@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuResponse;
+import com.duantuke.basic.po.Sale;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
@@ -196,5 +197,16 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 
 		logger.info("订单明细构建完成");
 		return orderDetails;
+	}
+
+	/**
+	 * 订单创建后，通过MQ消息，异步更新一些无需同步记录的信息<br>
+	 * 主要是为了保证同步接口的执行效率<br>
+	 * 
+	 * @param order
+	 */
+	public void updateOrderInfoAfterCreated(Order order) {
+		// 获取销售信息
+		Sale sales = getSalesInfo(order.getSupplierId());
 	}
 }

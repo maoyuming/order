@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.face.bean.SkuRequest;
 import com.duantuke.basic.face.bean.SkuResponse;
+import com.duantuke.basic.face.service.SaleService;
 import com.duantuke.basic.face.service.SkuService;
+import com.duantuke.basic.po.Sale;
 import com.duantuke.order.mappers.OrderMapper;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
@@ -25,6 +27,8 @@ public abstract class AbstractOrderHandler {
 	protected OrderMapper orderMapper;
 	@Autowired
 	private SkuService skuService;
+	@Autowired
+	private SaleService saleService;
 
 	/**
 	 * 查询订单信息(只查询主表)
@@ -91,5 +95,18 @@ public abstract class AbstractOrderHandler {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * 获取销售信息
+	 * 
+	 * @param hotelId
+	 * @return
+	 */
+	protected Sale getSalesInfo(Long hotelId) {
+		logger.info("开始获取销售信息,hotelId = {}", hotelId);
+		Sale sales = saleService.querySaleByHotelId(hotelId);
+		logger.info("销售信息获取完成,结果 = {}", JSON.toJSONString(sales));
+		return sales;
 	}
 }
