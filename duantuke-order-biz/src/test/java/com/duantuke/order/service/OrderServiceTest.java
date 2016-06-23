@@ -66,7 +66,7 @@ public class OrderServiceTest {
 		orderDetail.setSkuName("大床房");
 		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
 		orderDetail.setNum(1);
-		orderDetail.setPrice(new BigDecimal("190"));
+		orderDetail.setTotalPrice(new BigDecimal("190"));
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
@@ -82,7 +82,7 @@ public class OrderServiceTest {
 		orderDetail.setSkuName("标准房");
 		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
 		orderDetail.setNum(1);
-		orderDetail.setPrice(new BigDecimal("200"));
+		orderDetail.setTotalPrice(new BigDecimal("200"));
 		orderDetails.add(orderDetail);
 
 		order.setOrderDetails(orderDetails);

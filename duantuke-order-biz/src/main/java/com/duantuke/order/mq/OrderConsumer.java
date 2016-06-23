@@ -1,5 +1,6 @@
 package com.duantuke.order.mq;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -36,17 +37,19 @@ public class OrderConsumer {
 	public void updateOrderInfoAfterCreated(String message) {
 		try {
 			logger.info("接收到创建中的订单消息,报文:{}", message);
-			Message m = JSON.parseObject(message, Message.class);
+			if (StringUtils.isNotBlank(message)) {
+				Message m = JSON.parseObject(message, Message.class);
 
-			Order order = createOrderHandler.updateOrderInfoAfterCreated(m.getOrder());
+				Order order = createOrderHandler.updateOrderInfoAfterCreated(m.getOrder());
 
-			logger.info("订单创建后信息更新完成,开始发送订单创建消息");
+				logger.info("订单创建后信息更新完成,开始发送订单创建消息");
 
-			// 发送创建订单MQ消息
-			Message orderCreatedMessage = new Message();
-			orderCreatedMessage.setOrder(order);
-			orderProducter.sendCreatedMessage(JSON.toJSONString(orderCreatedMessage));
-			logger.info("订单创建消息发送成功");
+				// 发送创建订单MQ消息
+				Message orderCreatedMessage = new Message();
+				orderCreatedMessage.setOrder(order);
+				orderProducter.sendCreatedMessage(JSON.toJSONString(orderCreatedMessage));
+				logger.info("订单创建消息发送成功");
+			}
 		} catch (OrderException e) {
 			logger.info("消费order_creating消息异常 ", e);
 		} catch (Exception ex) {

@@ -8,7 +8,7 @@
     <result column="sku_name" property="skuName" jdbcType="VARCHAR" />
     <result column="sku_type" property="skuType" jdbcType="INTEGER" />
     <result column="num" property="num" jdbcType="INTEGER" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
     <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -17,7 +17,7 @@
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, order_id, sku_id, sku_name, sku_type, num, price, create_time, 
+    id, order_id, sku_id, sku_name, sku_type, num, total_price, create_time, 
     create_by, update_time, update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -33,12 +33,12 @@
   <insert id="insert" parameterType="com.duantuke.order.model.OrderDetail" useGeneratedKeys="true" keyProperty="id">
     insert into order_details (id, order_id, sku_id, 
       sku_name, sku_type, num, 
-      price, begin_time, end_time, 
+      total_price, begin_time, end_time, 
       create_time, create_by, update_time, 
       update_by)
     values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{skuId,jdbcType=BIGINT}, 
       #{skuName,jdbcType=VARCHAR}, #{skuType,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, 
-      #{price,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{totalPrice,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.duantuke.order.model.OrderDetail" useGeneratedKeys="true" keyProperty="id">
@@ -62,8 +62,8 @@
       <if test="num != null" >
         num,
       </if>
-      <if test="price != null" >
-        price,
+      <if test="totalPrice != null" >
+        total_price,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -97,8 +97,8 @@
       <if test="num != null" >
         #{num,jdbcType=INTEGER},
       </if>
-      <if test="price != null" >
-        #{price,jdbcType=DECIMAL},
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -132,8 +132,8 @@
       <if test="num != null" >
         num = #{num,jdbcType=INTEGER},
       </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DECIMAL},
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -157,7 +157,7 @@
       sku_name = #{skuName,jdbcType=VARCHAR},
       sku_type = #{skuType,jdbcType=INTEGER},
       num = #{num,jdbcType=INTEGER},
-      price = #{price,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -168,7 +168,7 @@
 		INSERT INTO order_details (
 			order_id, sku_id,
 			sku_name, sku_type,
-			num,price, create_time,
+			num,total_price, create_time,
 			create_by, update_time,
 			update_by
 		) VALUES
@@ -178,7 +178,7 @@
 			#{item.skuName,jdbcType=VARCHAR},
 			#{item.skuType,jdbcType=INTEGER},
 			#{item.num,jdbcType=INTEGER},
-			#{item.price,jdbcType=DECIMAL},
+			#{item.totalPrice,jdbcType=DECIMAL},
 			#{item.createTime,jdbcType=TIMESTAMP},
 			#{item.createBy,jdbcType=VARCHAR},
 			#{item.updateTime,jdbcType=TIMESTAMP},

@@ -119,8 +119,8 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			if (orderDetail.getNum() == null) {
 				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "数量不能为空");
 			}
-			if (orderDetail.getPrice() == null) {
-				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "单价不能为空");
+			if (orderDetail.getTotalPrice() == null) {
+				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "价格不能为空");
 			}
 		}
 
@@ -139,7 +139,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		logger.info("开始计算订单总金额");
 		BigDecimal totalPrice = BigDecimal.ZERO;
 		for (OrderDetail orderDetail : orderDetails) {
-			BigDecimal price = orderDetail.getPrice();
+			BigDecimal price = orderDetail.getTotalPrice();
 			BigDecimal num = new BigDecimal(orderDetail.getNum());
 			BigDecimal totalPriceOfSku = price.multiply(num);
 			totalPrice = totalPrice.add(totalPriceOfSku);

@@ -21,7 +21,7 @@ public class OrderDetail implements Serializable{
 
     private Integer num;
 
-    private BigDecimal price;
+    private BigDecimal totalPrice;
 
     private Date createTime;
 
@@ -81,15 +81,15 @@ public class OrderDetail implements Serializable{
         this.num = num;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
+    public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 
-    public Date getCreateTime() {
+	public Date getCreateTime() {
         return createTime;
     }
 
