@@ -1,15 +1,24 @@
 package com.duantuke.order.handlers;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.duantuke.basic.enums.SkuTypeEnum;
+import com.duantuke.basic.face.bean.RoomTypeInfo;
 import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuResponse;
+import com.duantuke.basic.po.Meal;
 import com.duantuke.basic.po.Sale;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
@@ -48,7 +57,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 
 		// 保存订单价格信息
 		saveOrderDetailPrice(order, context);
-		
+
 		context.setOrder(order);
 		logger.info("订单创建成功,orderId = {}", order.getId());
 	}
@@ -57,16 +66,22 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 * 验证请求参数
 	 * 
 	 * @param request
+	 * @throws ParseException
 	 */
-	public void validate(CreateOrderRequest request) {
+	public void validate(CreateOrderRequest request, OrderContext<Request<CreateOrderRequest>> context)
+			throws ParseException {
 		logger.info("开始验证请求参数");
 		Order order = request.getOrder();
+
+		// 获取sku信息
+		SkuResponse skuResponse = super.getSkuInfo(order);
+		context.setSkuInfo(skuResponse);
 
 		// 验证订单主信息
 		validateOrder(order);
 
 		// 验证订单明细
-		validateOrderDetail(order.getOrderDetails());
+		validateOrderDetail(order.getOrderDetails(), context);
 		logger.info("请求参数验证通过");
 	}
 
@@ -99,13 +114,19 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 * 验证订单明细
 	 * 
 	 * @param orderDetail
+	 * @throws ParseException
 	 */
-	private void validateOrderDetail(List<OrderDetail> orderDetails) {
+	@SuppressWarnings("rawtypes")
+	private void validateOrderDetail(List<OrderDetail> orderDetails, OrderContext<Request<CreateOrderRequest>> context)
+			throws ParseException {
 		logger.info("开始验证订单明细");
 		if (CollectionUtils.isEmpty(orderDetails)) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "订单明细不能为空");
 		}
 
+		SkuResponse skuResponse = context.getSkuInfo();
+		List<SkuInfo> skuInfoList = skuResponse.getList();
+		BigDecimal totalPrice = BigDecimal.ZERO;
 		for (OrderDetail orderDetail : orderDetails) {
 			if (orderDetail.getSkuId() == null) {
 				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "SkuId不能为空");
@@ -119,9 +140,67 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			if (orderDetail.getNum() == null) {
 				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "数量不能为空");
 			}
-			if (orderDetail.getTotalPrice() == null) {
-				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "价格不能为空");
+
+			// 验证订单价格
+			logger.info("开始验证订单价格信息");
+			List<OrderDetailPrice> priceList = orderDetail.getPriceDetails();
+			if (priceList == null) {
+				logger.error("Sku:{}缺少价格明细", orderDetail.getSkuId());
+				throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
+						"Sku:" + orderDetail.getSkuId() + "缺少价格明细");
 			}
+			logger.info("Sku:{}下单传入的价格列表是:{}", orderDetail.getSkuId(), JSON.toJSONString(priceList));
+			for (SkuInfo<?> skuInfo : skuInfoList) {
+				if (!skuInfo.getSkuId().equals(orderDetail.getSkuId())) {
+					continue;
+				}
+				logger.info("验证Sku:{}的价格", skuInfo.getSkuId());
+				if (skuInfo.getType().equals(SkuTypeEnum.roomtype.getCode())) {
+					RoomTypeInfo roomTypeInfo = (RoomTypeInfo) skuInfo.getInfo();
+					Map<String, BigDecimal> priceDetails = roomTypeInfo.getPrices();
+					for (Entry<String, BigDecimal> entry : priceDetails.entrySet()) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+						Date date = sdf.parse(entry.getKey());
+						BigDecimal price = entry.getValue();
+						logger.info("Sku:{}在{}的价格是{}", skuInfo.getSkuId(), entry.getKey(), price);
+						boolean isMatching = false;
+						for (OrderDetailPrice orderDetailPrice : priceList) {
+							if (date.equals(orderDetailPrice.getActionTime())
+									&& (price.compareTo(orderDetailPrice.getPrice()) == 0)) {
+								isMatching = true;
+							}
+						}
+						if (!isMatching) {
+							logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
+							throw new OrderException(OrderErrorEnum.orderPriceError);
+						}
+						totalPrice = totalPrice.add(price);
+					}
+				}
+				if (skuInfo.getType().equals(SkuTypeEnum.meal.getCode())) {
+					Meal meal = (Meal) skuInfo.getInfo();
+					logger.info("Sku:{}的价格是{}", skuInfo.getSkuId(), meal.getPrice());
+					boolean isMatching = false;
+					for (OrderDetailPrice orderDetailPrice : priceList) {
+						if (meal.getPrice().compareTo(orderDetailPrice.getPrice()) == 0) {
+							isMatching = true;
+						}
+					}
+					if (!isMatching) {
+						logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
+						throw new OrderException(OrderErrorEnum.orderPriceError);
+					}
+					totalPrice = totalPrice.add(meal.getPrice());
+				}
+			}
+			logger.info("订单价格验证通过");
+		}
+
+		// 验证订单总价格
+		logger.info("验证订单总价格,SkuService计算的结果是:{},订单下单传入的明细结算后的结果是:{}", skuResponse.getTotalPrice(), totalPrice);
+		if (totalPrice.compareTo(skuResponse.getTotalPrice()) != 0) {
+			logger.error("订单总价格验证不通过");
+			throw new OrderException(OrderErrorEnum.orderPriceError);
 		}
 
 		logger.info("订单明细验证通过");
@@ -222,13 +301,12 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 * @param context
 	 * @return
 	 */
-	private void saveOrderDetailPrice(Order order,
-			OrderContext<Request<CreateOrderRequest>> context) {
+	private void saveOrderDetailPrice(Order order, OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始保存订单价格信息");
 
 		List<OrderDetail> orderDetails = order.getOrderDetails();
 		for (OrderDetail orderDetail : orderDetails) {
-			if(orderDetail.getPriceDetails() != null){
+			if (orderDetail.getPriceDetails() != null) {
 				for (OrderDetailPrice orderDetailPrice : orderDetail.getPriceDetails()) {
 					orderDetailPrice.setOrderId(order.getId());
 					orderDetailPrice.setOrderDetailId(orderDetail.getId());

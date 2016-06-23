@@ -31,6 +31,7 @@ import com.duantuke.order.model.OrderDetailPrice;
 import com.duantuke.order.model.QueryOrderRequest;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
+import com.duantuke.order.utils.DateUtil;
 import com.duantuke.order.utils.log.LogUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -66,12 +67,11 @@ public class OrderServiceTest {
 		orderDetail.setSkuName("大床房");
 		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
 		orderDetail.setNum(1);
-		orderDetail.setTotalPrice(new BigDecimal("190"));
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(new Date());
-		orderDetailPrice.setPrice(new BigDecimal("140"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160623"));
+		orderDetailPrice.setPrice(new BigDecimal("122"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
 		
@@ -80,11 +80,17 @@ public class OrderServiceTest {
 		orderDetail = new OrderDetail();
 		orderDetail.setSkuId(2l);
 		orderDetail.setSkuName("标准房");
-		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
+		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
 		orderDetail.setNum(1);
-		orderDetail.setTotalPrice(new BigDecimal("200"));
-		orderDetails.add(orderDetail);
 
+		priceDetails = new ArrayList<OrderDetailPrice>();
+		orderDetailPrice = new OrderDetailPrice();
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160623"));
+		orderDetailPrice.setPrice(new BigDecimal("122"));
+		priceDetails.add(orderDetailPrice);
+		orderDetail.setPriceDetails(priceDetails);
+		orderDetails.add(orderDetail);
+		
 		order.setOrderDetails(orderDetails);
 
 		createOrderRequest.setOrder(order);

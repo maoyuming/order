@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
 
 			CreateOrderRequest createOrderRequest = request.getData();
 			// 参数合法性校验
-			createOrderHandler.validate(createOrderRequest);
+			createOrderHandler.validate(createOrderRequest, context);
 
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
@@ -70,6 +70,17 @@ public class OrderServiceImpl implements OrderService {
 			// 开始创建订单
 			createOrderHandler.create(context);
 
+			// 创建订单后处理，如果发生异常也需要正常返回成功，此处可降级
+			try {
+				// 发送消息
+				orderProducter.sendCreatingMessage(buildMessage(context.getOrder()));
+
+				// 保存业务日志
+				saveLog(context.getOrder(), BusinessTypeEnum.CREATE, "订单创建成功");
+			} catch (Exception e) {
+				logger.error("创建订单后处理异常", e);
+			}
+			
 			// 封装返回信息
 			CreateOrderResponse createOrderResponse = new CreateOrderResponse();
 			createOrderResponse.setOrder(context.getOrder());
@@ -85,17 +96,6 @@ public class OrderServiceImpl implements OrderService {
 			response.setSuccess(false);
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
-		}
-
-		// 创建订单后处理，如果发生异常也需要正常返回成功，此处可降级
-		try {
-			// 发送消息
-			orderProducter.sendCreatingMessage(buildMessage(context.getOrder()));
-
-			// 保存业务日志
-			saveLog(context.getOrder(), BusinessTypeEnum.CREATE, "订单创建成功");
-		} catch (Exception e) {
-			logger.error("创建订单后处理异常", e);
 		}
 
 		logger.info("订单创建全部完成,返回值:{}", JSON.toJSONString(response));
