@@ -80,7 +80,7 @@ public class QueryOrderHandler extends AbstractOrderHandler{
 			throw new OrderException(OrderErrorEnum.paramsError);
 		}
 
-		if (request.getPageNo() == null || request.getPageNo() == null) {
+		if (request.getPageNo() == null || request.getPageSize() == null) {
 			logger.error("必须填写分页信息");
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "必须填写分页信息");
 		}
