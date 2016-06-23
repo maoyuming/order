@@ -309,9 +309,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.lz</groupId>
-			<artifactId>lz-mongo</artifactId>
-			<version>0.0.2</version>
+			<groupId>com.dtk</groupId>
+			<artifactId>dtk-mongo</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
 
