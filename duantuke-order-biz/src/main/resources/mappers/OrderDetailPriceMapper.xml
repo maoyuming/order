@@ -1,48 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.duantuke.order.mappers.OrderDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.duantuke.order.model.OrderDetail" >
+<mapper namespace="com.duantuke.order.mappers.OrderDetailPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.duantuke.order.model.OrderDetailPrice" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="order_detail_id" property="orderDetailId" jdbcType="BIGINT" />
     <result column="sku_id" property="skuId" jdbcType="BIGINT" />
     <result column="sku_name" property="skuName" jdbcType="VARCHAR" />
-    <result column="sku_type" property="skuType" jdbcType="INTEGER" />
-    <result column="num" property="num" jdbcType="INTEGER" />
     <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
-    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="action_time" property="actionTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, order_id, sku_id, sku_name, sku_type, num, price, create_time, 
+    id, order_id, order_detail_id, sku_id, sku_name, price, action_time, create_time, 
     create_by, update_time, update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from order_details
+    from order_details_price
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from order_details
+    delete from order_details_price
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.duantuke.order.model.OrderDetail" useGeneratedKeys="true" keyProperty="id">
-    insert into order_details (id, order_id, sku_id, 
-      sku_name, sku_type, num, 
-      price, begin_time, end_time, 
-      create_time, create_by, update_time, 
-      update_by)
-    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{skuId,jdbcType=BIGINT}, 
-      #{skuName,jdbcType=VARCHAR}, #{skuType,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, 
-      #{price,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.duantuke.order.model.OrderDetailPrice" useGeneratedKeys="true" keyProperty="id">
+    insert into order_details_price (id, order_id, order_detail_id, 
+      sku_id, sku_name, price, 
+      action_time, create_time, create_by, 
+      update_time, update_by)
+    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{orderDetailId,jdbcType=BIGINT}, 
+      #{skuId,jdbcType=BIGINT}, #{skuName,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{actionTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.duantuke.order.model.OrderDetail" useGeneratedKeys="true" keyProperty="id">
-    insert into order_details
+  <insert id="insertSelective" parameterType="com.duantuke.order.model.OrderDetailPrice" useGeneratedKeys="true" keyProperty="id">
+    insert into order_details_price
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -50,20 +47,20 @@
       <if test="orderId != null" >
         order_id,
       </if>
+      <if test="orderDetailId != null" >
+        order_detail_id,
+      </if>
       <if test="skuId != null" >
         sku_id,
       </if>
       <if test="skuName != null" >
         sku_name,
       </if>
-      <if test="skuType != null" >
-        sku_type,
-      </if>
-      <if test="num != null" >
-        num,
-      </if>
       <if test="price != null" >
         price,
+      </if>
+      <if test="actionTime != null" >
+        action_time,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -85,20 +82,20 @@
       <if test="orderId != null" >
         #{orderId,jdbcType=BIGINT},
       </if>
+      <if test="orderDetailId != null" >
+        #{orderDetailId,jdbcType=BIGINT},
+      </if>
       <if test="skuId != null" >
         #{skuId,jdbcType=BIGINT},
       </if>
       <if test="skuName != null" >
         #{skuName,jdbcType=VARCHAR},
       </if>
-      <if test="skuType != null" >
-        #{skuType,jdbcType=INTEGER},
-      </if>
-      <if test="num != null" >
-        #{num,jdbcType=INTEGER},
-      </if>
       <if test="price != null" >
         #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="actionTime != null" >
+        #{actionTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -114,11 +111,14 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.duantuke.order.model.OrderDetail" >
-    update order_details
+  <update id="updateByPrimaryKeySelective" parameterType="com.duantuke.order.model.OrderDetailPrice" >
+    update order_details_price
     <set >
       <if test="orderId != null" >
         order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderDetailId != null" >
+        order_detail_id = #{orderDetailId,jdbcType=BIGINT},
       </if>
       <if test="skuId != null" >
         sku_id = #{skuId,jdbcType=BIGINT},
@@ -126,14 +126,11 @@
       <if test="skuName != null" >
         sku_name = #{skuName,jdbcType=VARCHAR},
       </if>
-      <if test="skuType != null" >
-        sku_type = #{skuType,jdbcType=INTEGER},
-      </if>
-      <if test="num != null" >
-        num = #{num,jdbcType=INTEGER},
-      </if>
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="actionTime != null" >
+        action_time = #{actionTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -150,14 +147,14 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.duantuke.order.model.OrderDetail" >
-    update order_details
+  <update id="updateByPrimaryKey" parameterType="com.duantuke.order.model.OrderDetailPrice" >
+    update order_details_price
     set order_id = #{orderId,jdbcType=BIGINT},
+      order_detail_id = #{orderDetailId,jdbcType=BIGINT},
       sku_id = #{skuId,jdbcType=BIGINT},
       sku_name = #{skuName,jdbcType=VARCHAR},
-      sku_type = #{skuType,jdbcType=INTEGER},
-      num = #{num,jdbcType=INTEGER},
       price = #{price,jdbcType=DECIMAL},
+      action_time = #{actionTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -165,20 +162,19 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="batchInsert" parameterType="java.util.List">
-		INSERT INTO order_details (
-			order_id, sku_id,
-			sku_name, sku_type,
-			num,price, create_time,
-			create_by, update_time,
-			update_by
+		INSERT INTO order_details_price (
+			order_id, order_detail_id, sku_id,
+			sku_name, price, action_time,
+			create_time, create_by,
+			update_time,update_by
 		) VALUES
 		<foreach collection="list" item="item" separator=",">
 			(#{item.orderId,jdbcType=BIGINT},
+			#{item.orderDetailId,jdbcType=BIGINT},
 			#{item.skuId,jdbcType=BIGINT},
 			#{item.skuName,jdbcType=VARCHAR},
-			#{item.skuType,jdbcType=INTEGER},
-			#{item.num,jdbcType=INTEGER},
 			#{item.price,jdbcType=DECIMAL},
+			#{item.actionTime,jdbcType=TIMESTAMP},
 			#{item.createTime,jdbcType=TIMESTAMP},
 			#{item.createBy,jdbcType=VARCHAR},
 			#{item.updateTime,jdbcType=TIMESTAMP},
@@ -186,10 +182,4 @@
 			)
 		</foreach>
 	</select>
-	<select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from order_details
-    where order_id = #{orderId,jdbcType=BIGINT}
-  </select>
 </mapper>

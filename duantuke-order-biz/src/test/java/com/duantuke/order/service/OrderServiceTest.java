@@ -27,6 +27,7 @@ import com.duantuke.order.model.CreateOrderResponse;
 import com.duantuke.order.model.Header;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderDetail;
+import com.duantuke.order.model.OrderDetailPrice;
 import com.duantuke.order.model.QueryOrderRequest;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
@@ -66,8 +67,16 @@ public class OrderServiceTest {
 		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
 		orderDetail.setNum(1);
 		orderDetail.setPrice(new BigDecimal("190"));
+		
+		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
+		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
+		orderDetailPrice.setActionTime(new Date());
+		orderDetailPrice.setPrice(new BigDecimal("140"));
+		priceDetails.add(orderDetailPrice);
+		orderDetail.setPriceDetails(priceDetails);
+		
 		orderDetails.add(orderDetail);
-
+		
 		orderDetail = new OrderDetail();
 		orderDetail.setSkuId(2l);
 		orderDetail.setSkuName("标准房");
@@ -80,6 +89,8 @@ public class OrderServiceTest {
 
 		createOrderRequest.setOrder(order);
 		request.setData(createOrderRequest);
+		createOrderRequest.setOperatorId("123");
+		createOrderRequest.setOperatorName("张三");
 
 		Response<CreateOrderResponse> response = orderService.create(request);
 		Assert.assertTrue(response.isSuccess());

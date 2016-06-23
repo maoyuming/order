@@ -14,6 +14,8 @@ import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.basic.face.service.SaleService;
 import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.basic.po.Sale;
+import com.duantuke.order.mappers.OrderDetailMapper;
+import com.duantuke.order.mappers.OrderDetailPriceMapper;
 import com.duantuke.order.mappers.OrderMapper;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
@@ -26,9 +28,13 @@ public abstract class AbstractOrderHandler {
 	@Autowired
 	protected OrderMapper orderMapper;
 	@Autowired
+	protected OrderDetailMapper orderDetailMapper;
+	@Autowired
 	private SkuService skuService;
 	@Autowired
 	private SaleService saleService;
+	@Autowired
+	protected OrderDetailPriceMapper orderDetailPriceMapper;
 
 	/**
 	 * 查询订单信息(只查询主表)
@@ -94,7 +100,8 @@ public abstract class AbstractOrderHandler {
 			sb.append(")");
 		}
 
-		return sb.toString();
+		String result = sb.toString();
+		return result.equals("null") ? null : result;
 	}
 
 	/**

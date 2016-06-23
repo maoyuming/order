@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -17,11 +16,11 @@ import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayStatusEnum;
 import com.duantuke.order.exception.OrderException;
-import com.duantuke.order.mappers.OrderDetailMapper;
 import com.duantuke.order.model.CreateOrderRequest;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.OrderDetail;
+import com.duantuke.order.model.OrderDetailPrice;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.utils.log.LogUtil;
 
@@ -35,24 +34,21 @@ import com.duantuke.order.utils.log.LogUtil;
 public class CreateOrderHandler extends AbstractOrderHandler {
 
 	private static final LogUtil logger = new LogUtil(CreateOrderHandler.class);
-	@Autowired
-	private OrderDetailMapper orderDetailMapper;
 
 	public void create(OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始创建订单");
 
 		// 构建订单信息
 		Order order = buildOrder(context);
-
 		// 保存订单主表
 		orderMapper.insertSelective(order);
 
-		// 构建订单明细
-		List<OrderDetail> orderDetails = buildOrderDetail(order, context);
-
 		// 保存订单明细
-		orderDetailMapper.batchInsert(orderDetails);
+		saveOrderDetails(order, context);
 
+		// 保存订单价格信息
+		saveOrderDetailPrice(order, context);
+		
 		context.setOrder(order);
 		logger.info("订单创建成功,orderId = {}", order.getId());
 	}
@@ -181,22 +177,22 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	}
 
 	/**
-	 * 构建订单明细
+	 * 保存订单明细
 	 * 
 	 * @param order
 	 */
-	private List<OrderDetail> buildOrderDetail(Order order, OrderContext<Request<CreateOrderRequest>> context) {
-		logger.info("开始构建订单明细");
+	private void saveOrderDetails(Order order, OrderContext<Request<CreateOrderRequest>> context) {
+		logger.info("开始保存订单明细");
 		List<OrderDetail> orderDetails = order.getOrderDetails();
 
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetail.setOrderId(order.getId());
 			orderDetail.setCreateTime(context.getCurrentTime());
-			orderDetail.setCreateBy(context.getOperatorId() + "(" + context.getOperatorName() + ")");
+			orderDetail.setCreateBy(formatOperator(context));
+			orderDetailMapper.insertSelective(orderDetail);
 		}
 
-		logger.info("订单明细构建完成");
-		return orderDetails;
+		logger.info("订单明细保存完成");
 	}
 
 	/**
@@ -217,5 +213,34 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			logger.info("订单信息更新完成,结果:{}", result);
 		}
 		return order;
+	}
+
+	/**
+	 * 保存订单价格信息
+	 * 
+	 * @param order
+	 * @param context
+	 * @return
+	 */
+	private void saveOrderDetailPrice(Order order,
+			OrderContext<Request<CreateOrderRequest>> context) {
+		logger.info("开始保存订单价格信息");
+
+		List<OrderDetail> orderDetails = order.getOrderDetails();
+		for (OrderDetail orderDetail : orderDetails) {
+			if(orderDetail.getPriceDetails() != null){
+				for (OrderDetailPrice orderDetailPrice : orderDetail.getPriceDetails()) {
+					orderDetailPrice.setOrderId(order.getId());
+					orderDetailPrice.setOrderDetailId(orderDetail.getId());
+					orderDetailPrice.setSkuId(orderDetail.getSkuId());
+					orderDetailPrice.setSkuName(orderDetail.getSkuName());
+					orderDetailPrice.setCreateTime(context.getCurrentTime());
+					orderDetailPrice.setCreateBy(formatOperator(context));
+					orderDetailPriceMapper.insertSelective(orderDetailPrice);
+				}
+			}
+		}
+
+		logger.info("订单价格信息保存完成");
 	}
 }

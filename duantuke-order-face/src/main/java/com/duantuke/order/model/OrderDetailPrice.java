@@ -1,27 +1,22 @@
 package com.duantuke.order.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
-public class OrderDetail implements Serializable{
-
-	private static final long serialVersionUID = 1L;
-
-	private Long id;
+public class OrderDetailPrice {
+    private Long id;
 
     private Long orderId;
+
+    private Long orderDetailId;
 
     private Long skuId;
 
     private String skuName;
 
-    private Integer skuType;
-
-    private Integer num;
-
     private BigDecimal price;
+
+    private Date actionTime;
 
     private Date createTime;
 
@@ -30,8 +25,6 @@ public class OrderDetail implements Serializable{
     private Date updateTime;
 
     private String updateBy;
-    
-    private List<OrderDetailPrice> priceDetails;
 
     public Long getId() {
         return id;
@@ -47,6 +40,14 @@ public class OrderDetail implements Serializable{
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public Long getOrderDetailId() {
+        return orderDetailId;
+    }
+
+    public void setOrderDetailId(Long orderDetailId) {
+        this.orderDetailId = orderDetailId;
     }
 
     public Long getSkuId() {
@@ -65,28 +66,20 @@ public class OrderDetail implements Serializable{
         this.skuName = skuName == null ? null : skuName.trim();
     }
 
-    public Integer getSkuType() {
-        return skuType;
-    }
-
-    public void setSkuType(Integer skuType) {
-        this.skuType = skuType;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Date getActionTime() {
+        return actionTime;
+    }
+
+    public void setActionTime(Date actionTime) {
+        this.actionTime = actionTime;
     }
 
     public Date getCreateTime() {
@@ -113,20 +106,11 @@ public class OrderDetail implements Serializable{
         this.updateTime = updateTime;
     }
 
-    public List<OrderDetailPrice> getPriceDetails() {
-		return priceDetails;
-	}
-
-	public void setPriceDetails(List<OrderDetailPrice> priceDetails) {
-		this.priceDetails = priceDetails;
-	}
-
-	public String getUpdateBy() {
+    public String getUpdateBy() {
         return updateBy;
     }
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy == null ? null : updateBy.trim();
     }
-    
 }

@@ -64,6 +64,8 @@ public class OrderServiceImpl implements OrderService {
 
 			context.setRequest(request);
 			context.setCurrentTime(new Date());
+			context.setOperatorId(createOrderRequest.getOperatorId());
+			context.setOperatorName(createOrderRequest.getOperatorName());
 
 			// 开始创建订单
 			createOrderHandler.create(context);
