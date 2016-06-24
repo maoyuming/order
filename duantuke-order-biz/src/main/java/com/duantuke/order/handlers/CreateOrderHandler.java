@@ -3,13 +3,10 @@ package com.duantuke.order.handlers;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -150,50 +147,42 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 						"Sku:" + orderDetail.getSkuId() + "缺少价格明细");
 			}
 			logger.info("Sku:{}下单传入的价格列表是:{}", orderDetail.getSkuId(), JSON.toJSONString(priceList));
-			for (SkuInfo<?> skuInfo : skuInfoList) {
-				if (!skuInfo.getSkuId().equals(orderDetail.getSkuId())) {
-					continue;
-				}
-				logger.info("验证Sku:{}的价格", skuInfo.getSkuId());
-				if (skuInfo.getType().equals(SkuTypeEnum.roomtype.getCode())) {
-					RoomTypeInfo roomTypeInfo = (RoomTypeInfo) skuInfo.getInfo();
-					Map<String, BigDecimal> priceDetails = roomTypeInfo.getPrices();
-					for (Entry<String, BigDecimal> entry : priceDetails.entrySet()) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-						Date date = sdf.parse(entry.getKey());
-						BigDecimal price = entry.getValue();
-						logger.info("Sku:{}在{}的价格是{}", skuInfo.getSkuId(), entry.getKey(), price);
-						boolean isMatching = false;
-						for (OrderDetailPrice orderDetailPrice : priceList) {
-							if (date.equals(orderDetailPrice.getActionTime())
-									&& (price.compareTo(orderDetailPrice.getPrice()) == 0)) {
-								isMatching = true;
-							}
+			for (OrderDetailPrice orderDetailPrice : priceList) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+				String date = sdf.format(orderDetailPrice.getActionTime());
+				for (SkuInfo<?> skuInfo : skuInfoList) {
+					if (!skuInfo.getSkuId().equals(orderDetail.getSkuId())) {
+						continue;
+					}
+					logger.info("验证Sku:{}的价格", skuInfo.getSkuId());
+					// 房间模型
+					if (skuInfo.getType().equals(SkuTypeEnum.roomtype.getCode())) {
+						RoomTypeInfo roomTypeInfo = (RoomTypeInfo) skuInfo.getInfo();
+						Map<String, BigDecimal> priceDetails = roomTypeInfo.getPrices();
+						BigDecimal price = priceDetails.get(date);
+						if (price == null) {
+							throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
+									"日期" + date + "的价格不存在");
 						}
-						if (!isMatching) {
+						if (price.compareTo(orderDetailPrice.getPrice()) != 0) {
 							logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
 							throw new OrderException(OrderErrorEnum.orderPriceError);
 						}
-						totalPrice = totalPrice.add(price);
 					}
-				}
-				if (skuInfo.getType().equals(SkuTypeEnum.meal.getCode())) {
-					Meal meal = (Meal) skuInfo.getInfo();
-					logger.info("Sku:{}的价格是{}", skuInfo.getSkuId(), meal.getPrice());
-					boolean isMatching = false;
-					for (OrderDetailPrice orderDetailPrice : priceList) {
-						if (meal.getPrice().compareTo(orderDetailPrice.getPrice()) == 0) {
-							isMatching = true;
+
+					// 餐饮模型
+					if (skuInfo.getType().equals(SkuTypeEnum.meal.getCode())) {
+						Meal meal = (Meal) skuInfo.getInfo();
+						logger.info("Sku:{}的价格是{}", skuInfo.getSkuId(), meal.getPrice());
+						if (meal.getPrice().compareTo(orderDetailPrice.getPrice()) != 0) {
+							logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
+							throw new OrderException(OrderErrorEnum.orderPriceError);
 						}
 					}
-					if (!isMatching) {
-						logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
-						throw new OrderException(OrderErrorEnum.orderPriceError);
-					}
-					totalPrice = totalPrice.add(meal.getPrice());
 				}
+				totalPrice = totalPrice.add(orderDetailPrice.getPrice());
 			}
-			logger.info("订单价格验证通过");
+			logger.info("订单SKU单价验证通过");
 		}
 
 		// 验证订单总价格
@@ -239,6 +228,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		order.setType(OrderTypeEnum.common.getId());
 		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
 		order.setPayStatus(PayStatusEnum.waitForPayment.getId());
+		order.setCustomerId(Long.parseLong(context.getOperatorId()));
 		order.setCreateTime(context.getCurrentTime());
 		order.setCreateBy(formatOperator(context));
 
