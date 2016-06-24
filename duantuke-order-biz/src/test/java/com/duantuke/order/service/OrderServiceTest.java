@@ -187,4 +187,21 @@ public class OrderServiceTest {
 		Response<String> response = orderService.autoFinish(request);
 		System.out.println(JSON.toJSONString(response));
 	}
+	
+	@Test
+	public void testQueryOrdersCount() throws ParseException{
+		Request<QueryOrderRequest> request = new Request<QueryOrderRequest>();
+		Header header = new Header();
+		header.setTimeStamp(new Date());
+		request.setHeader(header);
+
+		QueryOrderRequest queryOrderRequest = new QueryOrderRequest();
+		queryOrderRequest.setOrderType(OrderTypeEnum.common.getId());
+		queryOrderRequest.setContact("张三");
+
+		request.setData(queryOrderRequest);
+
+		Response<Integer> response = orderService.queryOrdersCount(request);
+		Assert.assertTrue(response.isSuccess());
+	}
 }

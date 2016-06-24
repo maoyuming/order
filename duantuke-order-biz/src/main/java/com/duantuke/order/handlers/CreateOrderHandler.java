@@ -182,7 +182,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 				}
 				totalPrice = totalPrice.add(orderDetailPrice.getPrice());
 			}
-			logger.info("订单SKU单价验证通过");
+			logger.info("Sku单价验证通过");
 		}
 
 		// 验证订单总价格

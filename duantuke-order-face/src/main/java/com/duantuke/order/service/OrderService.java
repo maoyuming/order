@@ -73,6 +73,14 @@ public interface OrderService {
 	Response<List<Order>> queryOrders(Request<QueryOrderRequest> request);
 
 	/**
+	 * 查询订单数(多个查询条件，结果集取交集)
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response<Integer> queryOrdersCount(Request<QueryOrderRequest> request);
+	
+	/**
 	 * 根据订单号查询订单信息，包含订单明细
 	 * 
 	 * @param request

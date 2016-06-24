@@ -126,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
 			// 参数合法性校验
 			QueryOrderRequest queryOrderRequest = request.getData();
 			queryOrderHandler.validate(queryOrderRequest);
+			queryOrderHandler.validatePageInfo(queryOrderRequest);
 
 			// 执行查询操作
 			List<Order> orders = queryOrderHandler.queryOrders(queryOrderRequest);
@@ -378,6 +379,37 @@ public class OrderServiceImpl implements OrderService {
 		logger.info("开始记录日志,参数:{}", JSON.toJSONString(bisLog));
 		this.bisLogDelegate.saveBigLog(bisLog);
 		logger.info("日志记录完成");
+	}
+
+	@Override
+	public Response<Integer> queryOrdersCount(Request<QueryOrderRequest> request) {
+		Response<Integer> response = new Response<Integer>();
+		try {
+			logger.info("接收到订单数查询请求,入参:{}", JSON.toJSONString(request));
+			// 参数合法性校验
+			QueryOrderRequest queryOrderRequest = request.getData();
+			queryOrderHandler.validate(queryOrderRequest);
+
+			// 执行查询操作
+			Integer count = queryOrderHandler.queryOrdersCount(queryOrderRequest);
+
+			// 封装返回信息
+			response.setSuccess(true);
+			response.setData(count);
+		} catch (OrderException e) {
+			logger.error("查询订单异常", e);
+			response.setSuccess(false);
+			response.setErrorCode(e.getErrorCode());
+			response.setErrorMessage(e.getErrorMsg());
+		} catch (Exception ex) {
+			logger.error("查询订单异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
+		logger.info("订单数查询全部完成,返回值:{}", JSON.toJSONString(response));
+		return response;
 	}
 
 }

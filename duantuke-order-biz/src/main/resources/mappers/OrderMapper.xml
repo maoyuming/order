@@ -397,6 +397,46 @@
 	    ORDER BY id DESC
 		LIMIT #{startNum, jdbcType=INTEGER} ,#{pageSize, jdbcType=INTEGER}
   </select>
+  <select id="queryOrdersCount" resultType="int" parameterType="map" >
+		SELECT 
+			count(1) 
+		FROM orders 
+		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+		 <if test="supplierId != null">
+	    	AND supplier_id = #{supplierId,jdbcType=BIGINT}
+	     </if>
+		 <if test="type != null">
+	    	AND type = #{orderType,jdbcType=INTEGER}
+	     </if>
+	     <if test="status != null">
+	    	AND status = #{orderStatus,jdbcType=INTEGER}
+	     </if>
+	     <if test="payType != null">
+	    	AND pay_type = #{payType,jdbcType=INTEGER}
+	     </if>
+	     <if test="payStatus != null">
+	    	AND pay_status = #{payStatus,jdbcType=INTEGER}
+	     </if>
+	     <if test="contact != null">
+	    	AND contact = #{contact,jdbcType=VARCHAR}
+	     </if>
+	     <if test="contactPhone != null">
+	    	AND contactPhone = #{contactPhone,jdbcType=VARCHAR}
+	     </if>
+	     <if test="customerId != null">
+	    	AND customer_id = #{customerId,jdbcType=BIGINT}
+	     </if>
+	     <if test="salesId != null">
+	    	AND sales_id = #{salesId,jdbcType=BIGINT}
+	     </if>
+	     <if test="startDate != null">
+	    	AND create_time &gt; #{startDate,jdbcType=TIMESTAMP}
+	     </if>
+	      <if test="endDate != null">
+	    	AND create_time &lt; #{endDate,jdbcType=TIMESTAMP}
+	     </if>
+	    </trim>
+  </select>
   <select id="selectOrderAndDetailsById" resultMap="ResultMapWithOrderDetails" parameterType="java.lang.Long" >
     SELECT 
     	a.id,

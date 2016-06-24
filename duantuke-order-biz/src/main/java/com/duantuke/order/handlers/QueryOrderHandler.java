@@ -21,7 +21,7 @@ import com.duantuke.order.utils.log.LogUtil;
  * @date 2016年6月12日
  */
 @Service
-public class QueryOrderHandler extends AbstractOrderHandler{
+public class QueryOrderHandler extends AbstractOrderHandler {
 
 	public static final LogUtil logger = new LogUtil(QueryOrderHandler.class);
 
@@ -33,6 +33,16 @@ public class QueryOrderHandler extends AbstractOrderHandler{
 
 		logger.info("订单查询成功");
 		return orders;
+	}
+
+	public Integer queryOrdersCount(QueryOrderRequest request) {
+		logger.info("开始查询订单数");
+		Map<String, Object> params = buildParameters(request);
+
+		int count = orderMapper.queryOrdersCount(params);
+
+		logger.info("订单数查询成功,结果:{}", count);
+		return count;
 	}
 
 	/**
@@ -55,8 +65,13 @@ public class QueryOrderHandler extends AbstractOrderHandler{
 		params.put("salesId", request.getSalesId());
 		params.put("startDate", request.getStartDate());
 		params.put("endDate", request.getEndDate());
-		params.put("startNum", (request.getPageNo() - 1) * request.getPageSize());
-		params.put("pageSize", request.getPageSize());
+		if (request.getPageNo() != null) {
+			params.put("startNum", (request.getPageNo() - 1) * request.getPageSize());
+		}
+		if (request.getPageSize() != null) {
+			params.put("pageSize", request.getPageSize());
+		}
+
 		logger.info("查询参数构建完成,参数明细:{}", JSON.toJSONString(params));
 		return params;
 	}
@@ -80,6 +95,16 @@ public class QueryOrderHandler extends AbstractOrderHandler{
 			throw new OrderException(OrderErrorEnum.paramsError);
 		}
 
+		logger.info("请求参数验证通过");
+	}
+
+	/**
+	 * 验证分页信息
+	 * 
+	 * @param request
+	 */
+	public void validatePageInfo(QueryOrderRequest request) {
+		logger.info("开始验证分页信息");
 		if (request.getPageNo() == null || request.getPageSize() == null) {
 			logger.error("必须填写分页信息");
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "必须填写分页信息");
@@ -97,8 +122,7 @@ public class QueryOrderHandler extends AbstractOrderHandler{
 			logger.error("PageSize必须小于等于" + orderListPageSize);
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "PageSize必须小于等于" + orderListPageSize);
 		}
-
-		logger.info("请求参数验证通过");
+		logger.info("分页信息验证通过");
 	}
 
 	/**
