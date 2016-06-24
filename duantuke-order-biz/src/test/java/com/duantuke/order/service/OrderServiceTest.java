@@ -135,7 +135,7 @@ public class OrderServiceTest {
 		request.setHeader(header);
 
 		Base base = new Base();
-		base.setOrderId(19l);
+		base.setOrderId(63l);
 		request.setData(base);
 
 		Response<Order> response = orderService.queryOrderByOrderId(request);

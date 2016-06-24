@@ -36,11 +36,25 @@
 	    <result column="sku_name" property="skuName" jdbcType="VARCHAR" />
 	    <result column="sku_type" property="skuType" jdbcType="INTEGER" />
 	    <result column="num" property="num" jdbcType="INTEGER" />
-	    <result column="price" property="price" jdbcType="DECIMAL" />
 	    <result column="detail_create_time" property="createTime" jdbcType="TIMESTAMP" />
 	    <result column="detail_create_by" property="createBy" jdbcType="VARCHAR" />
 	    <result column="detail_update_time" property="updateTime" jdbcType="TIMESTAMP" />
 	    <result column="detail_update_by" property="updateBy" jdbcType="VARCHAR" />
+	    <collection property="priceDetails" 
+			ofType="com.duantuke.order.model.OrderDetailPrice"
+			javaType="java.util.ArrayList">
+			<id column="price_id" property="id" jdbcType="BIGINT" />
+		    <result column="price_order_id" property="orderId" jdbcType="BIGINT" />
+		    <result column="price_order_detail_id" property="orderDetailId" jdbcType="BIGINT" />
+		    <result column="price_sku_id" property="skuId" jdbcType="BIGINT" />
+		    <result column="price_sku_name" property="skuName" jdbcType="VARCHAR" />
+		    <result column="price" property="price" jdbcType="DECIMAL" />
+		    <result column="action_time" property="actionTime" jdbcType="TIMESTAMP" />
+		    <result column="price_create_time" property="createTime" jdbcType="TIMESTAMP" />
+		    <result column="price_create_by" property="createBy" jdbcType="VARCHAR" />
+		    <result column="price_update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		    <result column="price_update_by" property="updateBy" jdbcType="VARCHAR" />
+		</collection>
 	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
@@ -468,10 +482,21 @@
 		b.create_time as detail_create_time,
 		b.create_by as detail_create_by,
 		b.update_time as detail_update_time,
-		b.update_by as detail_update_by
+		b.update_by as detail_update_by,
+		c.id AS price_id,
+		c.order_id as price_order_id,
+		c.order_detail_id as price_order_detail_id,
+		c.action_time,
+		c.price,
+		c.sku_id as price_sku_id,
+		c.sku_name as price_sku_name,
+		c.create_by as price_create_by,
+		c.create_time as price_create_time,
+		c.update_by as price_update_by,
+		c.update_time as price_update_time
     FROM orders AS a 
-    LEFT JOIN order_details AS b 
-    ON a.id = b.order_id 
+    LEFT JOIN order_details AS b ON a.id = b.order_id 
+	LEFT JOIN order_details_price AS c ON c.order_detail_id = b.id
     WHERE a.id = #{id,jdbcType=BIGINT}
   </select>
    <update id="cancelOrder" parameterType="com.duantuke.order.model.Order" >
