@@ -180,7 +180,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 						}
 					}
 				}
-				totalPrice = totalPrice.add(orderDetailPrice.getPrice());
+				totalPrice = totalPrice.add(orderDetailPrice.getPrice().multiply(new BigDecimal(orderDetail.getNum())));
 			}
 			logger.info("Sku单价验证通过");
 		}
