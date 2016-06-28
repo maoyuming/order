@@ -19,6 +19,7 @@
     <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
     <result column="cancel_reason" property="cancelReason" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
@@ -59,7 +60,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, type, status, pay_type, pay_status, total_price, contact, contact_phone, customer_id, 
-    promotion_id, sales_id, sales_name,begin_time,end_time, supplier_id, supplier_name, cancel_reason, memo, create_time, create_by, upate_time, 
+    promotion_id, sales_id, sales_name,begin_time,end_time, supplier_id, supplier_name, cancel_reason,flag, memo, create_time, create_by, upate_time, 
     update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -77,7 +78,7 @@
       pay_type, pay_status, total_price, 
       contact, contact_phone, customer_id, 
       promotion_id, sales_id, sales_name, supplier_id, 
-      supplier_name,beign_time,end_time,cancel_reason, memo, create_time, 
+      supplier_name,beign_time,end_time,cancel_reason,flag, memo, create_time, 
       create_by, upate_time, update_by
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
@@ -85,7 +86,7 @@
       #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
       #{promotionId,jdbcType=BIGINT}, #{salesId,jdbcType=BIGINT},#{salesName,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
       #{supplierName,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},
-      #{cancel_reason,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{cancel_reason,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
       )
   </insert>
@@ -142,6 +143,9 @@
       </if>
        <if test="cancelReason != null" >
         cancelReason,
+      </if>
+      <if test="flag != null" >
+        flag,
       </if>
       <if test="memo != null" >
         memo,
@@ -211,6 +215,9 @@
       <if test="cancelReason != null" >
         #{cancelReason,jdbcType=VARCHAR},
       </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
       </if>
@@ -279,6 +286,9 @@
       <if test="cancelReason != null" >
         cancel_reason = #{cancelReason,jdbcType=VARCHAR},
       </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
@@ -315,6 +325,7 @@
       begin_time = #{beginTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
@@ -339,6 +350,7 @@
 			a.begin_time,
 			a.end_time,
 			a.cancel_reason,
+			a.flag,
 			a.memo,
 			a.create_time,
 			a.create_by,
@@ -367,6 +379,7 @@
 			begin_time,
 			end_time,
 			cancel_reason,
+			flag,
 			memo,
 			create_time,
 			create_by,
@@ -468,6 +481,7 @@
 		a.begin_time,
 		a.end_time,
 		a.cancel_reason,
+		a.flag,
 		a.memo,
 		a.create_time,
 		a.create_by,
@@ -533,6 +547,7 @@
 			begin_time,
 			end_time,
 			cancel_reason,
+			flag,
 			memo,
 			create_time,
 			create_by,

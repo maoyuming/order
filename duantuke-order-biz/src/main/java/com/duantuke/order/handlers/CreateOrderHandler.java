@@ -222,6 +222,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 * 
 	 * @param order
 	 */
+	@SuppressWarnings("rawtypes")
 	private Order buildOrder(OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始构建订单主信息");
 		Order order = context.getRequest().getData().getOrder();
@@ -240,6 +241,27 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		order.setSupplierId(skuInfo.getSupplierId());
 		order.setSupplierName(skuInfo.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
+
+		/*
+		 * 业务标识：第0位标识是否有订房, 第1位标识是否有餐饮, 第2位标识是否有门票
+		 */
+		char[] flagArray = new char[64];
+		for (SkuInfo s : skuResponse.getList()) {
+			if (s.getType().equals(SkuTypeEnum.roomtype.getCode()) && flagArray[0] != '1') {
+				flagArray[0] = '1';
+			}
+			if (s.getType().equals(SkuTypeEnum.meal.getCode()) && flagArray[1] != '1') {
+				flagArray[1] = '1';
+			}
+		}
+		StringBuilder flag = new StringBuilder();
+		for(char c : flagArray){
+			if(c == '\u0000'){
+				c = '0';
+			}
+			flag.append(c);
+		}
+		order.setFlag(flag.toString());
 
 		logger.info("订单主信息构建完成,结果:{}", JSON.toJSONString(order));
 		return order;

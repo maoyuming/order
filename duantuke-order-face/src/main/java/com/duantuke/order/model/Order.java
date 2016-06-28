@@ -43,6 +43,8 @@ public class Order implements Serializable{
 
 	private String cancelReason;
 	
+	private String flag;
+	
 	private String memo;
 
 	private Date createTime;
@@ -237,5 +239,13 @@ public class Order implements Serializable{
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
 	}
 }

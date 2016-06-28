@@ -66,11 +66,11 @@ public class OrderServiceTest {
 		orderDetail.setSkuId(1l);
 		orderDetail.setSkuName("大床房");
 		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
-		orderDetail.setNum(2);
+		orderDetail.setNum(1);
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160624"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160628"));
 		orderDetailPrice.setPrice(new BigDecimal("122"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
@@ -85,7 +85,7 @@ public class OrderServiceTest {
 
 		priceDetails = new ArrayList<OrderDetailPrice>();
 		orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160624"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160628"));
 		orderDetailPrice.setPrice(new BigDecimal("2"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
@@ -111,7 +111,7 @@ public class OrderServiceTest {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = sdf.parse("2016-06-12");
-		Date endDate = sdf.parse("2016-06-14");
+		Date endDate = sdf.parse("2016-06-29");
 
 		QueryOrderRequest queryOrderRequest = new QueryOrderRequest();
 		queryOrderRequest.setOrderType(OrderTypeEnum.common.getId());
