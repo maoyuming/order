@@ -420,7 +420,8 @@ public class OrderServiceImpl implements OrderService {
 			logger.info("接收到增加订单备注请求,入参:{}", JSON.toJSONString(request));
 			// 参数合法性校验
 			Base base = request.getData();
-			if (base == null || base.getOrderId() == null || base.getOrderId() < 1 || base.getRemark() == null) {
+			if (base == null || base.getOrderId() == null || base.getOrderId() < 1 || base.getRemark() == null
+					|| base.getOperatorId() == null || base.getOperatorName() == null) {
 				throw new OrderException(OrderErrorEnum.paramsError);
 			}
 
