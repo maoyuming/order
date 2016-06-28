@@ -27,6 +27,10 @@ public class Base implements Serializable {
 	 * 操作人名称
 	 */
 	private String operatorName;
+	/**
+	 * 备注
+	 */
+	private String remark;
 
 	public Long getOrderId() {
 		return orderId;
@@ -58,5 +62,13 @@ public class Base implements Serializable {
 
 	public void setOperatorName(String operatorName) {
 		this.operatorName = operatorName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

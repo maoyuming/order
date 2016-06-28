@@ -76,11 +76,12 @@ public class OrderServiceImpl implements OrderService {
 				orderProducter.sendCreatingMessage(buildMessage(context.getOrder()));
 
 				// 保存业务日志
-				saveLog(context.getOrder(), BusinessTypeEnum.CREATE, "订单创建成功");
+				saveLog(context.getOrder().getId(), BusinessTypeEnum.CREATE, "订单创建成功",
+						context.getOrder().getCreateBy());
 			} catch (Exception e) {
 				logger.error("创建订单后处理异常", e);
 			}
-			
+
 			// 封装返回信息
 			CreateOrderResponse createOrderResponse = new CreateOrderResponse();
 			createOrderResponse.setOrder(context.getOrder());
@@ -239,7 +240,7 @@ public class OrderServiceImpl implements OrderService {
 			orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
 
 			// 记录日志
-			saveLog(context.getOrder(), BusinessTypeEnum.CANCEL, "订单已取消");
+			saveLog(context.getOrder().getId(), BusinessTypeEnum.CANCEL, "订单已取消", context.getOrder().getUpdateBy());
 		} catch (Exception e) {
 			logger.error("取消订单后处理异常", e);
 		}
@@ -300,7 +301,7 @@ public class OrderServiceImpl implements OrderService {
 			orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
 
 			// 记录日志
-			saveLog(context.getOrder(), BusinessTypeEnum.CONFIRM, "订单已确认");
+			saveLog(context.getOrder().getId(), BusinessTypeEnum.CONFIRM, "订单已确认", context.getOrder().getUpdateBy());
 		} catch (Exception e) {
 			logger.error("确认订单后处理异常", e);
 		}
@@ -348,7 +349,7 @@ public class OrderServiceImpl implements OrderService {
 			for (Order order : orders) {
 				orderProducter.sendFinishedMessage(buildMessage(order));
 
-				saveLog(order, BusinessTypeEnum.FINISHED, "订单已完成");
+				saveLog(order.getId(), BusinessTypeEnum.FINISHED, "订单已完成", order.getUpdateBy());
 			}
 		} catch (Exception e) {
 			logger.error("完成订单后处理异常", e);
@@ -368,12 +369,12 @@ public class OrderServiceImpl implements OrderService {
 	 * @param content
 	 *            日志内容
 	 */
-	private void saveLog(Order order, BusinessTypeEnum businessTypeEnum, String content) {
+	private void saveLog(Long orderId, BusinessTypeEnum businessTypeEnum, String content, String operator) {
 		logger.info("准备记录日志");
 		BisLog bisLog = new BisLog();
 		bisLog.setSystem(PropertyConfigurer.getProperty("system"));
-		bisLog.setOperator(order.getUpdateBy() == null ? order.getCreateBy() : order.getUpdateBy());
-		bisLog.setBussinessId(String.valueOf(order.getId()));
+		bisLog.setOperator(operator);
+		bisLog.setBussinessId(String.valueOf(orderId));
 		bisLog.setBussinssType(businessTypeEnum.getId());
 		bisLog.setContent(content);
 		logger.info("开始记录日志,参数:{}", JSON.toJSONString(bisLog));
@@ -409,6 +410,39 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		logger.info("订单数查询全部完成,返回值:{}", JSON.toJSONString(response));
+		return response;
+	}
+
+	@Override
+	public Response<String> addOrderRemark(Request<Base> request) {
+		Response<String> response = new Response<String>();
+		try {
+			logger.info("接收到增加订单备注请求,入参:{}", JSON.toJSONString(request));
+			// 参数合法性校验
+			Base base = request.getData();
+			if (base == null || base.getOrderId() == null || base.getOrderId() < 1 || base.getRemark() == null) {
+				throw new OrderException(OrderErrorEnum.paramsError);
+			}
+
+			saveLog(base.getOrderId(), BusinessTypeEnum.CSREMARK, base.getRemark(),
+					base.getOperatorId() + "(" + base.getOperatorName() + ")");
+
+			// 封装返回信息
+			response.setSuccess(true);
+			response.setData("订单备注添加成功");
+		} catch (OrderException e) {
+			logger.error("订单增加备注异常", e);
+			response.setSuccess(false);
+			response.setErrorCode(e.getErrorCode());
+			response.setErrorMessage(e.getErrorMsg());
+		} catch (Exception ex) {
+			logger.error("订单增加备注异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
+		logger.info("订单新增备注全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
 

@@ -79,7 +79,7 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<Integer> queryOrdersCount(Request<QueryOrderRequest> request);
-	
+
 	/**
 	 * 根据订单号查询订单信息，包含订单明细
 	 * 
@@ -111,4 +111,12 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<String> autoFinish(Request<Base> request);
+
+	/**
+	 * 增加订单备注
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response<String> addOrderRemark(Request<Base> request);
 }

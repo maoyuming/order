@@ -166,7 +166,7 @@ public class OrderServiceTest {
 		request.setHeader(header);
 
 		Base base = new Base();
-		base.setOrderId(19l);
+		base.setOrderId(68l);
 		request.setData(base);
 
 		Response<Order> response = orderService.confirm(request);
@@ -202,6 +202,23 @@ public class OrderServiceTest {
 		request.setData(queryOrderRequest);
 
 		Response<Integer> response = orderService.queryOrdersCount(request);
+		Assert.assertTrue(response.isSuccess());
+	}
+	
+	@Test
+	public void testAddOrderRemark(){
+		Request<Base> request = new Request<Base>();
+		Header header = new Header();
+		header.setTimeStamp(new Date());
+		request.setHeader(header);
+		
+		Base base = new Base();
+		base.setOrderId(68l);
+		base.setRemark("老板确认有房");
+		base.setOperatorId("123");
+		base.setOperatorName("客服mm");
+		request.setData(base);
+		Response<String> response = orderService.addOrderRemark(request);
 		Assert.assertTrue(response.isSuccess());
 	}
 }
