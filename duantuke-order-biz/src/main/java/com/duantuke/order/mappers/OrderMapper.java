@@ -31,4 +31,6 @@ public interface OrderMapper {
     int updateOrderInfoAfterCreated(Order record);
     
     int queryOrdersCount(Map<String, Object> params);
+    
+    int updateOrderAfterPaid(Order record);
 }

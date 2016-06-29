@@ -564,4 +564,11 @@
       sales_name = #{salesName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="updateOrderAfterPaid" parameterType="com.duantuke.order.model.Order" >
+    update orders
+    set pay_status = #{payStatus,jdbcType=INTEGER},
+      upate_time = #{upateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

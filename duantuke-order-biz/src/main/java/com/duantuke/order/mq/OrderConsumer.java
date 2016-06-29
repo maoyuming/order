@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CreateOrderHandler;
+import com.duantuke.order.handlers.UpdateOrderHandler;
 import com.duantuke.order.model.Message;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.utils.log.LogUtil;
@@ -26,6 +27,8 @@ public class OrderConsumer {
 	@Autowired
 	private CreateOrderHandler createOrderHandler;
 	@Autowired
+	private UpdateOrderHandler updateOrderHandler;
+	@Autowired
 	private OrderProducter orderProducter;
 
 	/**
@@ -34,7 +37,7 @@ public class OrderConsumer {
 	 * @param message
 	 */
 	@MkTopicConsumer(topic = "order_creating", group = "OrderGroup", serializerClass = "com.mk.kafka.client.serializer.SerializerDecoder")
-	public void updateOrderInfoAfterCreated(String message) {
+	public void updateOrderAfterCreated(String message) {
 		try {
 			logger.info("接收到创建中的订单消息,报文:{}", message);
 			if (StringUtils.isNotBlank(message)) {
@@ -56,5 +59,25 @@ public class OrderConsumer {
 			logger.info("消费order_creating消息异常 ", ex);
 			throw new KafkaMessageConsumeException(ex);
 		}
+	}
+
+	/**
+	 * 订单支付完成消息，更新订单信息
+	 */
+	@MkTopicConsumer(topic = "sc_pay_success_topic", group = "OrderGroup", serializerClass = "com.mk.kafka.client.serializer.SerializerDecoder")
+	public void updateOrderAfterPaid(String message) {
+		try {
+			logger.info("接收到支付完成消息,报文:{}", message);
+			if (StringUtils.isNotBlank(message)) {
+				Long orderId = JSON.parseObject(message, Long.class);
+				updateOrderHandler.updateOrderAfterPaid(orderId);
+			}
+		} catch (OrderException e) {
+			logger.info("消费sc_pay_success_topic消息异常 ", e);
+		} catch (Exception ex) {
+			logger.info("消费sc_pay_success_topic消息异常 ", ex);
+			throw new KafkaMessageConsumeException(ex);
+		}
+		logger.info("支付完成消息消费完成");
 	}
 }

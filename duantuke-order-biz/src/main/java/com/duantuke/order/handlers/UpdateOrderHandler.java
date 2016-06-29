@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
+import com.duantuke.order.common.enums.PayStatusEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.model.Base;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.Request;
+import com.duantuke.order.utils.PropertyConfigurer;
 
 /**
  * 修改订单处理器
@@ -98,5 +100,23 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 
 		logger.info("订单处理完成");
 		return orders;
+	}
+
+	/**
+	 * 支付完成更新订单
+	 * 
+	 * @param id
+	 */
+	public void updateOrderAfterPaid(Long id) {
+		logger.info("准备执行更新操作");
+		Order order = new Order();
+		order.setId(id);
+		order.setPayStatus(PayStatusEnum.paymentSuccess.getId());
+		order.setUpateTime(new Date());
+		order.setUpdateBy(PropertyConfigurer.getProperty("system"));
+
+		logger.info("开始执行更新操作,参数:{}", JSON.toJSONString(order));
+		int result = orderMapper.updateOrderAfterPaid(order);
+		logger.info("更新完成,结果:{}", result);
 	}
 }
