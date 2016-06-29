@@ -40,7 +40,7 @@ public class OrderConsumer {
 	public void updateOrderAfterCreated(String message) {
 		try {
 			logger.info("接收到创建中的订单消息,报文:{}", message);
-			if (StringUtils.isNotBlank(message)) {
+			if (StringUtils.isNotBlank(message)) { 
 				Message m = JSON.parseObject(message, Message.class);
 
 				Order order = createOrderHandler.updateOrderInfoAfterCreated(m.getOrder());

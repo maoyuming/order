@@ -42,7 +42,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		// 执行修改操作
 		Order order = context.getOrder();
 		order.setStatus(OrderStatusEnum.confirmed.getId());
-		order.setUpateTime(context.getCurrentTime());
+		order.setUpdateTime(context.getCurrentTime());
 		order.setUpdateBy(formatOperator(context));
 		int result = orderMapper.updateOrderStatus(order);
 
@@ -92,7 +92,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		// 执行完成操作
 		for (Order order : orders) {
 			order.setStatus(OrderStatusEnum.finished.getId());
-			order.setUpateTime(now);
+			order.setUpdateTime(now);
 			order.setUpdateBy(formatOperator(context));
 			int result = orderMapper.updateOrderStatus(order);
 			logger.info("订单[{}]执行完成操作,结果:{}", order.getId(), result);
@@ -112,7 +112,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		Order order = new Order();
 		order.setId(id);
 		order.setPayStatus(PayStatusEnum.paymentSuccess.getId());
-		order.setUpateTime(new Date());
+		order.setUpdateTime(new Date());
 		order.setUpdateBy(PropertyConfigurer.getProperty("system"));
 
 		logger.info("开始执行更新操作,参数:{}", JSON.toJSONString(order));

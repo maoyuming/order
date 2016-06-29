@@ -70,7 +70,7 @@ public class OrderServiceTest {
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160628"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160629"));
 		orderDetailPrice.setPrice(new BigDecimal("122"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
@@ -85,7 +85,7 @@ public class OrderServiceTest {
 
 		priceDetails = new ArrayList<OrderDetailPrice>();
 		orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160628"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160629"));
 		orderDetailPrice.setPrice(new BigDecimal("2"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);

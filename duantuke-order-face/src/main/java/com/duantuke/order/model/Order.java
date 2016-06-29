@@ -51,7 +51,7 @@ public class Order implements Serializable{
 
 	private String createBy;
 
-	private Date upateTime;
+	private Date updateTime;
 
 	private String updateBy;
 
@@ -153,12 +153,12 @@ public class Order implements Serializable{
 		this.createBy = createBy == null ? null : createBy.trim();
 	}
 
-	public Date getUpateTime() {
-		return upateTime;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-	public void setUpateTime(Date upateTime) {
-		this.upateTime = upateTime;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public String getUpdateBy() {
