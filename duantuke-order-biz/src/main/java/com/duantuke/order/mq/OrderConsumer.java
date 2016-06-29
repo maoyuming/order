@@ -54,9 +54,9 @@ public class OrderConsumer {
 				logger.info("订单创建消息发送成功");
 			}
 		} catch (OrderException e) {
-			logger.info("消费order_creating消息异常 ", e);
+			logger.info("消费order_creating消息异常", e);
 		} catch (Exception ex) {
-			logger.info("消费order_creating消息异常 ", ex);
+			logger.info("消费order_creating消息异常", ex);
 			throw new KafkaMessageConsumeException(ex);
 		}
 	}
@@ -73,9 +73,9 @@ public class OrderConsumer {
 				updateOrderHandler.updateOrderAfterPaid(orderId);
 			}
 		} catch (OrderException e) {
-			logger.info("消费sc_pay_success_topic消息异常 ", e);
+			logger.info("消费sc_pay_success_topic消息异常", e);
 		} catch (Exception ex) {
-			logger.info("消费sc_pay_success_topic消息异常 ", ex);
+			logger.info("消费sc_pay_success_topic消息异常", ex);
 			throw new KafkaMessageConsumeException(ex);
 		}
 		logger.info("支付完成消息消费完成");
