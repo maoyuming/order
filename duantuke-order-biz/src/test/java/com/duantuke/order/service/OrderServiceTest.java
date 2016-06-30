@@ -103,6 +103,51 @@ public class OrderServiceTest {
 	}
 
 	@Test
+	public void testCreateForTeam() {
+		Request<CreateOrderRequest> request = new Request<CreateOrderRequest>();
+		Header header = new Header();
+		header.setTimeStamp(new Date());
+		request.setHeader(header);
+
+		Date today = new Date();
+		Date tomorrow = DateUtils.addDays(today, 1);
+		CreateOrderRequest createOrderRequest = new CreateOrderRequest();
+		Order order = new Order();
+		order.setPayType(PayTypeEnum.prepay.getId());
+		order.setContact("张三");
+		order.setContactPhone("13333333334");
+		order.setBeginTime(today);
+		order.setEndTime(tomorrow);
+
+		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
+		OrderDetail orderDetail = new OrderDetail();
+		orderDetail.setSkuId(10002l);
+		orderDetail.setSkuName("团体10人");
+		orderDetail.setSkuType(SkuTypeEnum.teamsku.getCode());
+		orderDetail.setNum(1);
+		
+		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
+		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160630"));
+		orderDetailPrice.setPrice(new BigDecimal("112"));
+		priceDetails.add(orderDetailPrice);
+		orderDetail.setPriceDetails(priceDetails);
+		
+		orderDetails.add(orderDetail);
+		
+		order.setOrderDetails(orderDetails);
+
+		createOrderRequest.setOrder(order);
+		request.setData(createOrderRequest);
+		createOrderRequest.setOperatorId("123");
+		createOrderRequest.setOperatorName("张三");
+
+		Response<CreateOrderResponse> response = orderService.create(request);
+		Assert.assertTrue(response.isSuccess());
+	}
+	
+	
+	@Test
 	public void testQueryOrders() throws ParseException {
 		Request<QueryOrderRequest> request = new Request<QueryOrderRequest>();
 		Header header = new Header();

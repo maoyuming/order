@@ -15,6 +15,7 @@ import com.duantuke.basic.enums.SkuTypeEnum;
 import com.duantuke.basic.face.bean.RoomTypeInfo;
 import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuResponse;
+import com.duantuke.basic.face.bean.TeamSkuInfo;
 import com.duantuke.basic.po.Meal;
 import com.duantuke.basic.po.Sale;
 import com.duantuke.order.common.enums.OrderErrorEnum;
@@ -137,7 +138,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			if (orderDetail.getNum() == null) {
 				throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "数量不能为空");
 			}
-
+			BigDecimal totalPricePerDay = BigDecimal.ZERO;
 			// 验证订单价格
 			logger.info("开始验证订单价格信息");
 			List<OrderDetailPrice> priceList = orderDetail.getPriceDetails();
@@ -179,9 +180,28 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 							throw new OrderException(OrderErrorEnum.orderPriceError);
 						}
 					}
+					
+					// 团体模型
+					if(skuInfo.getType().equals(SkuTypeEnum.teamsku.getCode())){
+						TeamSkuInfo teamSku = (TeamSkuInfo) skuInfo.getInfo();
+						Map<String, BigDecimal> priceDetails = teamSku.getPrices();
+						BigDecimal price = priceDetails.get(date);
+						if (price == null) {
+							throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
+									"日期" + date + "的价格不存在");
+						}
+						if (price.compareTo(orderDetailPrice.getPrice()) != 0) {
+							logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
+							throw new OrderException(OrderErrorEnum.orderPriceError);
+						}
+					}
+					totalPricePerDay = totalPricePerDay.add(orderDetailPrice.getPrice());
 				}
-				totalPrice = totalPrice.add(orderDetailPrice.getPrice().multiply(new BigDecimal(orderDetail.getNum())));
 			}
+			totalPricePerDay = totalPricePerDay.multiply(new BigDecimal(orderDetail.getNum()));
+			orderDetail.setTotalPrice(totalPricePerDay);
+			totalPrice = totalPrice.add(totalPricePerDay);
+			
 			logger.info("Sku单价验证通过");
 		}
 
