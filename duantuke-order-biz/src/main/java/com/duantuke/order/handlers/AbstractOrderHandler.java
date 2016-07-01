@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.face.bean.SkuRequest;
 import com.duantuke.basic.face.bean.SkuResponse;
+import com.duantuke.basic.face.bean.SkuSubRequest;
 import com.duantuke.basic.face.service.SaleService;
 import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.basic.po.Sale;
@@ -62,18 +63,25 @@ public abstract class AbstractOrderHandler {
 		SkuRequest request = new SkuRequest();
 		request.setBeginTime(order.getBeginTime());
 		request.setEndTime(order.getEndTime());
-		Map<Integer, List<Long>> skuMap = new HashMap<Integer, List<Long>>();
+		Map<Integer, List<SkuSubRequest>> skuMap = new HashMap<Integer, List<SkuSubRequest>>();
 		for (OrderDetail orderDetail : orderDetails) {
 			Long skuId = orderDetail.getSkuId();
+			int num = orderDetail.getNum();
 			Integer skuType = orderDetail.getSkuType();
 
 			if (skuMap.containsKey(skuType)) {
-				List<Long> skus = skuMap.get(skuType);
-				skus.add(skuId);
+				List<SkuSubRequest> list = skuMap.get(skuType);
+				SkuSubRequest skuSubRequest = new SkuSubRequest();
+				skuSubRequest.setSkuId(skuId);
+				skuSubRequest.setNum(num);
+				list.add(skuSubRequest);
 			} else {
-				List<Long> skus = new ArrayList<Long>();
-				skus.add(skuId);
-				skuMap.put(skuType, skus);
+				List<SkuSubRequest> list = new ArrayList<SkuSubRequest>();
+				SkuSubRequest skuSubRequest = new SkuSubRequest();
+				skuSubRequest.setSkuId(skuId);
+				skuSubRequest.setNum(num);
+				list.add(skuSubRequest);
+				skuMap.put(skuType, list);
 			}
 		}
 		request.setSkuMap(skuMap);

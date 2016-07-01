@@ -63,33 +63,33 @@ public class OrderServiceTest {
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
-		orderDetail.setSkuId(1l);
-		orderDetail.setSkuName("大床房");
+		orderDetail.setSkuId(26l);
+		orderDetail.setSkuName("三人间");
 		orderDetail.setSkuType(SkuTypeEnum.roomtype.getCode());
-		orderDetail.setNum(1);
+		orderDetail.setNum(3);
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160629"));
-		orderDetailPrice.setPrice(new BigDecimal("122"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160701"));
+		orderDetailPrice.setPrice(new BigDecimal("100"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
 		
 		orderDetails.add(orderDetail);
 		
-		orderDetail = new OrderDetail();
-		orderDetail.setSkuId(2l);
-		orderDetail.setSkuName("老北京火锅");
-		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
-		orderDetail.setNum(1);
-
-		priceDetails = new ArrayList<OrderDetailPrice>();
-		orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160629"));
-		orderDetailPrice.setPrice(new BigDecimal("2"));
-		priceDetails.add(orderDetailPrice);
-		orderDetail.setPriceDetails(priceDetails);
-		orderDetails.add(orderDetail);
+//		orderDetail = new OrderDetail();
+//		orderDetail.setSkuId(2l);
+//		orderDetail.setSkuName("老北京火锅");
+//		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
+//		orderDetail.setNum(1);
+//
+//		priceDetails = new ArrayList<OrderDetailPrice>();
+//		orderDetailPrice = new OrderDetailPrice();
+//		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160701"));
+//		orderDetailPrice.setPrice(new BigDecimal("2"));
+//		priceDetails.add(orderDetailPrice);
+//		orderDetail.setPriceDetails(priceDetails);
+//		orderDetails.add(orderDetail);
 		
 		order.setOrderDetails(orderDetails);
 
@@ -128,7 +128,7 @@ public class OrderServiceTest {
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160630"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160701"));
 		orderDetailPrice.setPrice(new BigDecimal("112"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
