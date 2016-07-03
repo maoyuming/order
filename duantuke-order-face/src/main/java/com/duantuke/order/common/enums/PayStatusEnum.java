@@ -9,7 +9,8 @@ public enum PayStatusEnum {
 	noNeedToPay(10, "无需支付"),
 	waitForPayment(30, "等待支付"),
 	paymentSuccess(50, "支付成功"),
-	paymentFailure(70, "支付失败");
+	paymentFailure(70, "支付失败"),
+	refunded(90, "已退款");
 
 	private final Integer id;
 	private final String name;

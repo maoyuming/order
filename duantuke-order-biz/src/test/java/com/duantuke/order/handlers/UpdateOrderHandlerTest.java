@@ -21,4 +21,9 @@ public class UpdateOrderHandlerTest {
 	public void testUpdateOrderAfterPaid(){
 		updateOrderHandler.updateOrderAfterPaid(82l);
 	}
+	
+	@Test
+	public void testUpdateOrderAfterRefunded(){
+		updateOrderHandler.updateOrderAfterRefunded(108l);
+	}
 }

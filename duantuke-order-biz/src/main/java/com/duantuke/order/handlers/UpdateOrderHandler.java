@@ -60,17 +60,17 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 
 		Order order = super.getOrderById(base.getOrderId());
 		context.setOrder(order);
-		
+
 		if (order.getStatus().equals(OrderStatusEnum.confirmed.getId())) {
 			logger.warn("订单已确认");
 			throw new OrderException(OrderErrorEnum.orderConfirmed);
 		}
-		
+
 		if (!order.getStatus().equals(OrderStatusEnum.toBeConfirmed.getId())) {
 			logger.error("非法订单状态");
 			throw new OrderException(OrderErrorEnum.orderStatusError);
 		}
-		
+
 		if (!order.getPayStatus().equals(PayStatusEnum.paymentSuccess.getId())) {
 			logger.error("订单未支付，不能确认");
 			throw new OrderException(OrderErrorEnum.orderNotPaid);
@@ -117,10 +117,10 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 	 * 
 	 * @param id
 	 */
-	public void updateOrderAfterPaid(Long id) {
+	public void updateOrderAfterPaid(Long orderId) {
 		logger.info("准备执行更新操作");
 		Order order = new Order();
-		order.setId(id);
+		order.setId(orderId);
 		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
 		order.setPayStatus(PayStatusEnum.paymentSuccess.getId());
 		order.setUpdateTime(new Date());
@@ -128,6 +128,24 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 
 		logger.info("开始执行更新操作,参数:{}", JSON.toJSONString(order));
 		int result = orderMapper.updateOrderAfterPaid(order);
+		logger.info("更新完成,结果:{}", result);
+	}
+
+	/**
+	 * 退款后更新订单
+	 * 
+	 * @param orderId
+	 */
+	public void updateOrderAfterRefunded(Long orderId) {
+		logger.info("准备执行更新操作");
+		Order order = new Order();
+		order.setId(orderId);
+		order.setPayStatus(PayStatusEnum.refunded.getId());
+		order.setUpdateTime(new Date());
+		order.setUpdateBy(PropertyConfigurer.getProperty("system"));
+
+		logger.info("开始执行更新操作,参数:{}", JSON.toJSONString(order));
+		int result = orderMapper.updateOrderAfterRefunded(order);
 		logger.info("更新完成,结果:{}", result);
 	}
 }

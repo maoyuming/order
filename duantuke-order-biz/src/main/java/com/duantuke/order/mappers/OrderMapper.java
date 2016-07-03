@@ -33,4 +33,6 @@ public interface OrderMapper {
     int queryOrdersCount(Map<String, Object> params);
     
     int updateOrderAfterPaid(Order record);
+    
+    int updateOrderAfterRefunded(Order record);
 }

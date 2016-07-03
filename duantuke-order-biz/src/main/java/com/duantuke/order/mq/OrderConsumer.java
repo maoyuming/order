@@ -81,4 +81,25 @@ public class OrderConsumer {
 		}
 		logger.info("支付完成消息消费完成");
 	}
+	
+	/**
+	 * 订单已退款消息，更新订单信息
+	 */
+	@MkTopicConsumer(topic = "sc_refund_success_topic", group = "OrderGroup", serializerClass = "com.mk.kafka.client.serializer.StringDecoder")
+	public void updateOrderAfterRefunded(String message) {
+		try {
+			logger.info("接收到已退款消息,报文:{}", message);
+			if (StringUtils.isNotBlank(message)) {
+				int index = message.indexOf(":");
+				String orderId = message.substring(index + 1, message.length() - 1);
+				updateOrderHandler.updateOrderAfterRefunded(Long.parseLong(orderId));
+			}
+		} catch (OrderException e) {
+			logger.info("消费sc_refund_success_topic消息异常", e);
+		} catch (Exception ex) {
+			logger.info("消费sc_refund_success_topic消息异常", ex);
+			throw new KafkaMessageConsumeException(ex);
+		}
+		logger.info("已退款消息消费完成");
+	}
 }
