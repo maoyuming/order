@@ -40,7 +40,7 @@ public class OrderConsumer {
 	public void updateOrderAfterCreated(String message) {
 		try {
 			logger.info("接收到创建中的订单消息,报文:{}", message);
-			if (StringUtils.isNotBlank(message)) { 
+			if (StringUtils.isNotBlank(message)) {
 				Message m = JSON.parseObject(message, Message.class);
 
 				Order order = createOrderHandler.updateOrderInfoAfterCreated(m.getOrder());
@@ -69,8 +69,9 @@ public class OrderConsumer {
 		try {
 			logger.info("接收到支付完成消息,报文:{}", message);
 			if (StringUtils.isNotBlank(message)) {
-				Long orderId = JSON.parseObject(message, Long.class);
-				updateOrderHandler.updateOrderAfterPaid(orderId);
+				int index = message.indexOf(":");
+				String orderId = message.substring(index + 1, message.length() - 1);
+				updateOrderHandler.updateOrderAfterPaid(Long.parseLong(orderId));
 			}
 		} catch (OrderException e) {
 			logger.info("消费sc_pay_success_topic消息异常", e);
