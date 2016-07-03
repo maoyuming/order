@@ -566,7 +566,8 @@
   </update>
   <update id="updateOrderAfterPaid" parameterType="com.duantuke.order.model.Order" >
     update orders
-    set pay_status = #{payStatus,jdbcType=INTEGER},
+    set status = #{status,jdbcType=INTEGER},
+      pay_status = #{payStatus,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
