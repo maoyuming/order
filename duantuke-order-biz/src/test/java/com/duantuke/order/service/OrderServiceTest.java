@@ -60,6 +60,7 @@ public class OrderServiceTest {
 		order.setMemo("尽量安排无烟房");
 		order.setBeginTime(today);
 		order.setEndTime(tomorrow);
+		order.setType(OrderTypeEnum.common.getId());
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
@@ -118,6 +119,7 @@ public class OrderServiceTest {
 		order.setContactPhone("13333333334");
 		order.setBeginTime(today);
 		order.setEndTime(tomorrow);
+		order.setType(OrderTypeEnum.common.getId());
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
@@ -180,7 +182,7 @@ public class OrderServiceTest {
 		request.setHeader(header);
 
 		Base base = new Base();
-		base.setOrderId(63l);
+		base.setOrderId(89l);
 		request.setData(base);
 
 		Response<Order> response = orderService.queryOrderByOrderId(request);

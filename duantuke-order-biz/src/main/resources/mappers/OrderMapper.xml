@@ -478,6 +478,8 @@
 		a.promotion_id,
 		a.sales_id,
 		a.sales_name,
+		a.supplier_id,
+		a.supplier_name,
 		a.begin_time,
 		a.end_time,
 		a.cancel_reason,
