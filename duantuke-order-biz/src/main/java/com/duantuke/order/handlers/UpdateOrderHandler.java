@@ -71,7 +71,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 			throw new OrderException(OrderErrorEnum.orderStatusError);
 		}
 		
-		if (!order.getPayStatus().equals(PayStatusEnum.paymentSuccess)) {
+		if (!order.getPayStatus().equals(PayStatusEnum.paymentSuccess.getId())) {
 			logger.error("订单未支付，不能确认");
 			throw new OrderException(OrderErrorEnum.orderNotPaid);
 		}
