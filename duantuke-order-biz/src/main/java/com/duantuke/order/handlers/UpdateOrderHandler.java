@@ -66,7 +66,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 			throw new OrderException(OrderErrorEnum.orderConfirmed);
 		}
 		
-		if (!order.getStatus().equals(OrderStatusEnum.initial.getId())) {
+		if (!order.getStatus().equals(OrderStatusEnum.toBeConfirmed.getId())) {
 			logger.error("非法订单状态");
 			throw new OrderException(OrderErrorEnum.orderStatusError);
 		}
