@@ -350,6 +350,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		}
 
 		if (sales != null || customer != null) {
+			logger.info("订单信息更新参数:{}", JSON.toJSONString(order));
 			int result = orderMapper.updateOrderInfoAfterCreated(order);
 			logger.info("订单信息更新完成,结果:{}", result);
 		}
