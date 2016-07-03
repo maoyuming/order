@@ -90,6 +90,12 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 */
 	private void validateOrder(Order order) {
 		logger.info("开始验证订单主信息");
+		if (order.getSupplierId() == null) {
+			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "酒店id不能为空");
+		}
+		if (order.getSupplierName() == null) {
+			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "酒店名称不能为空");
+		}
 		if (order.getType() == null) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "订单类型不能为空");
 		}
@@ -265,10 +271,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		// 获取sku信息
 		SkuResponse skuResponse = super.getSkuInfo(order);
 		context.setSkuInfo(skuResponse);
-		SkuInfo<?> skuInfo = skuResponse.getList().get(0);
-
-		order.setSupplierId(skuInfo.getSupplierId());
-		order.setSupplierName(skuInfo.getSupplierName());
+		
 		order.setTotalPrice(skuResponse.getTotalPrice());
 		order.setFlag(buildFlag(skuResponse));
 

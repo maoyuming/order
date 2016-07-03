@@ -61,6 +61,8 @@ public class OrderServiceTest {
 		order.setBeginTime(today);
 		order.setEndTime(tomorrow);
 		order.setType(OrderTypeEnum.common.getId());
+		order.setSupplierId(869l);
+		order.setSupplierName("邓磊测试农家院");
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
@@ -120,6 +122,8 @@ public class OrderServiceTest {
 		order.setBeginTime(today);
 		order.setEndTime(tomorrow);
 		order.setType(OrderTypeEnum.common.getId());
+		order.setSupplierId(869l);
+		order.setSupplierName("邓磊测试农家院");
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
