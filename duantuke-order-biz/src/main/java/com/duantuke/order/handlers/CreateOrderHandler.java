@@ -20,7 +20,6 @@ import com.duantuke.basic.po.Meal;
 import com.duantuke.basic.po.Sale;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
-import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayStatusEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.model.CreateOrderRequest;
@@ -91,6 +90,9 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 */
 	private void validateOrder(Order order) {
 		logger.info("开始验证订单主信息");
+		if (order.getType() == null) {
+			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "订单类型不能为空");
+		}
 		if (order.getPayType() == null) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "联系人不能为空");
 		}
@@ -255,7 +257,6 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	private Order buildOrder(OrderContext<Request<CreateOrderRequest>> context) {
 		logger.info("开始构建订单主信息");
 		Order order = context.getRequest().getData().getOrder();
-		order.setType(OrderTypeEnum.common.getId());
 		order.setStatus(OrderStatusEnum.initial.getId());
 		order.setPayStatus(PayStatusEnum.waitForPayment.getId());
 		order.setCreateTime(context.getCurrentTime());
