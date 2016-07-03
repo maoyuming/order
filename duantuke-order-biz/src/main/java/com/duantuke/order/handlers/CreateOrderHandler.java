@@ -371,6 +371,11 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 					orderDetailPrice.setSkuName(orderDetail.getSkuName());
 					orderDetailPrice.setCreateTime(context.getCurrentTime());
 					orderDetailPrice.setCreateBy(formatOperator(context));
+					
+					// 处理十分秒
+					String actionDate = DateUtil.getStringFromDate(orderDetailPrice.getActionTime(), DateUtil.FORMAT_DATE);
+					orderDetailPrice.setActionTime(DateUtil.getDateFromString(actionDate, DateUtil.FORMAT_DATE));
+					
 					orderDetailPriceMapper.insertSelective(orderDetailPrice);
 				}
 			}
