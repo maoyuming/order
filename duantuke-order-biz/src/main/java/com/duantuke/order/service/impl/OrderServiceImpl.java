@@ -155,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
 	public Response<Order> queryOrderByOrderId(Request<Base> request) {
 		Response<Order> response = new Response<Order>();
 		try {
-			logger.info("接收到订单明细查询请求,入参:{}", JSON.toJSONString(request));
+			logger.info("接收到订单详情查询请求,入参:{}", JSON.toJSONString(request));
 			// 参数合法性校验
 			Base base = request.getData();
 			if (base == null || base.getOrderId() == null || base.getOrderId() < 1) {
@@ -178,6 +178,7 @@ public class OrderServiceImpl implements OrderService {
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
 		}
+		logger.info("订单详情查询全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
 	}
 

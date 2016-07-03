@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.enums.SkuTypeEnum;
+import com.duantuke.basic.face.bean.PriceInfo;
 import com.duantuke.basic.face.bean.RoomTypeInfo;
 import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuResponse;
@@ -159,15 +159,19 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 					// 房间模型
 					if (skuInfo.getType().equals(SkuTypeEnum.roomtype.getCode())) {
 						RoomTypeInfo roomTypeInfo = (RoomTypeInfo) skuInfo.getInfo();
-						Map<String, BigDecimal> priceDetails = roomTypeInfo.getPrices();
-						BigDecimal price = priceDetails.get(date);
-						if (price == null) {
-							throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
-									"日期" + date + "的价格不存在");
-						}
-						if (price.compareTo(orderDetailPrice.getPrice()) != 0) {
-							logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
-							throw new OrderException(OrderErrorEnum.orderPriceError);
+						List<PriceInfo> priceInfoList = roomTypeInfo.getPriceInfos();
+						for(PriceInfo priceInfo : priceInfoList){
+							if(date.equals(priceInfo.getDate())){
+								BigDecimal price = priceInfo.getPrice();
+								if (price == null) {
+									throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
+											"日期" + date + "的价格不存在");
+								}
+								if (price.compareTo(orderDetailPrice.getPrice()) != 0) {
+									logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
+									throw new OrderException(OrderErrorEnum.orderPriceError);
+								}
+							}
 						}
 					}
 
@@ -184,15 +188,19 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 					// 团体模型
 					if(skuInfo.getType().equals(SkuTypeEnum.teamsku.getCode())){
 						TeamSkuInfo teamSku = (TeamSkuInfo) skuInfo.getInfo();
-						Map<String, BigDecimal> priceDetails = teamSku.getPrices();
-						BigDecimal price = priceDetails.get(date);
-						if (price == null) {
-							throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
-									"日期" + date + "的价格不存在");
-						}
-						if (price.compareTo(orderDetailPrice.getPrice()) != 0) {
-							logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
-							throw new OrderException(OrderErrorEnum.orderPriceError);
+						List<PriceInfo> priceInfoList = teamSku.getPriceInfos();
+						for(PriceInfo priceInfo : priceInfoList){
+							if(date.equals(priceInfo.getDate())){
+								BigDecimal price = priceInfo.getPrice();
+								if (price == null) {
+									throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
+											"日期" + date + "的价格不存在");
+								}
+								if (price.compareTo(orderDetailPrice.getPrice()) != 0) {
+									logger.error("Sku:{}价格验证不通过", skuInfo.getSkuId());
+									throw new OrderException(OrderErrorEnum.orderPriceError);
+								}
+							}
 						}
 					}
 					totalPricePerDay = totalPricePerDay.add(orderDetailPrice.getPrice());
