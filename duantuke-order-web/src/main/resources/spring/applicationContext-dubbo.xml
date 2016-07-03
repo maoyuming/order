@@ -21,6 +21,9 @@
 	<dubbo:reference id="saleService"
 		interface="com.duantuke.basic.face.service.SaleService" timeout="30000"
 		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
+	<dubbo:reference id="customerService"
+		interface="com.duantuke.basic.face.service.CustomerService" timeout="30000"
+		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
 
 	<dubbo:monitor protocol="registry"></dubbo:monitor>
 </beans>
