@@ -19,6 +19,7 @@ public enum OrderErrorEnum {
 	orderPriceError("10003","订单金额错误"),
 	orderStatusError("10004","非法订单状态"),
 	orderNotPaid("10005","订单未支付"),
+	orderFinished("10006","订单已完成"),
 	
 	// 通用错误信息
 	customError("0","系统错误"),

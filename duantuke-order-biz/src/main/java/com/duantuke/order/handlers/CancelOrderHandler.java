@@ -50,6 +50,11 @@ public class CancelOrderHandler extends AbstractOrderHandler {
 			logger.warn("订单已取消");
 			throw new OrderException(OrderErrorEnum.orderCanceled);
 		}
+		
+		if (order.getStatus().equals(OrderStatusEnum.finished.getId())) {
+			logger.warn("订单已完成，不能取消");
+			throw new OrderException(OrderErrorEnum.orderFinished);
+		}
 
 		logger.info("取消订单业务合法性验证通过");
 	}
