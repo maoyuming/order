@@ -37,6 +37,7 @@
 	    <result column="sku_name" property="skuName" jdbcType="VARCHAR" />
 	    <result column="sku_type" property="skuType" jdbcType="INTEGER" />
 	    <result column="num" property="num" jdbcType="INTEGER" />
+	    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
 	    <result column="detail_create_time" property="createTime" jdbcType="TIMESTAMP" />
 	    <result column="detail_create_by" property="createBy" jdbcType="VARCHAR" />
 	    <result column="detail_update_time" property="updateTime" jdbcType="TIMESTAMP" />
