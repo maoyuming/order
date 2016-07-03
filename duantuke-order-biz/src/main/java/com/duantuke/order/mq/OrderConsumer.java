@@ -64,7 +64,7 @@ public class OrderConsumer {
 	/**
 	 * 订单支付完成消息，更新订单信息
 	 */
-	@MkTopicConsumer(topic = "sc_pay_success_topic", group = "OrderGroup", serializerClass = "com.mk.kafka.client.serializer.SerializerDecoder")
+	@MkTopicConsumer(topic = "sc_pay_success_topic", group = "OrderGroup", serializerClass = "com.mk.kafka.client.serializer.StringEncoder")
 	public void updateOrderAfterPaid(String message) {
 		try {
 			logger.info("接收到支付完成消息,报文:{}", message);
