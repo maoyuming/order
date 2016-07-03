@@ -29,6 +29,7 @@ import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.OrderDetail;
 import com.duantuke.order.model.OrderDetailPrice;
 import com.duantuke.order.model.Request;
+import com.duantuke.order.utils.DateUtil;
 import com.duantuke.order.utils.log.LogUtil;
 
 /**
@@ -270,6 +271,12 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		order.setSupplierName(skuInfo.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
 		order.setFlag(buildFlag(skuResponse));
+		
+		// 处理十分秒
+		String beginDate = DateUtil.getStringFromDate(order.getBeginTime(), DateUtil.FORMAT_DATE);
+		String endDate = DateUtil.getStringFromDate(order.getEndTime(), DateUtil.FORMAT_DATE);
+		order.setBeginTime(DateUtil.getDateFromString(beginDate, DateUtil.FORMAT_DATE));
+		order.setEndTime(DateUtil.getDateFromString(endDate+" 23:59:59", DateUtil.FORMAT_DATETIME));
 
 		logger.info("订单主信息构建完成,结果:{}", JSON.toJSONString(order));
 		return order;
