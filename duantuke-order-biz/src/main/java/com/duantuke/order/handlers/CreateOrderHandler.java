@@ -16,6 +16,7 @@ import com.duantuke.basic.face.bean.RoomTypeInfo;
 import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.basic.face.bean.TeamSkuInfo;
+import com.duantuke.basic.po.Customer;
 import com.duantuke.basic.po.Meal;
 import com.duantuke.basic.po.Sale;
 import com.duantuke.order.common.enums.OrderErrorEnum;
@@ -161,8 +162,8 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 					if (skuInfo.getType().equals(SkuTypeEnum.roomtype.getCode())) {
 						RoomTypeInfo roomTypeInfo = (RoomTypeInfo) skuInfo.getInfo();
 						List<PriceInfo> priceInfoList = roomTypeInfo.getPriceInfos();
-						for(PriceInfo priceInfo : priceInfoList){
-							if(date.equals(priceInfo.getDate())){
+						for (PriceInfo priceInfo : priceInfoList) {
+							if (date.equals(priceInfo.getDate())) {
 								BigDecimal price = priceInfo.getPrice();
 								if (price == null) {
 									throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
@@ -185,13 +186,13 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 							throw new OrderException(OrderErrorEnum.orderPriceError);
 						}
 					}
-					
+
 					// 团体模型
-					if(skuInfo.getType().equals(SkuTypeEnum.teamsku.getCode())){
+					if (skuInfo.getType().equals(SkuTypeEnum.teamsku.getCode())) {
 						TeamSkuInfo teamSku = (TeamSkuInfo) skuInfo.getInfo();
 						List<PriceInfo> priceInfoList = teamSku.getPriceInfos();
-						for(PriceInfo priceInfo : priceInfoList){
-							if(date.equals(priceInfo.getDate())){
+						for (PriceInfo priceInfo : priceInfoList) {
+							if (date.equals(priceInfo.getDate())) {
 								BigDecimal price = priceInfo.getPrice();
 								if (price == null) {
 									throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
@@ -210,7 +211,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			totalPricePerDay = totalPricePerDay.multiply(new BigDecimal(orderDetail.getNum()));
 			orderDetail.setTotalPrice(totalPricePerDay);
 			totalPrice = totalPrice.add(totalPricePerDay);
-			
+
 			logger.info("Sku单价验证通过");
 		}
 
@@ -271,12 +272,12 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		order.setSupplierName(skuInfo.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
 		order.setFlag(buildFlag(skuResponse));
-		
+
 		// 处理十分秒
 		String beginDate = DateUtil.getStringFromDate(order.getBeginTime(), DateUtil.FORMAT_DATE);
 		String endDate = DateUtil.getStringFromDate(order.getEndTime(), DateUtil.FORMAT_DATE);
 		order.setBeginTime(DateUtil.getDateFromString(beginDate, DateUtil.FORMAT_DATE));
-		order.setEndTime(DateUtil.getDateFromString(endDate+" 23:59:59", DateUtil.FORMAT_DATETIME));
+		order.setEndTime(DateUtil.getDateFromString(endDate + " 23:59:59", DateUtil.FORMAT_DATETIME));
 
 		logger.info("订单主信息构建完成,结果:{}", JSON.toJSONString(order));
 		return order;
@@ -341,7 +342,14 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		if (sales != null) {
 			order.setSalesId(sales.getSalesId());
 			order.setSalesName(sales.getMemberName());
+		}
+		// 获取用户信息
+		Customer customer = getCustomerById(order.getCustomerId());
+		if (customer != null) {
+			order.setCreateBy(super.formatOperator(String.valueOf(customer.getCustomerId()), customer.getLoginName()));
+		}
 
+		if (sales != null || customer != null) {
 			int result = orderMapper.updateOrderInfoAfterCreated(order);
 			logger.info("订单信息更新完成,结果:{}", result);
 		}

@@ -12,8 +12,10 @@ import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.face.bean.SkuRequest;
 import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.basic.face.bean.SkuSubRequest;
+import com.duantuke.basic.face.service.CustomerService;
 import com.duantuke.basic.face.service.SaleService;
 import com.duantuke.basic.face.service.SkuService;
+import com.duantuke.basic.po.Customer;
 import com.duantuke.basic.po.Sale;
 import com.duantuke.order.mappers.OrderDetailMapper;
 import com.duantuke.order.mappers.OrderDetailPriceMapper;
@@ -32,6 +34,8 @@ public abstract class AbstractOrderHandler {
 	protected OrderDetailMapper orderDetailMapper;
 	@Autowired
 	private SkuService skuService;
+	@Autowired
+	private CustomerService customerService;
 	@Autowired
 	private SaleService saleService;
 	@Autowired
@@ -100,11 +104,22 @@ public abstract class AbstractOrderHandler {
 	 * @return
 	 */
 	protected String formatOperator(OrderContext<?> context) {
+		return this.formatOperator(context.getOperatorId(), context.getOperatorName());
+	}
+
+	/**
+	 * 格式化操作人信息
+	 * 
+	 * @param operatorId
+	 * @param operatorName
+	 * @return
+	 */
+	protected String formatOperator(String operatorId, String operatorName) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(context.getOperatorId());
-		if (StringUtils.isNotBlank(context.getOperatorName())) {
+		sb.append(operatorId);
+		if (StringUtils.isNotBlank(operatorName)) {
 			sb.append("(");
-			sb.append(context.getOperatorName());
+			sb.append(operatorName);
 			sb.append(")");
 		}
 
@@ -123,5 +138,18 @@ public abstract class AbstractOrderHandler {
 		Sale sales = saleService.querySaleByHotelId(hotelId);
 		logger.info("销售信息获取完成,结果 = {}", JSON.toJSONString(sales));
 		return sales;
+	}
+
+	/**
+	 * 获取用户信息
+	 * 
+	 * @param customerId
+	 * @return
+	 */
+	protected Customer getCustomerById(Long customerId) {
+		logger.info("开始获取用户信息,hotelId = {}", customerId);
+		Customer customer = customerService.queryCustomerById(customerId);
+		logger.info("用户信息获取完成,结果 = {}", JSON.toJSONString(customer));
+		return customer;
 	}
 }

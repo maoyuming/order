@@ -95,8 +95,8 @@ public class OrderServiceTest {
 
 		createOrderRequest.setOrder(order);
 		request.setData(createOrderRequest);
-		createOrderRequest.setOperatorId("123");
-		createOrderRequest.setOperatorName("张三");
+		createOrderRequest.setOperatorId("5");
+//		createOrderRequest.setOperatorName("张三");
 
 		Response<CreateOrderResponse> response = orderService.create(request);
 		Assert.assertTrue(response.isSuccess());
