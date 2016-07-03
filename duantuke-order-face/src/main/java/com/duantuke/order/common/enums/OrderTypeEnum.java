@@ -7,7 +7,8 @@ package com.duantuke.order.common.enums;
  */
 public enum OrderTypeEnum {
 	
-	common(0, "一般订单");
+	common(0, "一般订单"),
+	customization(10,"定制订单");
 	
 	private final Integer id;
 	private final String name;

@@ -282,7 +282,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	}
 
 	/**
-	 * 业务标识：第0位标识是否有订房, 第1位标识是否有餐饮, 第2位标识是否有门票
+	 * 业务标识：第0位标识是否有订房, 第1位标识是否有餐饮, 第2位标识是否是团体
 	 * 
 	 * @param skuResponse
 	 * @return
@@ -296,6 +296,9 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			}
 			if (s.getType().equals(SkuTypeEnum.meal.getCode()) && flagArray[1] != '1') {
 				flagArray[1] = '1';
+			}
+			if (s.getType().equals(SkuTypeEnum.teamsku.getCode()) && flagArray[2] != '1') {
+				flagArray[2] = '1';
 			}
 		}
 		StringBuilder flag = new StringBuilder();
