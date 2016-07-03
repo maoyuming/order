@@ -70,8 +70,8 @@ public class OrderServiceTest {
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160701"));
-		orderDetailPrice.setPrice(new BigDecimal("100"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160703"));
+		orderDetailPrice.setPrice(new BigDecimal("80"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
 		
@@ -211,7 +211,7 @@ public class OrderServiceTest {
 		request.setHeader(header);
 
 		Base base = new Base();
-		base.setOrderId(68l);
+		base.setOrderId(84l);
 		request.setData(base);
 
 		Response<Order> response = orderService.confirm(request);

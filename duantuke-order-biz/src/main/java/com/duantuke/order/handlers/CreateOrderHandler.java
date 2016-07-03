@@ -247,7 +247,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		logger.info("开始构建订单主信息");
 		Order order = context.getRequest().getData().getOrder();
 		order.setType(OrderTypeEnum.common.getId());
-		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
+		order.setStatus(OrderStatusEnum.initial.getId());
 		order.setPayStatus(PayStatusEnum.waitForPayment.getId());
 		order.setCustomerId(Long.parseLong(context.getOperatorId()));
 		order.setCreateTime(context.getCurrentTime());

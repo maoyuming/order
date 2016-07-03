@@ -60,10 +60,20 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 
 		Order order = super.getOrderById(base.getOrderId());
 		context.setOrder(order);
-
+		
 		if (order.getStatus().equals(OrderStatusEnum.confirmed.getId())) {
 			logger.warn("订单已确认");
 			throw new OrderException(OrderErrorEnum.orderConfirmed);
+		}
+		
+		if (!order.getStatus().equals(OrderStatusEnum.initial.getId())) {
+			logger.error("非法订单状态");
+			throw new OrderException(OrderErrorEnum.orderStatusError);
+		}
+		
+		if (!order.getPayStatus().equals(PayStatusEnum.paymentSuccess)) {
+			logger.error("订单未支付，不能确认");
+			throw new OrderException(OrderErrorEnum.orderNotPaid);
 		}
 
 		logger.info("确认订单业务合法性验证通过");
@@ -111,6 +121,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 		logger.info("准备执行更新操作");
 		Order order = new Order();
 		order.setId(id);
+		order.setStatus(OrderStatusEnum.toBeConfirmed.getId());
 		order.setPayStatus(PayStatusEnum.paymentSuccess.getId());
 		order.setUpdateTime(new Date());
 		order.setUpdateBy(PropertyConfigurer.getProperty("system"));

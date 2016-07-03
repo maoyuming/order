@@ -271,6 +271,16 @@ public class OrderServiceImpl implements OrderService {
 			// 开始确认订单
 			updateOrderHandler.confirm(context);
 
+			try {
+				// 发送消息
+				orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
+
+				// 记录日志
+				saveLog(context.getOrder().getId(), BusinessTypeEnum.CONFIRM, "订单已确认", context.getOrder().getUpdateBy());
+			} catch (Exception e) {
+				logger.error("确认订单后处理异常", e);
+			}
+			
 			// 封装返回信息
 			Order order = context.getOrder();
 			response.setSuccess(true);
@@ -294,16 +304,6 @@ public class OrderServiceImpl implements OrderService {
 			response.setSuccess(false);
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
-		}
-
-		try {
-			// 发送消息
-			orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
-
-			// 记录日志
-			saveLog(context.getOrder().getId(), BusinessTypeEnum.CONFIRM, "订单已确认", context.getOrder().getUpdateBy());
-		} catch (Exception e) {
-			logger.error("确认订单后处理异常", e);
 		}
 
 		logger.info("确认订单全部执行完成,返回值:{}", JSON.toJSONString(response));

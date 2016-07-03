@@ -6,6 +6,7 @@ package com.duantuke.order.common.enums;
  * @date 2016年6月8日
  */
 public enum OrderStatusEnum {
+	initial(0,"新订单"),
 	/**
 	 * 待确认
 	 */
