@@ -1,5 +1,7 @@
 package com.duantuke.order.handlers;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 
 import com.duantuke.order.common.enums.CancelTypeEnum;
@@ -52,10 +54,14 @@ public class CancelOrderHandler extends AbstractOrderHandler {
 			throw new OrderException(OrderErrorEnum.orderCanceled);
 		}
 
+		// 目前限制到了预抵时间当天的已确认订单不允许取消
+		Date beginDate = order.getBeginTime();
+		Date now = context.getCurrentTime();
 		if (order.getStatus().equals(OrderStatusEnum.confirmed.getId())
+				&& now.after(beginDate)
 				&& CancelTypeEnum.common.getId().equals(request.getCancelType())) {
-			logger.error("订单已确认，不能取消");
-			throw new OrderException(OrderErrorEnum.orderCanNotBeCanceled.getErrorCode(), "订单已确认，请联系客服取消");
+			logger.error("订单已确认且已到预抵日期，不能取消");
+			throw new OrderException(OrderErrorEnum.orderCanNotBeCanceled.getErrorCode(), "订单已确认且已到预抵日期，不能取消，如有疑问请联系客服!");
 		}
 
 		if (order.getStatus().equals(OrderStatusEnum.finished.getId())) {

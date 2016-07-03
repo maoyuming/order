@@ -205,6 +205,16 @@ public class OrderServiceImpl implements OrderService {
 			// 开始取消订单
 			cancelOrderHandler.cancel(context);
 
+			try {
+				// 发送消息
+				orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
+
+				// 记录日志
+				saveLog(context.getOrder().getId(), BusinessTypeEnum.CANCEL, "订单已取消", context.getOrder().getUpdateBy());
+			} catch (Exception e) {
+				logger.error("取消订单后处理异常", e);
+			}
+			
 			// 封装返回信息
 			Order order = context.getOrder();
 			response.setSuccess(true);
@@ -234,16 +244,6 @@ public class OrderServiceImpl implements OrderService {
 			response.setSuccess(false);
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
-		}
-
-		try {
-			// 发送消息
-			orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
-
-			// 记录日志
-			saveLog(context.getOrder().getId(), BusinessTypeEnum.CANCEL, "订单已取消", context.getOrder().getUpdateBy());
-		} catch (Exception e) {
-			logger.error("取消订单后处理异常", e);
 		}
 
 		logger.info("取消订单全部执行完成,返回值:{}", JSON.toJSONString(response));

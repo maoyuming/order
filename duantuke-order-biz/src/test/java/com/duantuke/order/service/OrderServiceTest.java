@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
 import com.duantuke.basic.enums.SkuTypeEnum;
+import com.duantuke.order.common.enums.CancelTypeEnum;
 import com.duantuke.order.common.enums.OrderTypeEnum;
 import com.duantuke.order.common.enums.PayTypeEnum;
 import com.duantuke.order.model.Base;
@@ -201,8 +202,10 @@ public class OrderServiceTest {
 		request.setHeader(header);
 
 		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
-		cancelOrderRequest.setOrderId(19l);
+		cancelOrderRequest.setCancelType(CancelTypeEnum.common.getId());
+		cancelOrderRequest.setOrderId(108l);
 		cancelOrderRequest.setReason("测试取消理由");
+		cancelOrderRequest.setOperatorId("5");
 		request.setData(cancelOrderRequest);
 
 		Response<CancelOrderResponse> response = orderService.cancel(request);
