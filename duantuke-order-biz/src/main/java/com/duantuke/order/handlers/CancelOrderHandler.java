@@ -2,6 +2,7 @@ package com.duantuke.order.handlers;
 
 import org.springframework.stereotype.Service;
 
+import com.duantuke.order.common.enums.CancelTypeEnum;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.common.enums.OrderStatusEnum;
 import com.duantuke.order.exception.OrderException;
@@ -50,9 +51,15 @@ public class CancelOrderHandler extends AbstractOrderHandler {
 			logger.warn("订单已取消");
 			throw new OrderException(OrderErrorEnum.orderCanceled);
 		}
-		
+
+		if (order.getStatus().equals(OrderStatusEnum.confirmed.getId())
+				&& CancelTypeEnum.common.getId().equals(request.getCancelType())) {
+			logger.error("订单已确认，不能取消");
+			throw new OrderException(OrderErrorEnum.orderCanNotBeCanceled.getErrorCode(), "订单已确认，请联系客服取消");
+		}
+
 		if (order.getStatus().equals(OrderStatusEnum.finished.getId())) {
-			logger.warn("订单已完成，不能取消");
+			logger.error("订单已完成，不能取消");
 			throw new OrderException(OrderErrorEnum.orderFinished);
 		}
 

@@ -20,6 +20,7 @@ public enum OrderErrorEnum {
 	orderStatusError("10004","非法订单状态"),
 	orderNotPaid("10005","订单未支付"),
 	orderFinished("10006","订单已完成"),
+	orderCanNotBeCanceled("10007","订单不能取消"),
 	
 	// 通用错误信息
 	customError("0","系统错误"),
