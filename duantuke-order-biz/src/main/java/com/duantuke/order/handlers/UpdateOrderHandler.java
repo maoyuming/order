@@ -95,6 +95,7 @@ public class UpdateOrderHandler extends AbstractOrderHandler {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("endTime", endTime);
+		params.put("status", OrderStatusEnum.confirmed.getId());
 		logger.info("开始查询待完成的订单,参数:{}", JSON.toJSONString(params));
 		List<Order> orders = orderMapper.queryOrdersByEndTime(params);
 		logger.info("待完成的订单查询完成,结果:{}", JSON.toJSONString(orders));

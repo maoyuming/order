@@ -330,6 +330,17 @@ public class OrderServiceImpl implements OrderService {
 			// 开始处理
 			orders = updateOrderHandler.autoFinish(context);
 
+			try {
+				// 发送消息，记录日志
+				for (Order order : orders) {
+					orderProducter.sendFinishedMessage(buildMessage(order));
+
+					saveLog(order.getId(), BusinessTypeEnum.FINISHED, "订单已完成", order.getUpdateBy());
+				}
+			} catch (Exception e) {
+				logger.error("完成订单后处理异常", e);
+			}
+			
 			// 封装返回信息
 			response.setSuccess(true);
 			response.setData(null);
@@ -343,17 +354,6 @@ public class OrderServiceImpl implements OrderService {
 			response.setSuccess(false);
 			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
 			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
-		}
-
-		try {
-			// 发送消息，记录日志
-			for (Order order : orders) {
-				orderProducter.sendFinishedMessage(buildMessage(order));
-
-				saveLog(order.getId(), BusinessTypeEnum.FINISHED, "订单已完成", order.getUpdateBy());
-			}
-		} catch (Exception e) {
-			logger.error("完成订单后处理异常", e);
 		}
 
 		logger.info("自动完成订单全部执行完成,返回值:{}", JSON.toJSONString(response));
@@ -446,6 +446,56 @@ public class OrderServiceImpl implements OrderService {
 
 		logger.info("订单新增备注全部完成,返回值:{}", JSON.toJSONString(response));
 		return response;
+	}
+
+	@Override
+	public Response<String> autoCancel(Request<CancelOrderRequest> request) {
+		Response<String> response = new Response<String>();
+		// 初始化上下文
+		OrderContext<Request<CancelOrderRequest>> context = new OrderContext<Request<CancelOrderRequest>>();
+		List<Order> orders = null;
+		try {
+			logger.info("接收到自动取消订单请求,入参:{}", JSON.toJSONString(request));
+
+			Base base = request.getData();
+			// 设置订单上下文
+			context.setRequest(request);
+			context.setCurrentTime(new Date());
+			context.setOperatorId(base.getOperatorId());
+			context.setOperatorName(base.getOperatorName());
+
+			// 开始处理
+			orders = cancelOrderHandler.autoCancel(context);
+
+			try {
+				// 发送消息，记录日志
+				for (Order order : orders) {
+					orderProducter.sendCanceledMessage(buildMessage(order));
+
+					saveLog(order.getId(), BusinessTypeEnum.CANCEL, "订单已取消", order.getUpdateBy());
+				}
+			} catch (Exception e) {
+				logger.error("取消订单后处理异常", e);
+			}
+			
+			// 封装返回信息
+			response.setSuccess(true);
+			response.setData(null);
+		} catch (OrderException e) {
+			logger.error("自动取消订单异常", e);
+			response.setSuccess(false);
+			response.setErrorCode(e.getErrorCode());
+			response.setErrorMessage(e.getErrorMsg());
+		} catch (Exception ex) {
+			logger.error("自动取消订单异常", ex);
+			response.setSuccess(false);
+			response.setErrorCode(OrderErrorEnum.customError.getErrorCode());
+			response.setErrorMessage(OrderErrorEnum.customError.getErrorMsg());
+		}
+
+		logger.info("自动取消订单全部执行完成,返回值:{}", JSON.toJSONString(response));
+		return response;
+		
 	}
 
 }

@@ -96,7 +96,7 @@ public class OrderServiceTest {
 		priceDetails = new ArrayList<OrderDetailPrice>();
 		orderDetailPrice = new OrderDetailPrice();
 		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160704"));
-		orderDetailPrice.setPrice(new BigDecimal("0"));
+		orderDetailPrice.setPrice(new BigDecimal("399"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);
 		orderDetails.add(orderDetail);
@@ -280,5 +280,20 @@ public class OrderServiceTest {
 		request.setData(base);
 		Response<String> response = orderService.addOrderRemark(request);
 		Assert.assertTrue(response.isSuccess());
+	}
+	
+	@Test
+	public void testAutoCancel(){
+		Request<CancelOrderRequest> request = new Request<CancelOrderRequest>();
+		Header header = new Header();
+		header.setTimeStamp(new Date());
+		request.setHeader(header);
+
+		CancelOrderRequest base = new CancelOrderRequest();
+		base.setOperatorId("OrderFinishWorker");
+		request.setData(base);
+
+		Response<String> response = orderService.autoCancel(request);
+		System.out.println(JSON.toJSONString(response));
 	}
 }

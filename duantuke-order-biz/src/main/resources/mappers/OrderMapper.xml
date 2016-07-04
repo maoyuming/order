@@ -559,7 +559,7 @@
 			update_by
 		FROM orders 
 		WHERE end_time &lt; #{endTime,jdbcType=TIMESTAMP}
-		AND status = 50 
+		AND status = #{status,jdbcType=INTEGER} 
 	    ORDER BY id DESC
   </select>
   <update id="updateOrderInfoAfterCreated" parameterType="com.duantuke.order.model.Order" >
@@ -583,4 +583,35 @@
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="queryOrdersToCancel" resultMap="BaseResultMap" parameterType="map" >
+		SELECT 
+			id,
+			type,
+			status,
+			pay_type,
+			pay_status,
+			total_price,
+			contact,
+			contact_phone,
+			customer_id,
+			promotion_id,
+			supplier_id,
+			supplier_name,
+			sales_id,
+			sales_name,
+			begin_time,
+			end_time,
+			cancel_reason,
+			flag,
+			memo,
+			create_time,
+			create_by,
+			update_time,
+			update_by
+		FROM orders 
+		WHERE pay_status = #{payStatus,jdbcType=INTEGER}
+		AND status = #{status,jdbcType=INTEGER} 
+		AND create_time &lt; date_add(now(),interval -#{time,jdbcType=INTEGER} minute)
+	    ORDER BY id DESC
+  </select>
 </mapper>

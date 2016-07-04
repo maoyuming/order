@@ -119,4 +119,12 @@ public interface OrderService {
 	 * @return
 	 */
 	Response<String> addOrderRemark(Request<Base> request);
+	
+	/**
+	 * 订单自动取消接口(仅供worker调用)
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response<String> autoCancel(Request<CancelOrderRequest> request);
 }
