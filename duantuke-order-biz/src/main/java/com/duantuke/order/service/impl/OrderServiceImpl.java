@@ -472,7 +472,7 @@ public class OrderServiceImpl implements OrderService {
 				for (Order order : orders) {
 					orderProducter.sendCanceledMessage(buildMessage(order));
 
-					saveLog(order.getId(), BusinessTypeEnum.CANCEL, "订单已取消", order.getUpdateBy());
+					saveLog(order.getId(), BusinessTypeEnum.CANCEL, order.getCancelReason(), order.getUpdateBy());
 				}
 			} catch (Exception e) {
 				logger.error("取消订单后处理异常", e);
