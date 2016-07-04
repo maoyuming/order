@@ -124,7 +124,7 @@ public class CancelOrderHandler extends AbstractOrderHandler {
 
 		// 执行取消操作
 		for (Order order : orders) {
-			order.setCancelReason("系统自动取消");
+			order.setCancelReason("超过" + PropertyConfigurer.getProperty("autoCancelInterval") + "分钟未支付,系统自动取消");
 			order.setUpdateTime(context.getCurrentTime());
 			order.setUpdateBy(formatOperator(context));
 			this.doCancel(order);
