@@ -79,7 +79,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		validateOrder(order);
 
 		// 验证订单明细
-		validateOrderDetail(order.getOrderDetails(), context);
+		validateOrderDetail(order, context);
 		logger.info("请求参数验证通过");
 	}
 
@@ -124,9 +124,10 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	 * @throws ParseException
 	 */
 	@SuppressWarnings("rawtypes")
-	private void validateOrderDetail(List<OrderDetail> orderDetails, OrderContext<Request<CreateOrderRequest>> context)
+	private void validateOrderDetail(Order order, OrderContext<Request<CreateOrderRequest>> context)
 			throws ParseException {
 		logger.info("开始验证订单明细");
+		List<OrderDetail> orderDetails = order.getOrderDetails();
 		if (CollectionUtils.isEmpty(orderDetails)) {
 			throw new OrderException(OrderErrorEnum.paramsError.getErrorCode(), "订单明细不能为空");
 		}
@@ -214,6 +215,10 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 					}
 					totalPricePerDay = totalPricePerDay.add(orderDetailPrice.getPrice());
 				}
+				if (totalPricePerDay.compareTo(BigDecimal.ZERO) == 0) {
+					logger.error("没有获取到Sku:[{}]在[{}]的价格信息", orderDetail.getSkuId(), date);
+					throw new OrderException(OrderErrorEnum.orderPriceError);
+				}
 			}
 			totalPricePerDay = totalPricePerDay.multiply(new BigDecimal(orderDetail.getNum()));
 			orderDetail.setTotalPrice(totalPricePerDay);
@@ -233,28 +238,6 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	}
 
 	/**
-	 * 计算订单总金额
-	 * 
-	 * @param orderDetails
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	private BigDecimal calculateTotalPrice(List<OrderDetail> orderDetails) {
-		logger.info("开始计算订单总金额");
-		BigDecimal totalPrice = BigDecimal.ZERO;
-		for (OrderDetail orderDetail : orderDetails) {
-			BigDecimal price = orderDetail.getTotalPrice();
-			BigDecimal num = new BigDecimal(orderDetail.getNum());
-			BigDecimal totalPriceOfSku = price.multiply(num);
-			totalPrice = totalPrice.add(totalPriceOfSku);
-		}
-
-		logger.info("订单总金额计算完成,totalPrice = {}", totalPrice);
-		return totalPrice;
-	}
-
-	/**
 	 * 构建订单信息
 	 * 
 	 * @param order
@@ -271,15 +254,23 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		// 获取sku信息
 		SkuResponse skuResponse = super.getSkuInfo(order);
 		context.setSkuInfo(skuResponse);
-		
-		order.setTotalPrice(skuResponse.getTotalPrice());
-		order.setFlag(buildFlag(skuResponse));
 
-		// 处理十分秒
+		order.setTotalPrice(skuResponse.getTotalPrice());
+		String flag = buildFlag(skuResponse);
+		order.setFlag(flag);
+
+		/*
+		 * 处理预抵时间、预离时间的时分秒
+		 */
 		String beginDate = DateUtil.getStringFromDate(order.getBeginTime(), DateUtil.FORMAT_DATE);
 		String endDate = DateUtil.getStringFromDate(order.getEndTime(), DateUtil.FORMAT_DATE);
-		order.setBeginTime(DateUtil.getDateFromString(beginDate, DateUtil.FORMAT_DATE));
-		order.setEndTime(DateUtil.getDateFromString(endDate + " 23:59:59", DateUtil.FORMAT_DATETIME));
+		if (flag.charAt(0) == '1' || flag.charAt(2) == '1') {
+			order.setBeginTime(DateUtil.getDateFromString(beginDate + " 12:00:00", DateUtil.FORMAT_DATETIME));
+			order.setEndTime(DateUtil.getDateFromString(endDate + " 12:00:00", DateUtil.FORMAT_DATETIME));
+		} else if (flag.charAt(1) == '1') {
+			order.setBeginTime(DateUtil.getDateFromString(beginDate + " 00:00:00", DateUtil.FORMAT_DATETIME));
+			order.setEndTime(DateUtil.getDateFromString(endDate + " 23:59:59", DateUtil.FORMAT_DATETIME));
+		}
 
 		logger.info("订单主信息构建完成,结果:{}", JSON.toJSONString(order));
 		return order;
@@ -374,11 +365,12 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 					orderDetailPrice.setSkuName(orderDetail.getSkuName());
 					orderDetailPrice.setCreateTime(context.getCurrentTime());
 					orderDetailPrice.setCreateBy(formatOperator(context));
-					
+
 					// 处理十分秒
-					String actionDate = DateUtil.getStringFromDate(orderDetailPrice.getActionTime(), DateUtil.FORMAT_DATE);
+					String actionDate = DateUtil.getStringFromDate(orderDetailPrice.getActionTime(),
+							DateUtil.FORMAT_DATE);
 					orderDetailPrice.setActionTime(DateUtil.getDateFromString(actionDate, DateUtil.FORMAT_DATE));
-					
+
 					orderDetailPriceMapper.insertSelective(orderDetailPrice);
 				}
 			}

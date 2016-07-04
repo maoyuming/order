@@ -74,26 +74,32 @@ public class OrderServiceTest {
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160703"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160704"));
 		orderDetailPrice.setPrice(new BigDecimal("80"));
 		priceDetails.add(orderDetailPrice);
+		
+//		orderDetailPrice = new OrderDetailPrice();
+//		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160705"));
+//		orderDetailPrice.setPrice(new BigDecimal("80"));
+//		priceDetails.add(orderDetailPrice);
+		
 		orderDetail.setPriceDetails(priceDetails);
 		
 		orderDetails.add(orderDetail);
 		
-//		orderDetail = new OrderDetail();
-//		orderDetail.setSkuId(2l);
-//		orderDetail.setSkuName("老北京火锅");
-//		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
-//		orderDetail.setNum(1);
-//
-//		priceDetails = new ArrayList<OrderDetailPrice>();
-//		orderDetailPrice = new OrderDetailPrice();
-//		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160701"));
-//		orderDetailPrice.setPrice(new BigDecimal("2"));
-//		priceDetails.add(orderDetailPrice);
-//		orderDetail.setPriceDetails(priceDetails);
-//		orderDetails.add(orderDetail);
+		orderDetail = new OrderDetail();
+		orderDetail.setSkuId(27l);
+		orderDetail.setSkuName("十人餐");
+		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
+		orderDetail.setNum(1);
+
+		priceDetails = new ArrayList<OrderDetailPrice>();
+		orderDetailPrice = new OrderDetailPrice();
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160704"));
+		orderDetailPrice.setPrice(new BigDecimal("0"));
+		priceDetails.add(orderDetailPrice);
+		orderDetail.setPriceDetails(priceDetails);
+		orderDetails.add(orderDetail);
 		
 		order.setOrderDetails(orderDetails);
 
