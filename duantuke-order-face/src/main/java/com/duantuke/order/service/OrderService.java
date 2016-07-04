@@ -122,6 +122,7 @@ public interface OrderService {
 	
 	/**
 	 * 订单自动取消接口(仅供worker调用)
+	 * <br>超过30分钟未支付的订单，系统自动取消，30分钟时间可以配置
 	 * 
 	 * @param request
 	 * @return
