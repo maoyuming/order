@@ -160,7 +160,10 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			logger.info("Sku:{}下单传入的价格列表是:{}", orderDetail.getSkuId(), JSON.toJSONString(priceList));
 			for (OrderDetailPrice orderDetailPrice : priceList) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-				String date = sdf.format(orderDetailPrice.getActionTime());
+				String date = "";
+				if(orderDetailPrice.getActionTime() != null){
+					date = sdf.format(orderDetailPrice.getActionTime());
+				}
 				for (SkuInfo<?> skuInfo : skuInfoList) {
 					if (!skuInfo.getSkuId().equals(orderDetail.getSkuId())) {
 						continue;
