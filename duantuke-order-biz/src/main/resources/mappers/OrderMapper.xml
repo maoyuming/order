@@ -394,8 +394,11 @@
 		 <if test="type != null">
 	    	AND type = #{orderType,jdbcType=INTEGER}
 	     </if>
-	     <if test="status != null">
-	    	AND status = #{orderStatus,jdbcType=INTEGER}
+	     <if test="orderStatus != null">
+	     	AND status in 
+		     <foreach collection="orderStatus" index="index" item="item" open="(" separator="," close=")">
+	            #{item,jdbcType=INTEGER}
+	         </foreach>
 	     </if>
 	     <if test="payType != null">
 	    	AND pay_type = #{payType,jdbcType=INTEGER}

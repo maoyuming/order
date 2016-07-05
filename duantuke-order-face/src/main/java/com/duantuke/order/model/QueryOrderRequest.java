@@ -20,7 +20,7 @@ public class QueryOrderRequest extends Base {
 	/**
 	 * 订单状态
 	 */
-	private Integer orderStatus;
+	private Integer[] orderStatus;
 
 	/**
 	 * 支付类型
@@ -79,11 +79,11 @@ public class QueryOrderRequest extends Base {
 		this.orderType = orderType;
 	}
 
-	public Integer getOrderStatus() {
+	public Integer[] getOrderStatus() {
 		return orderStatus;
 	}
 
-	public void setOrderStatus(Integer orderStatus) {
+	public void setOrderStatus(Integer[] orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 

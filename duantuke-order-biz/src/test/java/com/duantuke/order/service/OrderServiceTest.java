@@ -171,11 +171,14 @@ public class OrderServiceTest {
 		Date startDate = sdf.parse("2016-06-12");
 		Date endDate = sdf.parse("2016-06-29");
 
+		Integer[] orderStatus = {0,30,200};
+		
 		QueryOrderRequest queryOrderRequest = new QueryOrderRequest();
 		queryOrderRequest.setOrderType(OrderTypeEnum.common.getId());
 		queryOrderRequest.setContact("张三");
 		queryOrderRequest.setStartDate(startDate);
 		queryOrderRequest.setEndDate(endDate);
+		queryOrderRequest.setOrderStatus(orderStatus);
 		queryOrderRequest.setPageNo(1);
 		queryOrderRequest.setPageSize(10);
 
