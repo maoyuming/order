@@ -12,7 +12,6 @@
     <result column="contact" property="contact" jdbcType="VARCHAR" />
     <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
     <result column="customer_id" property="customerId" jdbcType="BIGINT" />
-    <result column="promotion_id" property="promotionId" jdbcType="BIGINT" />
     <result column="sales_id" property="salesId" jdbcType="BIGINT" />
     <result column="sales_name" property="salesName" jdbcType="VARCHAR" />
     <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
@@ -62,7 +61,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, type, status, pay_type, pay_status, total_price,discount, contact, contact_phone, customer_id, 
-    promotion_id, sales_id, sales_name,begin_time,end_time, supplier_id, supplier_name, cancel_reason,flag, memo, create_time, create_by, update_time, 
+    sales_id, sales_name,begin_time,end_time, supplier_id, supplier_name, cancel_reason,flag, memo, create_time, create_by, update_time, 
     update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -79,14 +78,14 @@
     insert into orders (id, type, status, 
       pay_type, pay_status, total_price, discount, 
       contact, contact_phone, customer_id, 
-      promotion_id, sales_id, sales_name, supplier_id, 
+      sales_id, sales_name, supplier_id, 
       supplier_name,beign_time,end_time,cancel_reason,flag, memo, create_time, 
       create_by, update_time, update_by
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{payType,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL},
       #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
-      #{promotionId,jdbcType=BIGINT}, #{salesId,jdbcType=BIGINT},#{salesName,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
+      #{salesId,jdbcType=BIGINT},#{salesName,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
       #{supplierName,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},
       #{cancel_reason,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
@@ -124,9 +123,6 @@
       </if>
       <if test="customerId != null" >
         customer_id,
-      </if>
-      <if test="promotionId != null" >
-        promotion_id,
       </if>
       <if test="salesId != null" >
         sales_id,
@@ -199,9 +195,6 @@
       <if test="customerId != null" >
         #{customerId,jdbcType=BIGINT},
       </if>
-      <if test="promotionId != null" >
-        #{promotionId,jdbcType=BIGINT},
-      </if>
       <if test="salesId != null" >
         #{salesId,jdbcType=BIGINT},
       </if>
@@ -273,9 +266,6 @@
       <if test="customerId != null" >
         customer_id = #{customerId,jdbcType=BIGINT},
       </if>
-      <if test="promotionId != null" >
-        promotion_id = #{promotionId,jdbcType=BIGINT},
-      </if>
       <if test="salesId != null" >
         sales_id = #{salesId,jdbcType=BIGINT},
       </if>
@@ -329,7 +319,6 @@
       contact = #{contact,jdbcType=VARCHAR},
       contact_phone = #{contactPhone,jdbcType=VARCHAR},
       customer_id = #{customerId,jdbcType=BIGINT},
-      promotion_id = #{promotionId,jdbcType=BIGINT},
       sales_id = #{salesId,jdbcType=BIGINT},
       sales_name = #{salesName,jdbcType=VARCHAR},
       supplier_id = #{supplierId,jdbcType=BIGINT},
@@ -357,7 +346,6 @@
 			a.contact,
 			a.contact_phone,
 			a.customer_id,
-			a.promotion_id,
 			a.sales_id,
 			a.sales_name,
 			a.begin_time,
@@ -385,7 +373,6 @@
 			contact,
 			contact_phone,
 			customer_id,
-			promotion_id,
 			supplier_id,
 			supplier_name,
 			sales_id,
@@ -493,7 +480,6 @@
 		a.contact,
 		a.contact_phone,
 		a.customer_id,
-		a.promotion_id,
 		a.sales_id,
 		a.sales_name,
 		a.supplier_id,
@@ -561,7 +547,6 @@
 			contact,
 			contact_phone,
 			customer_id,
-			promotion_id,
 			supplier_id,
 			supplier_name,
 			sales_id,
@@ -613,7 +598,6 @@
 			contact,
 			contact_phone,
 			customer_id,
-			promotion_id,
 			supplier_id,
 			supplier_name,
 			sales_id,

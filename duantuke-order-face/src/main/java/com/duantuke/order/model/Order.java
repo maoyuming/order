@@ -29,8 +29,6 @@ public class Order implements Serializable{
 
 	private Long customerId;
 
-	private Long promotionId;
-	
 	private Long supplierId;
 
     private String supplierName;
@@ -121,14 +119,6 @@ public class Order implements Serializable{
 
 	public void setContactPhone(String contactPhone) {
 		this.contactPhone = contactPhone == null ? null : contactPhone.trim();
-	}
-
-	public Long getPromotionId() {
-		return promotionId;
-	}
-
-	public void setPromotionId(Long promotionId) {
-		this.promotionId = promotionId;
 	}
 	
 	public String getMemo() {
