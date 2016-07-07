@@ -72,7 +72,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		Order order = request.getOrder();
 
 		// 获取sku信息
-		SkuResponse skuResponse = super.getSkuInfo(order);
+		SkuResponse skuResponse = super.getSkuInfo(order, request.getPromotions());
 		context.setSkuInfo(skuResponse);
 
 		// 验证订单主信息
@@ -158,7 +158,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 			for (OrderDetailPrice orderDetailPrice : priceList) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 				String date = "";
-				if(orderDetailPrice.getActionTime() != null){
+				if (orderDetailPrice.getActionTime() != null) {
 					date = sdf.format(orderDetailPrice.getActionTime());
 				}
 				for (SkuInfo<?> skuInfo : skuInfoList) {
@@ -253,8 +253,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		order.setCreateBy(formatOperator(context));
 
 		// 获取sku信息
-		SkuResponse skuResponse = super.getSkuInfo(order);
-		context.setSkuInfo(skuResponse);
+		SkuResponse skuResponse = context.getSkuInfo();
 		SkuInfo skuInfo = skuResponse.getList().get(0);
 		order.setSupplierName(skuInfo.getSupplierName());
 		order.setTotalPrice(skuResponse.getTotalPrice());
@@ -369,7 +368,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 					orderDetailPrice.setCreateBy(formatOperator(context));
 
 					// 处理十分秒
-					if(orderDetailPrice.getActionTime() != null){
+					if (orderDetailPrice.getActionTime() != null) {
 						String actionDate = DateUtil.getStringFromDate(orderDetailPrice.getActionTime(),
 								DateUtil.FORMAT_DATE);
 						orderDetailPrice.setActionTime(DateUtil.getDateFromString(actionDate, DateUtil.FORMAT_DATE));

@@ -60,13 +60,15 @@ public abstract class AbstractOrderHandler {
 	 * @param order
 	 * @return
 	 */
-	protected SkuResponse getSkuInfo(Order order) {
+	protected SkuResponse getSkuInfo(Order order, List<Long> promotions) {
 		logger.info("开始获取sku信息");
 		List<OrderDetail> orderDetails = order.getOrderDetails();
 
 		SkuRequest request = new SkuRequest();
 		request.setBeginTime(order.getBeginTime());
 		request.setEndTime(order.getEndTime());
+		request.setPromotionIds(promotions);
+		request.setHotelId(order.getSupplierId());
 		Map<Integer, List<SkuSubRequest>> skuMap = new HashMap<Integer, List<SkuSubRequest>>();
 		for (OrderDetail orderDetail : orderDetails) {
 			Long skuId = orderDetail.getSkuId();

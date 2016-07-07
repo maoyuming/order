@@ -64,6 +64,7 @@ public class OrderServiceTest {
 		order.setType(OrderTypeEnum.common.getId());
 		order.setSupplierId(869l);
 		order.setSupplierName("邓磊测试农家院");
+		order.setCustomerId(1l);
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
@@ -106,6 +107,11 @@ public class OrderServiceTest {
 		request.setData(createOrderRequest);
 		createOrderRequest.setOperatorId("5");
 //		createOrderRequest.setOperatorName("张三");
+		
+		// 促销
+		List<Long> promotions = new ArrayList<Long>();
+		promotions.add(1l);
+		createOrderRequest.setPromotions(promotions);
 
 		Response<CreateOrderResponse> response = orderService.create(request);
 		Assert.assertTrue(response.isSuccess());
