@@ -441,6 +441,7 @@
 				<dubbo-provide-group>test</dubbo-provide-group>
 				<!-- mongo -->
 				<mongo.host>211.157.155.198:27017</mongo.host>
+				<cat.app.name>${project.name}</cat.app.name>
 			</properties>
 		</profile>
 		<profile>
@@ -466,6 +467,7 @@
 				<dubbo-provide-group>test</dubbo-provide-group>
 				<!-- mongo -->
 				<mongo.host>211.157.155.198:27017</mongo.host>
+				<cat.app.name>${project.name}</cat.app.name>
 			</properties>
 		</profile>
 		<profile>
@@ -491,6 +493,7 @@
 				<dubbo-provide-group>test</dubbo-provide-group>
 				<!-- mongo -->
 				<mongo.host>211.157.155.198:27017</mongo.host>
+				<cat.app.name>${project.name}</cat.app.name>
 			</properties>
 		</profile>
 	</profiles>
