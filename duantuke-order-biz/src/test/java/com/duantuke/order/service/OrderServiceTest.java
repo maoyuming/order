@@ -95,7 +95,6 @@ public class OrderServiceTest {
 
 		priceDetails = new ArrayList<OrderDetailPrice>();
 		orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160704"));
 		orderDetailPrice.setPrice(new BigDecimal("399"));
 		priceDetails.add(orderDetailPrice);
 		orderDetail.setPriceDetails(priceDetails);

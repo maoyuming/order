@@ -20,6 +20,8 @@ public class Order implements Serializable{
 	private Integer payStatus;
 
 	private BigDecimal totalPrice;
+	
+	private BigDecimal discount;
 
 	private String contact;
 
@@ -247,5 +249,13 @@ public class Order implements Serializable{
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
 	}
 }

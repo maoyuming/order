@@ -8,6 +8,7 @@
     <result column="pay_type" property="payType" jdbcType="INTEGER" />
     <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
     <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="discount" property="discount" jdbcType="DECIMAL" />
     <result column="contact" property="contact" jdbcType="VARCHAR" />
     <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
     <result column="customer_id" property="customerId" jdbcType="BIGINT" />
@@ -60,7 +61,7 @@
 	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, type, status, pay_type, pay_status, total_price, contact, contact_phone, customer_id, 
+    id, type, status, pay_type, pay_status, total_price,discount, contact, contact_phone, customer_id, 
     promotion_id, sales_id, sales_name,begin_time,end_time, supplier_id, supplier_name, cancel_reason,flag, memo, create_time, create_by, update_time, 
     update_by
   </sql>
@@ -76,14 +77,14 @@
   </delete>
   <insert id="insert" parameterType="com.duantuke.order.model.Order" useGeneratedKeys="true" keyProperty="id">
     insert into orders (id, type, status, 
-      pay_type, pay_status, total_price, 
+      pay_type, pay_status, total_price, discount, 
       contact, contact_phone, customer_id, 
       promotion_id, sales_id, sales_name, supplier_id, 
       supplier_name,beign_time,end_time,cancel_reason,flag, memo, create_time, 
       create_by, update_time, update_by
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
-      #{payType,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, 
+      #{payType,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL},
       #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
       #{promotionId,jdbcType=BIGINT}, #{salesId,jdbcType=BIGINT},#{salesName,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
       #{supplierName,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},
@@ -111,6 +112,9 @@
       </if>
       <if test="totalPrice != null" >
         total_price,
+      </if>
+      <if test="discount != null" >
+        discount,
       </if>
       <if test="contact != null" >
         contact,
@@ -183,6 +187,9 @@
       <if test="totalPrice != null" >
         #{totalPrice,jdbcType=DECIMAL},
       </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=DECIMAL},
+      </if>
       <if test="contact != null" >
         #{contact,jdbcType=VARCHAR},
       </if>
@@ -254,6 +261,9 @@
       <if test="totalPrice != null" >
         total_price = #{totalPrice,jdbcType=DECIMAL},
       </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=DECIMAL},
+      </if>
       <if test="contact != null" >
         contact = #{contact,jdbcType=VARCHAR},
       </if>
@@ -315,6 +325,7 @@
       pay_type = #{payType,jdbcType=INTEGER},
       pay_status = #{payStatus,jdbcType=INTEGER},
       total_price = #{totalPrice,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
       contact = #{contact,jdbcType=VARCHAR},
       contact_phone = #{contactPhone,jdbcType=VARCHAR},
       customer_id = #{customerId,jdbcType=BIGINT},
@@ -342,6 +353,7 @@
 			a.pay_type,
 			a.pay_status,
 			a.total_price,
+			a.discount,
 			a.contact,
 			a.contact_phone,
 			a.customer_id,
@@ -369,6 +381,7 @@
 			pay_type,
 			pay_status,
 			total_price,
+			discount,
 			contact,
 			contact_phone,
 			customer_id,
@@ -476,6 +489,7 @@
 		a.pay_type,
 		a.pay_status,
 		a.total_price,
+		a.discount,
 		a.contact,
 		a.contact_phone,
 		a.customer_id,
@@ -543,6 +557,7 @@
 			pay_type,
 			pay_status,
 			total_price,
+			discount,
 			contact,
 			contact_phone,
 			customer_id,
@@ -594,6 +609,7 @@
 			pay_type,
 			pay_status,
 			total_price,
+			discount,
 			contact,
 			contact_phone,
 			customer_id,
