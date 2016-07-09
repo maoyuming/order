@@ -172,7 +172,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 						List<PriceInfo> priceInfoList = roomTypeInfo.getPriceInfos();
 						for (PriceInfo priceInfo : priceInfoList) {
 							if (date.equals(priceInfo.getDate())) {
-								BigDecimal price = priceInfo.getPrice();
+								BigDecimal price = priceInfo.getOriginalPrice();
 								if (price == null) {
 									throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
 											"日期" + date + "的价格不存在");
@@ -201,7 +201,7 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 						List<PriceInfo> priceInfoList = teamSku.getPriceInfos();
 						for (PriceInfo priceInfo : priceInfoList) {
 							if (date.equals(priceInfo.getDate())) {
-								BigDecimal price = priceInfo.getPrice();
+								BigDecimal price = priceInfo.getOriginalPrice();
 								if (price == null) {
 									throw new OrderException(OrderErrorEnum.orderPriceError.getErrorCode(),
 											"日期" + date + "的价格不存在");
