@@ -419,10 +419,10 @@
 	    	AND sales_id = #{salesId,jdbcType=BIGINT}
 	     </if>
 	     <if test="startDate != null">
-	    	AND create_time &gt; #{startDate,jdbcType=TIMESTAMP}
+	    	AND begin_time &gt; #{startDate,jdbcType=TIMESTAMP}
 	     </if>
 	      <if test="endDate != null">
-	    	AND create_time &lt; #{endDate,jdbcType=TIMESTAMP}
+	    	AND begin_time &lt; #{endDate,jdbcType=TIMESTAMP}
 	     </if>
 	    </trim>
 	    ORDER BY id DESC
