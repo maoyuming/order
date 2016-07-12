@@ -72,8 +72,12 @@ public class OrderConsumer {
 			logger.info("接收到支付完成消息,报文:{}", message);
 			if (StringUtils.isNotBlank(message)) {
 				int index = message.indexOf(":");
-				String orderId = message.substring(index + 1, message.length() - 1);
-				updateOrderHandler.updateOrderAfterPaid(Long.parseLong(orderId));
+				String orderIdStr = message.substring(index + 1, message.length() - 1);
+				long orderId = Long.parseLong(orderIdStr);
+				updateOrderHandler.updateOrderAfterPaid(orderId);
+				
+				// 纪录业务日志
+				updateOrderHandler.saveBusinessLog(orderId, BusinessTypeEnum.PAID, "订单已支付", PropertyConfigurer.getProperty("system"));
 			}
 		} catch (OrderException e) {
 			logger.info("消费sc_pay_success_topic消息异常", e);

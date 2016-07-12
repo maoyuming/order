@@ -10,6 +10,7 @@ public enum BusinessTypeEnum {
 	
 	CSREMARK("10", "客服备注"),
 	CREATE("100", "创建订单"),
+	PAID("110", "订单支付"),
 	CONFIRM("120", "确认订单"),
 	CHANGE_CONTACTS("130", "订单修改"),
 	CHECKIN("150", "已入住"),
@@ -17,7 +18,7 @@ public enum BusinessTypeEnum {
 	NOSHOW("220", "客户未到店"),
 	SETTLE("300", "已结算"),
 	CANCEL("500", "取消订单"),
-	REFUNDED("520","已退款");
+	REFUNDED("520","订单退款");
 
 	private final String id;
 	private final String name;
