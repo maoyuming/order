@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.duantuke.mongo.bislog.BisLog;
-import com.duantuke.mongo.bislog.BisLogDelegate;
 import com.duantuke.order.common.enums.BusinessTypeEnum;
 import com.duantuke.order.common.enums.OrderErrorEnum;
 import com.duantuke.order.exception.OrderException;
@@ -29,7 +27,6 @@ import com.duantuke.order.model.Request;
 import com.duantuke.order.model.Response;
 import com.duantuke.order.mq.OrderProducter;
 import com.duantuke.order.service.OrderService;
-import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
 
 @Service("orderService")
@@ -46,8 +43,6 @@ public class OrderServiceImpl implements OrderService {
 	private UpdateOrderHandler updateOrderHandler;
 	@Autowired
 	private OrderProducter orderProducter;
-	@Autowired
-	private BisLogDelegate bisLogDelegate;
 
 	@Override
 	public Response<CreateOrderResponse> create(Request<CreateOrderRequest> request) {
@@ -76,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
 				orderProducter.sendCreatingMessage(buildMessage(context.getOrder()));
 
 				// 保存业务日志
-				saveLog(context.getOrder().getId(), BusinessTypeEnum.CREATE, "订单创建成功",
+				createOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CREATE, "订单创建成功",
 						context.getOrder().getCreateBy());
 			} catch (Exception e) {
 				logger.error("创建订单后处理异常", e);
@@ -210,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
 				orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
 
 				// 记录日志
-				saveLog(context.getOrder().getId(), BusinessTypeEnum.CANCEL, "订单已取消", context.getOrder().getUpdateBy());
+				cancelOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CANCEL, "订单已取消", context.getOrder().getUpdateBy());
 			} catch (Exception e) {
 				logger.error("取消订单后处理异常", e);
 			}
@@ -277,7 +272,7 @@ public class OrderServiceImpl implements OrderService {
 				orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
 
 				// 记录日志
-				saveLog(context.getOrder().getId(), BusinessTypeEnum.CONFIRM, "订单已确认", context.getOrder().getUpdateBy());
+				updateOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CONFIRM, "订单已确认", context.getOrder().getUpdateBy());
 			} catch (Exception e) {
 				logger.error("确认订单后处理异常", e);
 			}
@@ -335,7 +330,7 @@ public class OrderServiceImpl implements OrderService {
 				for (Order order : orders) {
 					orderProducter.sendFinishedMessage(buildMessage(order));
 
-					saveLog(order.getId(), BusinessTypeEnum.FINISHED, "订单已完成", order.getUpdateBy());
+					updateOrderHandler.saveBusinessLog(order.getId(), BusinessTypeEnum.FINISHED, "订单已完成", order.getUpdateBy());
 				}
 			} catch (Exception e) {
 				logger.error("完成订单后处理异常", e);
@@ -358,29 +353,6 @@ public class OrderServiceImpl implements OrderService {
 
 		logger.info("自动完成订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
-	}
-
-	/**
-	 * 保存业务日志
-	 * 
-	 * @param order
-	 *            订单对象
-	 * @param businessTypeEnum
-	 *            日志类型
-	 * @param content
-	 *            日志内容
-	 */
-	private void saveLog(Long orderId, BusinessTypeEnum businessTypeEnum, String content, String operator) {
-		logger.info("准备记录日志");
-		BisLog bisLog = new BisLog();
-		bisLog.setSystem(PropertyConfigurer.getProperty("system"));
-		bisLog.setOperator(operator);
-		bisLog.setBussinessId(String.valueOf(orderId));
-		bisLog.setBussinssType(businessTypeEnum.getId());
-		bisLog.setContent(content);
-		logger.info("开始记录日志,参数:{}", JSON.toJSONString(bisLog));
-		this.bisLogDelegate.saveBigLog(bisLog);
-		logger.info("日志记录完成");
 	}
 
 	@Override
@@ -426,7 +398,7 @@ public class OrderServiceImpl implements OrderService {
 				throw new OrderException(OrderErrorEnum.paramsError);
 			}
 
-			saveLog(base.getOrderId(), BusinessTypeEnum.CSREMARK, base.getRemark(),
+			updateOrderHandler.saveBusinessLog(base.getOrderId(), BusinessTypeEnum.CSREMARK, base.getRemark(),
 					base.getOperatorId() + "(" + base.getOperatorName() + ")");
 
 			// 封装返回信息
@@ -472,7 +444,7 @@ public class OrderServiceImpl implements OrderService {
 				for (Order order : orders) {
 					orderProducter.sendCanceledMessage(buildMessage(order));
 
-					saveLog(order.getId(), BusinessTypeEnum.CANCEL, order.getCancelReason(), order.getUpdateBy());
+					cancelOrderHandler.saveBusinessLog(order.getId(), BusinessTypeEnum.CANCEL, order.getCancelReason(), order.getUpdateBy());
 				}
 			} catch (Exception e) {
 				logger.error("取消订单后处理异常", e);

@@ -4,11 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
+import com.duantuke.order.common.enums.BusinessTypeEnum;
 import com.duantuke.order.exception.OrderException;
 import com.duantuke.order.handlers.CreateOrderHandler;
 import com.duantuke.order.handlers.UpdateOrderHandler;
 import com.duantuke.order.model.Message;
 import com.duantuke.order.model.Order;
+import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
 import com.mk.kafka.client.exception.KafkaMessageConsumeException;
 import com.mk.kafka.client.stereotype.MkMessageService;
@@ -81,7 +83,7 @@ public class OrderConsumer {
 		}
 		logger.info("支付完成消息消费完成");
 	}
-	
+
 	/**
 	 * 订单已退款消息，更新订单信息
 	 */
@@ -91,8 +93,13 @@ public class OrderConsumer {
 			logger.info("接收到已退款消息,报文:{}", message);
 			if (StringUtils.isNotBlank(message)) {
 				int index = message.indexOf(":");
-				String orderId = message.substring(index + 1, message.length() - 1);
-				updateOrderHandler.updateOrderAfterRefunded(Long.parseLong(orderId));
+				String orderIdStr = message.substring(index + 1, message.length() - 1);
+				long orderId = Long.parseLong(orderIdStr);
+				updateOrderHandler.updateOrderAfterRefunded(orderId);
+
+				// 纪录业务日志
+				updateOrderHandler.saveBusinessLog(orderId, BusinessTypeEnum.REFUNDED, "订单已退款",
+						PropertyConfigurer.getProperty("system"));
 			}
 		} catch (OrderException e) {
 			logger.info("消费sc_refund_success_topic消息异常", e);

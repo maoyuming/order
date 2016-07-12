@@ -17,12 +17,16 @@ import com.duantuke.basic.face.service.SaleService;
 import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.basic.po.Customer;
 import com.duantuke.basic.po.Sale;
+import com.duantuke.mongo.bislog.BisLog;
+import com.duantuke.mongo.bislog.BisLogDelegate;
+import com.duantuke.order.common.enums.BusinessTypeEnum;
 import com.duantuke.order.mappers.OrderDetailMapper;
 import com.duantuke.order.mappers.OrderDetailPriceMapper;
 import com.duantuke.order.mappers.OrderMapper;
 import com.duantuke.order.model.Order;
 import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.OrderDetail;
+import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
 
 public abstract class AbstractOrderHandler {
@@ -40,6 +44,8 @@ public abstract class AbstractOrderHandler {
 	private SaleService saleService;
 	@Autowired
 	protected OrderDetailPriceMapper orderDetailPriceMapper;
+	@Autowired
+	private BisLogDelegate bisLogDelegate;
 
 	/**
 	 * 查询订单信息(只查询主表)
@@ -153,5 +159,26 @@ public abstract class AbstractOrderHandler {
 		Customer customer = customerService.queryCustomerById(customerId);
 		logger.info("用户信息获取完成,结果 = {}", JSON.toJSONString(customer));
 		return customer;
+	}
+
+	/**
+	 * 纪录业务日志
+	 * 
+	 * @param orderId
+	 * @param businessTypeEnum
+	 * @param content
+	 * @param operator
+	 */
+	public void saveBusinessLog(Long orderId, BusinessTypeEnum businessTypeEnum, String content, String operator) {
+		logger.info("准备记录日志");
+		BisLog bisLog = new BisLog();
+		bisLog.setSystem(PropertyConfigurer.getProperty("system"));
+		bisLog.setOperator(operator);
+		bisLog.setBussinessId(String.valueOf(orderId));
+		bisLog.setBussinssType(businessTypeEnum.getId());
+		bisLog.setContent(content);
+		logger.info("开始记录日志,参数:{}", JSON.toJSONString(bisLog));
+		this.bisLogDelegate.saveBigLog(bisLog);
+		logger.info("日志记录完成");
 	}
 }
