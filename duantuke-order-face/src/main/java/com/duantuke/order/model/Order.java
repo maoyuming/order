@@ -33,6 +33,8 @@ public class Order implements Serializable{
 
     private String supplierName;
     
+    private String supplierPhone;
+    
     private Date beginTime;
     
     private Date endTime;
@@ -247,5 +249,13 @@ public class Order implements Serializable{
 
 	public void setDiscount(BigDecimal discount) {
 		this.discount = discount;
+	}
+
+	public String getSupplierPhone() {
+		return supplierPhone;
+	}
+
+	public void setSupplierPhone(String supplierPhone) {
+		this.supplierPhone = supplierPhone;
 	}
 }

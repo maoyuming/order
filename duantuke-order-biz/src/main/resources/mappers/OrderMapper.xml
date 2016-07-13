@@ -18,6 +18,7 @@
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="supplier_phone" property="supplierPhone" jdbcType="VARCHAR" />
     <result column="cancel_reason" property="cancelReason" jdbcType="VARCHAR" />
     <result column="flag" property="flag" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
@@ -61,7 +62,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, type, status, pay_type, pay_status, total_price,discount, contact, contact_phone, customer_id, 
-    sales_id, sales_name,begin_time,end_time, supplier_id, supplier_name, cancel_reason,flag, memo, create_time, create_by, update_time, 
+    sales_id, sales_name,begin_time,end_time, supplier_id, supplier_name,supplier_phone, cancel_reason,flag, memo, create_time, create_by, update_time, 
     update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -79,14 +80,14 @@
       pay_type, pay_status, total_price, discount, 
       contact, contact_phone, customer_id, 
       sales_id, sales_name, supplier_id, 
-      supplier_name,beign_time,end_time,cancel_reason,flag, memo, create_time, 
+      supplier_name,supplier_phone,beign_time,end_time,cancel_reason,flag, memo, create_time, 
       create_by, update_time, update_by
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{payType,jdbcType=INTEGER}, #{payStatus,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL},
       #{contact,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
       #{salesId,jdbcType=BIGINT},#{salesName,jdbcType=VARCHAR}, #{supplierId,jdbcType=BIGINT}, 
-      #{supplierName,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},
+      #{supplierName,jdbcType=VARCHAR},#{supplierPhone,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},
       #{cancel_reason,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
       )
@@ -135,6 +136,9 @@
       </if>
       <if test="supplierName != null" >
         supplier_name,
+      </if>
+      <if test="supplierPhone != null" >
+        supplier_phone,
       </if>
       <if test="beginTime != null" >
         begin_time,
@@ -207,6 +211,9 @@
       <if test="supplierName != null" >
         #{supplierName,jdbcType=VARCHAR},
       </if>
+      <if test="supplierPhone != null" >
+        #{supplierPhone,jdbcType=VARCHAR},
+      </if>
       <if test="beginTime != null" >
         #{beginTime,jdbcType=TIMESTAMP},
       </if>
@@ -278,6 +285,9 @@
       <if test="supplierName != null" >
         supplier_name = #{supplierName,jdbcType=VARCHAR},
       </if>
+      <if test="supplierPhone != null" >
+        supplier_phone = #{supplierPhone,jdbcType=VARCHAR},
+      </if>
       <if test="beginTime != null" >
         beign_time = #{beginTime,jdbcType=TIMESTAMP},
       </if>
@@ -323,6 +333,7 @@
       sales_name = #{salesName,jdbcType=VARCHAR},
       supplier_id = #{supplierId,jdbcType=BIGINT},
       supplier_name = #{supplierName,jdbcType=VARCHAR},
+      supplier_phone = #{supplierPhone,jdbcType=VARCHAR},
       begin_time = #{beginTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       cancel_reason = #{cancelReason,jdbcType=VARCHAR},
@@ -375,6 +386,7 @@
 			customer_id,
 			supplier_id,
 			supplier_name,
+			supplier_phone,
 			sales_id,
 			sales_name,
 			begin_time,
@@ -484,6 +496,7 @@
 		a.sales_name,
 		a.supplier_id,
 		a.supplier_name,
+		a.supplier_phone,
 		a.begin_time,
 		a.end_time,
 		a.cancel_reason,
@@ -549,6 +562,7 @@
 			customer_id,
 			supplier_id,
 			supplier_name,
+			supplier_phone,
 			sales_id,
 			sales_name,
 			begin_time,
@@ -600,6 +614,7 @@
 			customer_id,
 			supplier_id,
 			supplier_name,
+			supplier_phone,
 			sales_id,
 			sales_name,
 			begin_time,

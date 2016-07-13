@@ -13,9 +13,11 @@ import com.duantuke.basic.face.bean.SkuRequest;
 import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.basic.face.bean.SkuSubRequest;
 import com.duantuke.basic.face.service.CustomerService;
+import com.duantuke.basic.face.service.HotelService;
 import com.duantuke.basic.face.service.SaleService;
 import com.duantuke.basic.face.service.SkuService;
 import com.duantuke.basic.po.Customer;
+import com.duantuke.basic.po.Hotel;
 import com.duantuke.basic.po.Sale;
 import com.duantuke.mongo.bislog.BisLog;
 import com.duantuke.mongo.bislog.BisLogDelegate;
@@ -42,6 +44,8 @@ public abstract class AbstractOrderHandler {
 	private CustomerService customerService;
 	@Autowired
 	private SaleService saleService;
+	@Autowired
+	private HotelService hotelService;
 	@Autowired
 	protected OrderDetailPriceMapper orderDetailPriceMapper;
 	@Autowired
@@ -141,11 +145,24 @@ public abstract class AbstractOrderHandler {
 	 * @param hotelId
 	 * @return
 	 */
-	protected Sale getSalesInfo(Long hotelId) {
+	protected Sale getSales(Long hotelId) {
 		logger.info("开始获取销售信息,hotelId = {}", hotelId);
 		Sale sales = saleService.querySaleByHotelId(hotelId);
 		logger.info("销售信息获取完成,结果 = {}", JSON.toJSONString(sales));
 		return sales;
+	}
+
+	/**
+	 * 获取供应商信息
+	 * 
+	 * @param supplierId
+	 * @return
+	 */
+	protected Hotel getSupplier(Long supplierId) {
+		logger.info("开始获取供应商信息,hotelId = {}", supplierId);
+		Hotel hotel = hotelService.queryHotelById(supplierId);
+		logger.info("供应商信息获取完成,结果 = {}", JSON.toJSONString(hotel));
+		return hotel;
 	}
 
 	/**

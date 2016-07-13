@@ -16,6 +16,7 @@ import com.duantuke.basic.face.bean.RoomTypeInfo;
 import com.duantuke.basic.face.bean.SkuInfo;
 import com.duantuke.basic.face.bean.SkuResponse;
 import com.duantuke.basic.face.bean.TeamSkuInfo;
+import com.duantuke.basic.po.Hotel;
 import com.duantuke.basic.po.Meal;
 import com.duantuke.basic.po.Sale;
 import com.duantuke.order.common.enums.OrderErrorEnum;
@@ -335,14 +336,24 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 	public Order updateOrderInfoAfterCreated(Order order) {
 		logger.info("开始更新订单信息");
 		// 获取销售信息
-		Sale sales = getSalesInfo(order.getSupplierId());
+		Sale sales = getSales(order.getSupplierId());
 		if (sales != null) {
 			order.setSalesId(sales.getSalesId());
 			order.setSalesName(sales.getMemberName());
+		}
+
+		// 获取供应商信息
+		Hotel hotel = getSupplier(order.getSupplierId());
+		if (hotel != null) {
+			order.setSupplierPhone(hotel.getHotelPhone());
+		}
+
+		if (sales != null || hotel != null) {
 			logger.info("订单信息更新参数:{}", JSON.toJSONString(order));
 			int result = orderMapper.updateOrderInfoAfterCreated(order);
 			logger.info("订单信息更新完成,结果:{}", result);
 		}
+
 		return order;
 	}
 
