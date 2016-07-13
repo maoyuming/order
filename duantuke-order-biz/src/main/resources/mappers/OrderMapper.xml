@@ -582,7 +582,8 @@
   <update id="updateOrderInfoAfterCreated" parameterType="com.duantuke.order.model.Order" >
     update orders
     set sales_id = #{salesId,jdbcType=INTEGER},
-      sales_name = #{salesName,jdbcType=VARCHAR}
+      sales_name = #{salesName,jdbcType=VARCHAR},
+      supplier_phone = #{supplierPhone,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateOrderAfterPaid" parameterType="com.duantuke.order.model.Order" >
