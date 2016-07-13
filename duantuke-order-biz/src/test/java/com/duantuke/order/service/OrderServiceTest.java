@@ -88,18 +88,18 @@ public class OrderServiceTest {
 		
 		orderDetails.add(orderDetail);
 		
-		orderDetail = new OrderDetail();
-		orderDetail.setSkuId(27l);
-		orderDetail.setSkuName("十人餐");
-		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
-		orderDetail.setNum(1);
-
-		priceDetails = new ArrayList<OrderDetailPrice>();
-		orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setPrice(new BigDecimal("399"));
-		priceDetails.add(orderDetailPrice);
-		orderDetail.setPriceDetails(priceDetails);
-		orderDetails.add(orderDetail);
+//		orderDetail = new OrderDetail();
+//		orderDetail.setSkuId(27l);
+//		orderDetail.setSkuName("十人餐");
+//		orderDetail.setSkuType(SkuTypeEnum.meal.getCode());
+//		orderDetail.setNum(1);
+//
+//		priceDetails = new ArrayList<OrderDetailPrice>();
+//		orderDetailPrice = new OrderDetailPrice();
+//		orderDetailPrice.setPrice(new BigDecimal("399"));
+//		priceDetails.add(orderDetailPrice);
+//		orderDetail.setPriceDetails(priceDetails);
+//		orderDetails.add(orderDetail);
 		
 		order.setOrderDetails(orderDetails);
 
