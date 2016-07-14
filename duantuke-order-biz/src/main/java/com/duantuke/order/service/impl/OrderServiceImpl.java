@@ -68,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
 			// 创建订单后处理，如果发生异常也需要正常返回成功，此处可降级
 			try {
 				// 发送消息
-				orderProducter.sendCreatingMessage(buildMessage(context.getOrder()));
+				orderProducter.sendCreatingMessage(buildMessage(context.getOrder(), createOrderRequest.getPromotions()));
 
 				// 保存业务日志
 				createOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CREATE, "订单创建成功",
@@ -104,10 +104,11 @@ public class OrderServiceImpl implements OrderService {
 	 * @param order
 	 * @return
 	 */
-	private String buildMessage(Order order) {
+	private String buildMessage(Order order, List<Long> promotions) {
 		logger.info("开始构建订单消息");
 		Message message = new Message();
 		message.setOrder(order);
+		message.setPromotions(promotions);
 
 		logger.info("订单消息构建完成");
 		return JSON.toJSONString(message);
@@ -202,14 +203,15 @@ public class OrderServiceImpl implements OrderService {
 
 			try {
 				// 发送消息
-				orderProducter.sendCanceledMessage(buildMessage(context.getOrder()));
+				orderProducter.sendCanceledMessage(buildMessage(context.getOrder(),null));
 
 				// 记录日志
-				cancelOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CANCEL, "订单已取消", context.getOrder().getUpdateBy());
+				cancelOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CANCEL, "订单已取消",
+						context.getOrder().getUpdateBy());
 			} catch (Exception e) {
 				logger.error("取消订单后处理异常", e);
 			}
-			
+
 			// 封装返回信息
 			Order order = context.getOrder();
 			response.setSuccess(true);
@@ -269,14 +271,15 @@ public class OrderServiceImpl implements OrderService {
 
 			try {
 				// 发送消息
-				orderProducter.sendConfirmedMessage(buildMessage(context.getOrder()));
+				orderProducter.sendConfirmedMessage(buildMessage(context.getOrder(),null));
 
 				// 记录日志
-				updateOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CONFIRM, "订单已确认", context.getOrder().getUpdateBy());
+				updateOrderHandler.saveBusinessLog(context.getOrder().getId(), BusinessTypeEnum.CONFIRM, "订单已确认",
+						context.getOrder().getUpdateBy());
 			} catch (Exception e) {
 				logger.error("确认订单后处理异常", e);
 			}
-			
+
 			// 封装返回信息
 			Order order = context.getOrder();
 			response.setSuccess(true);
@@ -328,14 +331,15 @@ public class OrderServiceImpl implements OrderService {
 			try {
 				// 发送消息，记录日志
 				for (Order order : orders) {
-					orderProducter.sendFinishedMessage(buildMessage(order));
+					orderProducter.sendFinishedMessage(buildMessage(order,null));
 
-					updateOrderHandler.saveBusinessLog(order.getId(), BusinessTypeEnum.FINISHED, "订单已完成", order.getUpdateBy());
+					updateOrderHandler.saveBusinessLog(order.getId(), BusinessTypeEnum.FINISHED, "订单已完成",
+							order.getUpdateBy());
 				}
 			} catch (Exception e) {
 				logger.error("完成订单后处理异常", e);
 			}
-			
+
 			// 封装返回信息
 			response.setSuccess(true);
 			response.setData(null);
@@ -442,14 +446,15 @@ public class OrderServiceImpl implements OrderService {
 			try {
 				// 发送消息，记录日志
 				for (Order order : orders) {
-					orderProducter.sendCanceledMessage(buildMessage(order));
+					orderProducter.sendCanceledMessage(buildMessage(order,null));
 
-					cancelOrderHandler.saveBusinessLog(order.getId(), BusinessTypeEnum.CANCEL, order.getCancelReason(), order.getUpdateBy());
+					cancelOrderHandler.saveBusinessLog(order.getId(), BusinessTypeEnum.CANCEL, order.getCancelReason(),
+							order.getUpdateBy());
 				}
 			} catch (Exception e) {
 				logger.error("取消订单后处理异常", e);
 			}
-			
+
 			// 封装返回信息
 			response.setSuccess(true);
 			response.setData(null);
@@ -467,7 +472,7 @@ public class OrderServiceImpl implements OrderService {
 
 		logger.info("自动取消订单全部执行完成,返回值:{}", JSON.toJSONString(response));
 		return response;
-		
+
 	}
 
 }

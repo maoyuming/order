@@ -52,6 +52,7 @@ public class OrderConsumer {
 				// 发送创建订单MQ消息
 				Message orderCreatedMessage = new Message();
 				orderCreatedMessage.setOrder(order);
+				orderCreatedMessage.setPromotions(m.getPromotions());
 				orderProducter.sendCreatedMessage(JSON.toJSONString(orderCreatedMessage));
 				logger.info("订单创建消息发送成功");
 			}

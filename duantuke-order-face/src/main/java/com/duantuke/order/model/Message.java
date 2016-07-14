@@ -1,5 +1,7 @@
 package com.duantuke.order.model;
 
+import java.util.List;
+
 /**
  * 订单消息模型
  * 
@@ -8,7 +10,14 @@ package com.duantuke.order.model;
  */
 public class Message {
 
+	/**
+	 * 订单
+	 */
 	private Order order;
+	/**
+	 * 促销id列表
+	 */
+	private List<Long> promotions;
 
 	public Order getOrder() {
 		return order;
@@ -16,5 +25,13 @@ public class Message {
 
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public List<Long> getPromotions() {
+		return promotions;
+	}
+
+	public void setPromotions(List<Long> promotions) {
+		this.promotions = promotions;
 	}
 }
