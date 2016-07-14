@@ -420,7 +420,12 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		promotionBind.setCustomerId(order.getCustomerId());
 		promotionBind.setHotelId(order.getSupplierId());
 		promotionBind.setPromotionIds(createOrderRequest.getPromotions());
-		promotionBind.setOrderPrice(order.getTotalPrice().add(order.getDiscount()));
+		if(order.getDiscount() != null){
+			promotionBind.setOrderPrice(order.getTotalPrice().add(order.getDiscount()));
+		} else {
+			promotionBind.setOrderPrice(order.getTotalPrice());
+		}
+		
 		boolean isRoom = isRoom(order.getFlag());
 		boolean isMeal = isMeal(order.getFlag());
 		if (isRoom && isMeal) {
