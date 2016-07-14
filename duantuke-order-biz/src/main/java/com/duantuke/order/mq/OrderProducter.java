@@ -22,7 +22,7 @@ public class OrderProducter {
 	 *
 	 * @param message
 	 */
-	@MkTopicProducer(topic = "order_creating", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	@MkTopicProducer(topic = "order_creating", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.StringEncoder")
 	public void sendCreatingMessage(String message) {
 		logger.info("创建订单中消息报文：{}", message);
 	}
@@ -32,7 +32,7 @@ public class OrderProducter {
 	 *
 	 * @param message
 	 */
-	@MkTopicProducer(topic = "order_created", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	@MkTopicProducer(topic = "order_created", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.StringEncoder")
 	public void sendCreatedMessage(String message) {
 		logger.info("创建订单消息报文：{}", message);
 	}
@@ -42,7 +42,7 @@ public class OrderProducter {
 	 *
 	 * @param message
 	 */
-	@MkTopicProducer(topic = "order_canceled", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	@MkTopicProducer(topic = "order_canceled", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.StringEncoder")
 	public void sendCanceledMessage(String message) {
 		logger.info("取消订单消息报文：{}", message);
 	}
@@ -52,7 +52,7 @@ public class OrderProducter {
 	 *
 	 * @param message
 	 */
-	@MkTopicProducer(topic = "order_confirmed", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	@MkTopicProducer(topic = "order_confirmed", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.StringEncoder")
 	public void sendConfirmedMessage(String message) {
 		logger.info("确认订单消息报文：{}", message);
 	}
@@ -62,7 +62,7 @@ public class OrderProducter {
 	 *
 	 * @param message
 	 */
-	@MkTopicProducer(topic = "order_finished", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.SerializerEncoder")
+	@MkTopicProducer(topic = "order_finished", replicationFactor = 1, serializerClass = "com.mk.kafka.client.serializer.StringEncoder")
 	public void sendFinishedMessage(String message) {
 		logger.info("订单完成消息报文：{}", message);
 	}

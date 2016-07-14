@@ -38,7 +38,7 @@ public class OrderConsumer {
 	 * 
 	 * @param message
 	 */
-	@MkTopicConsumer(topic = "order_creating", group = "OrderGroup", serializerClass = "com.mk.kafka.client.serializer.SerializerDecoder")
+	@MkTopicConsumer(topic = "order_creating", group = "OrderGroup", serializerClass = "com.mk.kafka.client.serializer.StringDecoder")
 	public void updateOrderAfterCreated(String message) {
 		try {
 			logger.info("接收到创建中的订单消息,报文:{}", message);
