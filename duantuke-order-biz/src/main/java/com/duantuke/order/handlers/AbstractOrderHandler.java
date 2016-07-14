@@ -79,6 +79,7 @@ public abstract class AbstractOrderHandler {
 		request.setEndTime(order.getEndTime());
 		request.setPromotionIds(promotions);
 		request.setHotelId(order.getSupplierId());
+		request.setCustomerId(order.getCustomerId());
 		Map<Integer, List<SkuSubRequest>> skuMap = new HashMap<Integer, List<SkuSubRequest>>();
 		for (OrderDetail orderDetail : orderDetails) {
 			Long skuId = orderDetail.getSkuId();

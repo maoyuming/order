@@ -52,7 +52,7 @@ public class OrderServiceTest {
 		request.setHeader(header);
 
 		Date today = new Date();
-		Date tomorrow = DateUtils.addDays(today, 1);
+		Date tomorrow = DateUtils.addDays(today, 2);
 		CreateOrderRequest createOrderRequest = new CreateOrderRequest();
 		Order order = new Order();
 		order.setPayType(PayTypeEnum.prepay.getId());
@@ -65,6 +65,7 @@ public class OrderServiceTest {
 		order.setSupplierId(869l);
 		order.setSupplierName("邓磊测试农家院");
 		order.setCustomerId(1l);
+		order.setDiscount(new BigDecimal(60));
 
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 		OrderDetail orderDetail = new OrderDetail();
@@ -75,8 +76,13 @@ public class OrderServiceTest {
 		
 		List<OrderDetailPrice> priceDetails = new ArrayList<OrderDetailPrice>();
 		OrderDetailPrice orderDetailPrice = new OrderDetailPrice();
-		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160704"));
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160714"));
 		orderDetailPrice.setPrice(new BigDecimal("72"));
+		priceDetails.add(orderDetailPrice);
+		
+		orderDetailPrice = new OrderDetailPrice();
+		orderDetailPrice.setActionTime(DateUtil.getDateFromString("20160715"));
+		orderDetailPrice.setPrice(new BigDecimal("120"));
 		priceDetails.add(orderDetailPrice);
 		
 //		orderDetailPrice = new OrderDetailPrice();
@@ -110,7 +116,7 @@ public class OrderServiceTest {
 		
 		// 促销
 		List<Long> promotions = new ArrayList<Long>();
-		promotions.add(1l);
+		promotions.add(10l);
 		createOrderRequest.setPromotions(promotions);
 
 		Response<CreateOrderResponse> response = orderService.create(request);
