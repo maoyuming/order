@@ -232,9 +232,11 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 
 			logger.info("Sku单价验证通过");
 		}
-
+	
+		if(order.getDiscount() != null){
+			totalPrice = totalPrice.subtract(order.getDiscount());
+		}
 		// 验证订单总价格
-		totalPrice = totalPrice.subtract(order.getDiscount());
 		logger.info("验证订单总价格,SkuService计算的结果是:{},订单下单传入的明细结算后的结果是:{}", skuResponse.getTotalPrice(), totalPrice);
 		if (totalPrice.compareTo(skuResponse.getTotalPrice()) != 0) {
 			logger.error("订单总价格验证不通过");
