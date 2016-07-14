@@ -30,6 +30,7 @@ import com.duantuke.order.model.OrderContext;
 import com.duantuke.order.model.OrderDetail;
 import com.duantuke.order.utils.PropertyConfigurer;
 import com.duantuke.order.utils.log.LogUtil;
+import com.duantuke.promotion.face.service.PromotionOrderService;
 
 public abstract class AbstractOrderHandler {
 
@@ -46,6 +47,8 @@ public abstract class AbstractOrderHandler {
 	private SaleService saleService;
 	@Autowired
 	private HotelService hotelService;
+	@Autowired
+	protected PromotionOrderService promotionOrderService;
 	@Autowired
 	protected OrderDetailPriceMapper orderDetailPriceMapper;
 	@Autowired
@@ -198,5 +201,33 @@ public abstract class AbstractOrderHandler {
 		logger.info("开始记录日志,参数:{}", JSON.toJSONString(bisLog));
 		this.bisLogDelegate.saveBigLog(bisLog);
 		logger.info("日志记录完成");
+	}
+
+	/**
+	 * 通过flag判断是否有预定房间
+	 * 
+	 * @param flag
+	 * @return
+	 */
+	public boolean isRoom(String flag) {
+		char[] flagArray = flag.toCharArray();
+		if (flagArray[0] == '1') {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 通过flag判断是否有预定餐饮
+	 * 
+	 * @param flag
+	 * @return
+	 */
+	public boolean isMeal(String flag) {
+		char[] flagArray = flag.toCharArray();
+		if (flagArray[1] == '1') {
+			return true;
+		}
+		return false;
 	}
 }

@@ -11,7 +11,7 @@
 	<!-- 用dubbo协议在20880端口暴露服务 -->
 	<dubbo:protocol name="dubbo" port="-1" />
 	<!-- 声明需要暴露的服务接口 -->
-	
+
 	<dubbo:service ref="orderService"
 		interface="com.duantuke.order.service.OrderService" group="order_${dubbo-group}"
 		version="1.0.0" timeout="10000" retries="0" />
@@ -20,12 +20,16 @@
 		group="basic_${dubbo-group}" version="1.0.0" check="false" />
 	<dubbo:reference id="saleService"
 		interface="com.duantuke.basic.face.service.SaleService" timeout="30000"
-		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
+		group="basic_${dubbo-group}" version="1.0.0" check="false" />
 	<dubbo:reference id="customerService"
 		interface="com.duantuke.basic.face.service.CustomerService" timeout="30000"
-		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
+		group="basic_${dubbo-group}" version="1.0.0" check="false" />
 	<dubbo:reference id="hotelService"
 		interface="com.duantuke.basic.face.service.HotelService" timeout="30000"
-		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
+		group="basic_${dubbo-group}" version="1.0.0" check="false" />
+	<dubbo:reference id="promotionOrderService"
+		interface="com.duantuke.promotion.face.service.PromotionOrderService"
+		timeout="30000" group="promotion_${dubbo-group}" version="1.0.0"
+		check="false" />
 	<dubbo:monitor protocol="registry"></dubbo:monitor>
 </beans>

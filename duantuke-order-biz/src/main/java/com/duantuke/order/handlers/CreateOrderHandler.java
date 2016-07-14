@@ -31,6 +31,8 @@ import com.duantuke.order.model.OrderDetailPrice;
 import com.duantuke.order.model.Request;
 import com.duantuke.order.utils.DateUtil;
 import com.duantuke.order.utils.log.LogUtil;
+import com.duantuke.promotion.domain.PromotionBind;
+import com.duantuke.promotion.face.base.RetInfo;
 
 /**
  * 创建订单处理器
@@ -56,6 +58,9 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 
 		// 保存订单价格信息
 		saveOrderDetailPrice(order, context);
+
+		// 绑定促销信息
+		bindPromotion(context, order);
 
 		context.setOrder(order);
 		logger.info("订单创建成功,orderId = {}", order.getId());
@@ -392,5 +397,44 @@ public class CreateOrderHandler extends AbstractOrderHandler {
 		}
 
 		logger.info("订单价格信息保存完成");
+	}
+
+	/**
+	 * 绑定促销信息
+	 * 
+	 * @param context
+	 * @param order
+	 */
+	private void bindPromotion(OrderContext<Request<CreateOrderRequest>> context, Order order) {
+		logger.info("开始绑定促销信息");
+		CreateOrderRequest createOrderRequest = context.getRequest().getData();
+		List<Long> promotions = createOrderRequest.getPromotions();
+		if (promotions == null) {
+			logger.info("没有促销信息,无需绑定");
+			return;
+		}
+		PromotionBind promotionBind = new PromotionBind();
+		promotionBind.setOrderId(order.getId());
+		promotionBind.setCustomerId(order.getCustomerId());
+		promotionBind.setHotelId(order.getSupplierId());
+		promotionBind.setPromotionIds(createOrderRequest.getPromotions());
+		promotionBind.setOrderPrice(order.getTotalPrice().add(order.getDiscount()));
+		boolean isRoom = isRoom(order.getFlag());
+		boolean isMeal = isMeal(order.getFlag());
+		if (isRoom && isMeal) {
+			promotionBind.setSkuType(null);
+		} else if (isRoom) {
+			promotionBind.setSkuType(SkuTypeEnum.roomtype.getCode());
+		} else if (isMeal) {
+			promotionBind.setSkuType(SkuTypeEnum.meal.getCode());
+		}
+		logger.info("开始调用促销接口,参数{}", JSON.toJSONString(promotionBind));
+		RetInfo<Boolean> result = promotionOrderService.bindCreateOrder(promotionBind);
+		logger.info("促销接口调用完成,结果{}", JSON.toJSONString(result));
+		if (!result.isResult()) {
+			logger.error("促销信息绑定失败");
+			throw new OrderException(OrderErrorEnum.orderPromotionBindError);
+		}
+		logger.info("促销信息绑定完成");
 	}
 }

@@ -20,13 +20,16 @@
 		group="basic_${dubbo-group}" version="1.0.0" check="false" />
 	<dubbo:reference id="saleService"
 		interface="com.duantuke.basic.face.service.SaleService" timeout="30000"
-		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
+		group="basic_${dubbo-group}" version="1.0.0" check="false" />
 	<dubbo:reference id="customerService"
 		interface="com.duantuke.basic.face.service.CustomerService" timeout="30000"
-		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
+		group="basic_${dubbo-group}" version="1.0.0" check="false" />
 	<dubbo:reference id="hotelService"
 		interface="com.duantuke.basic.face.service.HotelService" timeout="30000"
-		group="basic_${dubbo-group}" version="1.0.0" check="false"/>
-
+		group="basic_${dubbo-group}" version="1.0.0" check="false" />
+	<dubbo:reference id="promotionOrderService"
+		interface="com.duantuke.promotion.face.service.PromotionOrderService"
+		timeout="30000" group="promotion_${dubbo-group}" version="1.0.0"
+		check="false" />
 	<dubbo:monitor protocol="registry"></dubbo:monitor>
 </beans>
