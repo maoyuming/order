@@ -1,4 +1,4 @@
-package com.duantuke.order.asepct;
+package com.duantuke.order.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -17,8 +17,8 @@ import com.duantuke.order.utils.log.LogUtil;
 
 @Component
 @Aspect
-public class OrderAsepct {
-	private static final LogUtil logger = new LogUtil(OrderAsepct.class);
+public class OrderAspect {
+	private static final LogUtil logger = new LogUtil(OrderAspect.class);
 
 	@Pointcut("execution(* com.duantuke.order.service.impl.OrderServiceImpl.*(..))")
 	private void asepct() {
