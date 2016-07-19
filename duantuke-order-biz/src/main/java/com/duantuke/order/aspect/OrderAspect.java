@@ -21,11 +21,11 @@ public class OrderAspect {
 	private static final LogUtil logger = new LogUtil(OrderAspect.class);
 
 	@Pointcut("execution(* com.duantuke.order.service.impl.OrderServiceImpl.*(..))")
-	private void asepct() {
+	private void aspect() {
 	}// 定义一个切入点
 
 	@SuppressWarnings("rawtypes")
-	@Around("asepct() && args(request)")
+	@Around("aspect() && args(request)")
 	public Object parseRequest(ProceedingJoinPoint pjp, Request request) throws Throwable {
 		Response response = new Response();
 		try {
